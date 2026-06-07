@@ -1,0 +1,12 @@
+# ══════════════════════════════════════════════════════
+# Configuration Netlify — Groupe Financier Formule
+# ══════════════════════════════════════════════════════
+
+[build]
+  publish = "."
+
+# ── Fonction de rappel mensuel ──
+# Tourne le 1er de chaque mois à 9h00 EST (14h00 UTC)
+[[scheduled_functions]]
+  name = "rappel-mise-a-jour"
+  cron = "0 14 1 * *"
