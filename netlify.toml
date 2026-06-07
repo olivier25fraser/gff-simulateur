@@ -5,8 +5,25 @@
 [build]
   publish = "."
 
+# ── Protection mot de passe sur l'espace conseiller ──
+# À activer dans Netlify : Site config > Access & security > Password protection
+# Scope : /conseiller/*
+
+# ── Redirections ──
+[[redirects]]
+  from = "/simulateur"
+  to = "/conseiller"
+  status = 301
+
 # ── Fonction de rappel mensuel ──
-# Tourne le 1er de chaque mois à 9h00 EST (14h00 UTC)
 [[scheduled_functions]]
   name = "rappel-mise-a-jour"
   cron = "0 14 1 * *"
+
+# ── Headers de sécurité ──
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
