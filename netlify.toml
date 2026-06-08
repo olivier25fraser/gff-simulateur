@@ -5,9 +5,19 @@
 [build]
   publish = "."
 
-# ── Protection mot de passe sur l'espace conseiller ──
-# À activer dans Netlify : Site config > Access & security > Password protection
-# Scope : /conseiller/*
+# ── Notifications courriel pour le formulaire de contact ──
+[[build.environment]]
+  NETLIFY_EMAILS_PROVIDER = "mailgun"
+
+# ── Formulaire de contact — notifications aux deux conseillers ──
+[forms]
+  [forms.contact-gff]
+    notification_email = "ofraser@gfformule.ca,mtheberge@gfformule.ca"
+
+# ── Fonction de rappel mensuel ──
+[[scheduled_functions]]
+  name = "rappel-mise-a-jour"
+  cron = "0 14 1 * *"
 
 # ── Redirections ──
 [[redirects]]
@@ -15,10 +25,10 @@
   to = "/conseiller"
   status = 301
 
-# ── Fonction de rappel mensuel ──
-[[scheduled_functions]]
-  name = "rappel-mise-a-jour"
-  cron = "0 14 1 * *"
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
 
 # ── Headers de sécurité ──
 [[headers]]
@@ -27,3 +37,8 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/conseiller/*"
+  [headers.values]
+    Cache-Control = "no-store, no-cache"
