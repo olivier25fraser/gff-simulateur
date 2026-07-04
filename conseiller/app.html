@@ -3683,6 +3683,9 @@ function calcReei(){
   const n=g('ei-n'),d=g('ei-d'),f=g('ei-f'),c=getAnnualCot('ei'),r=g('ei-r')/100,rev=g('ei-rev');
   // Seuil de revenu pour la SCEI bonifiée (2e palier fédéral 2026)
   const SEUIL_SCEI=117045;
+  // Seuils de revenu familial pour le BCEI 2026 (indexés, source Canada.ca) :
+  // plein bon (1000$) si revenu ≤ 38 237$, dégressif jusqu'à 58 523$, nul au-delà
+  const BCEI_SEUIL_BAS=38237, BCEI_SEUIL_HAUT=58523;
   let sol=0,totC=0,totBCEI=0,totSCEI=0,rows='';
   for(let a=d;a<=Math.min(f,59);a++){
     // SCEI: versée jusqu'à la fin de l'année des 49 ans
@@ -3699,8 +3702,14 @@ function calcReei(){
       }
       scei=Math.min(scei,Math.max(0,70000-totSCEI)); // plafond à vie 70000$
     }
-    // BCEI: bon sans cotisation (faible revenu), jusqu'aux 49 ans
-    const bcei=a<50?Math.min(1000,Math.max(0,20000-totBCEI)):0;
+    // BCEI: bon sans cotisation requise, mais dépend du revenu familial, jusqu'aux 49 ans
+    let bceiBrut=0;
+    if(a<50){
+      if(rev<=BCEI_SEUIL_BAS) bceiBrut=1000;
+      else if(rev<BCEI_SEUIL_HAUT) bceiBrut=1000*(BCEI_SEUIL_HAUT-rev)/(BCEI_SEUIL_HAUT-BCEI_SEUIL_BAS);
+      else bceiBrut=0;
+    }
+    const bcei=a<50?Math.min(bceiBrut,Math.max(0,20000-totBCEI)):0;
     sol=(sol+c+scei+bcei)*(1+r);
     totC+=c;totBCEI+=bcei;totSCEI+=scei;
     if(a-d<12) rows+=`<tr><td>${a} ans</td><td>${fmt(c)}</td><td>${fmt(scei)}</td><td>${fmt(bcei)}</td><td>${fmt(Math.round(sol))}</td></tr>`;
@@ -3711,7 +3720,7 @@ function calcReei(){
     <div class="stitle">SCEI — Subvention canadienne épargne-invalidité</div>
     ${rr('Taux (revenu faible)','300\u00a0% sur 500\u00a0$ + 200\u00a0% sur 1\u202f000\u00a0$')}${rr('Taux (revenu élevé > 117\u202f045\u00a0$)','100\u00a0% sur 1\u202f000\u00a0$/an')}${rr('Maximum annuel',fmt(3500))}${rr('Maximum à vie',fmt(70000))}${rr('Âge limite','Avant les 49 ans du bénéficiaire')}
     <div class="stitle">BCEI — Bon canadien épargne-invalidité</div>
-    ${rr('Montant annuel','1\u202f000\u00a0$ (sans cotisation requise)')}${rr('Seuil revenu (BCEI)','≤ 37\u202f487\u00a0$ (plein) / ≤ 57\u202f375\u00a0$ (partiel)')}${rr('Maximum à vie',fmt(20000))}${rr('Âge limite','Avant les 49 ans du bénéficiaire')}
+    ${rr('Montant annuel','1\u202f000\u00a0$ (sans cotisation requise)')}${rr('Seuil revenu (BCEI) 2026','≤ 38\u202f237\u00a0$ (plein) / ≤ 58\u202f523\u00a0$ (dégressif jusqu\'à 0\u00a0$)')}${rr('Maximum à vie',fmt(20000))}${rr('Âge limite','Avant les 49 ans du bénéficiaire')}
     <div class="note">Admissibilité : Crédit d'impôt pour personnes handicapées (CIPH) requis. Cotisations admissibles jusqu'aux 59 ans.</div>`;
 }
 
@@ -4194,7 +4203,6 @@ function calcPret() {
         Diviser la somme entre dette et placement donne un résultat équilibré et réduit le risque psychologique.
       </div>` : '';
 
-  const seuil = (Math.log(1 + tauxD/rendNet) / Math.log(rendNet/tauxD + 1)).toFixed(1);
   document.getElementById('pv-detail').innerHTML = `
     ${rr('Taux de la dette', g('pv-taux-dette')+'%')}
     ${rr('Rendement du placement', g('pv-rend')+'% ('+compte+')')}
@@ -4334,7 +4342,7 @@ function calcSucc() {
   const cieVal=g('ss-cie-val'), ciePBR=g('ss-cie-pbr');
   const ciePME=document.getElementById('ss-cie-pme')?.value||'non';
   const cieExoDeja=g('ss-cie-exo-deja');
-  const exoPME2026=1016602;
+  const exoPME2026=1275000; // Plafond 2026 de l'exonération cumulative des gains en capital (actions PME admissibles), indexé
 
   const av1=g('ss-av1'), av2=g('ss-av2'), av3=g('ss-av3'), prime=g('ss-prime');
   const typeAv=document.getElementById('ss-type-av')?.value||'temporaire';
@@ -4854,7 +4862,7 @@ const RRQ_REDUC_MOIS    = 0.006;      // Réduction avant 65 ans (~0,6 %/mois)
 const RRQ_MAJ_MOIS      = 0.007;      // Majoration après 65 ans (0,7 %/mois, jusqu'à 72 ans)
 const PSV_MAX_65_74_AN  = 743.05*12;  // Pension maximale 65-74 ans = 8 916,60 $ (T2 2026)
 const PSV_MAJ_MOIS      = 0.006;      // Majoration pour report (0,6 %/mois, jusqu'à 70 ans)
-const PSV_SEUIL_RECUP   = 95323;      // Seuil de récupération fiscale 2026
+const PSV_SEUIL_RECUP   = 93454;      // Seuil de récupération fiscale en vigueur (juil. 2026-juin 2027, basé sur revenu 2025) — aligné avec l'onglet REER
 
 function estimRRQPSV() {
   const revenu = g('ob-revenu');
@@ -4902,7 +4910,7 @@ function estimRRQPSV() {
   const noteEl = document.getElementById('ob-rrq-psv-note');
   if (noteEl) {
     noteEl.textContent = `RRQ estimé pour un revenu de ${fmt(revenu)}/an, rente demandée à ${ageDebut} ans (référence : rente maximale 2026 = 18 091,80 $/an à 65 ans, MGA = 74 600 $). PSV estimée pour un début à ${ageDebutPsv} ans` +
-      (recuperation > 0 ? `, réduite de ${fmt(Math.round(recuperation))}/an par la récupération fiscale (revenu net > 95 323 $).` : `, sans récupération fiscale prévue selon le revenu de retraite estimé.`) +
+      (recuperation > 0 ? `, réduite de ${fmt(Math.round(recuperation))}/an par la récupération fiscale (revenu net > 93 454 $).` : `, sans récupération fiscale prévue selon le revenu de retraite estimé.`) +
       ` Estimation indicative — consultez Mon dossier (Retraite Québec) pour un relevé exact.`;
   }
 
@@ -5544,7 +5552,7 @@ const FISCAL = {
   ae_taux: 0.0130,
   ae_max_sal: 68900,
   ae_max_cotis: 895.70,
-  exo_pme: 1016602,
+  exo_pme: 1275000,
   scee_taux: 0.20,
   scee_max_an: 500,
   scee_max_vie: 7200,
