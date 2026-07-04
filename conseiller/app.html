@@ -904,10 +904,26 @@ body.dark .new-client-form input{background:#2a2a2a;border-color:#444;color:#e0e
       <div class="card">
         <div class="ch nv">Votre situation</div>
         <div class="cb">
-          <div class="field"><label>Revenu brut annuel ($)</label><input type="number" id="rr-rev" value="75000" min="0" oninput="calcReer()"></div>
-          <div class="field"><label>Âge actuel</label><input type="number" id="rr-age" value="35" min="18" max="75" oninput="calcReer()"></div>
-          <div class="field"><label>Âge de retraite prévu</label><input type="number" id="rr-ret" value="65" min="50" max="75" oninput="calcReer()"></div>
-          <div class="field"><label>Enfants à charge</label><input type="number" id="rr-enf" value="0" min="0" max="10" oninput="calcReer()"></div>
+          <div class="field" style="margin-bottom:16px">
+            <label>Situation familiale</label>
+            <div class="freq-group">
+              <button type="button" class="freq-btn on" id="rr-sit-seul" onclick="setSituationReer('seul')">Célibataire</button>
+              <button type="button" class="freq-btn" id="rr-sit-couple" onclick="setSituationReer('couple')">En couple</button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px">
+            <div>
+              <div style="font-size:10px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Vous</div>
+              <div class="field"><label>Revenu brut annuel ($)</label><input type="number" id="rr-rev" value="75000" min="0" oninput="calcReer()"></div>
+              <div class="field"><label>Âge actuel</label><input type="number" id="rr-age" value="35" min="18" max="75" oninput="calcReer()"></div>
+              <div class="field"><label>Âge de retraite prévu</label><input type="number" id="rr-ret" value="65" min="50" max="75" oninput="calcReer()"></div>
+              <div class="field"><label>Enfants à charge</label><input type="number" id="rr-enf" value="0" min="0" max="10" oninput="calcReer()"></div>
+            </div>
+            <div id="rr-conjoint-col" style="display:none">
+              <div style="font-size:10px;font-weight:700;color:var(--gold-br);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Conjoint(e)</div>
+              <div class="field"><label>Revenu brut annuel ($)</label><input type="number" id="rr-rev2" value="0" min="0" oninput="calcReer()"></div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="card">
@@ -926,10 +942,9 @@ body.dark .new-client-form input{background:#2a2a2a;border-color:#444;color:#e0e
           <div class="field"><label>RPDB employeur ($)</label><input type="number" id="r-rpd" value="0" min="0" oninput="calcReer()"></div>
         </div>
       </div>
-      <div class="card">
-        <div class="ch gd">Profil conjoint(e)</div>
+      <div class="card" id="rr-conjoint-params-card" style="display:none">
+        <div class="ch gd">Paramètres REER — conjoint(e)</div>
         <div class="cb">
-          <div class="field"><label>Revenu brut annuel conjoint(e) ($)</label><input type="number" id="rr-rev2" value="0" min="0" oninput="calcReer()"></div>
           <div class="field">
           <label>Cotisation REER conjoint(e) par période ($)</label>
           <input type="number" id="r-cot2-input" value="825" min="0" oninput="updateFreqEquiv('r-cot2');calcReer()" style="margin-bottom:4px">
@@ -3046,6 +3061,23 @@ function drawNetWorth() {
 }
 
 // ══ REER ══
+// Bascule Célibataire / En couple — affiche ou masque les champs du conjoint(e)
+function setSituationReer(sit){
+  const isCouple = sit==='couple';
+  const btnSeul=document.getElementById('rr-sit-seul'), btnCouple=document.getElementById('rr-sit-couple');
+  if(btnSeul) btnSeul.classList.toggle('on', !isCouple);
+  if(btnCouple) btnCouple.classList.toggle('on', isCouple);
+  const col=document.getElementById('rr-conjoint-col'), card=document.getElementById('rr-conjoint-params-card');
+  if(col) col.style.display = isCouple ? '' : 'none';
+  if(card) card.style.display = isCouple ? '' : 'none';
+  if(!isCouple){
+    const rev2=document.getElementById('rr-rev2'), cot2=document.getElementById('r-cot2-input');
+    if(rev2) rev2.value = 0;
+    if(cot2) cot2.value = 0;
+  }
+  calcReer();
+}
+
 function calcReer(){
   const rev=g('rr-rev'), age=g('rr-age'), ret=g('rr-ret'), enf=g('rr-enf'), rev2=g('rr-rev2');
   const tm=marg(rev);
@@ -3100,10 +3132,11 @@ const AF_SEUIL_COUPLE=60398, AF_SEUIL_MONO=44032, AF_TAUX_RED=0.04;
 // Calcule, pour un revenu/situation donnés, la ventilation marginale de chaque
 // mesure fiscale/aide gouvernementale par tranche de "step" $ cotisée au REER.
 // Réutilisé par le graphique (drawChart) et le tableau détaillé (drawImpactTable).
-function calcImpactPts(rev, enf, rev2, step, maxC, age){
-  rev2 = rev2 || 0;
+// Fabrique les fonctions de calcul des aides (ACE, ACT, Prime travail, Alloc. famille)
+// pour un profil donné — réutilisée par calcImpactPts (paliers uniformes) et
+// calcImpactPtsBreaks (paliers personnalisés, ex. pour le début du graphique).
+function makeCreditFuncs(enf, rev2){
   function aceF(r){return enf>0?enf*7000*Math.max(0,1-Math.max(0,r-36502)*.032/7000):0;}
-
   const actCat = enf>0 ? (rev2>0?'couple_avec':'monoparental') : (rev2>0?'couple_sans':'seul');
   const actIsCouple = actCat==='couple_sans'||actCat==='couple_avec';
   function actF(rn){
@@ -3131,6 +3164,12 @@ function calcImpactPts(rev, enf, rev2, step, maxC, age){
     const reduction = AF_TAUX_RED*Math.max(0, familyNet-seuil);
     return Math.max(totalMin, totalMax-reduction);
   }
+  return {aceF, actF, patF, afF, actCat};
+}
+
+function calcImpactPts(rev, enf, rev2, step, maxC, age){
+  rev2 = rev2 || 0;
+  const {aceF, actF, patF, afF} = makeCreditFuncs(enf, rev2);
 
   const pts=[];
   const plafond = Math.min(maxC||85000, rev);
@@ -3145,6 +3184,30 @@ function calcImpactPts(rev, enf, rev2, step, maxC, age){
     const sol=Math.max(0,Math.max(0,rp-43195)-Math.max(0,rn-43195))*0.06;
     const psv=(age>=65&&rev>80000&&rev<=105000)?Math.max(0,(Math.min(105000,rp)-Math.min(105000,rn))*.15):0;
     pts.push({c,imp,ace,act,pat,af,sol,psv,eff:(imp+ace+act+pat+af+sol+psv)/step});
+  }
+  return pts;
+}
+
+// Variante à paliers personnalisés (largeur variable), ex. [0,1000,3000,5000,10000,15000,...]
+// pour détailler le tout début de la cotisation avant de continuer par tranches de 5000$.
+function calcImpactPtsBreaks(rev, enf, rev2, breakpoints, age){
+  rev2 = rev2 || 0;
+  const {aceF, actF, patF, afF} = makeCreditFuncs(enf, rev2);
+  const pts=[];
+  for(let i=1;i<breakpoints.length;i++){
+    const lo=breakpoints[i-1], hi=Math.min(breakpoints[i], rev);
+    const w=hi-lo;
+    if(w<=0) break;
+    const rn=Math.max(0,rev-hi), rp=Math.max(0,rev-lo);
+    const imp=(marg(rp)+marg(rn))/2*w;
+    const ace=Math.max(0,aceF(rn)-aceF(rp));
+    const act=Math.max(0,actF(rn)-actF(rp));
+    const pat=Math.max(0,patF(rn)-patF(rp));
+    const af=Math.max(0,afF(rn)-afF(rp));
+    const sol=Math.max(0,Math.max(0,rp-43195)-Math.max(0,rn-43195))*0.06;
+    const psv=(age>=65&&rev>80000&&rev<=105000)?Math.max(0,(Math.min(105000,rp)-Math.min(105000,rn))*.15):0;
+    pts.push({c:hi,w,imp,ace,act,pat,af,sol,psv,eff:(imp+ace+act+pat+af+sol+psv)/w});
+    if(hi>=rev) break;
   }
   return pts;
 }
@@ -3374,7 +3437,10 @@ function drawChart(rev,tm,enf,rev2,age){
   svg.setAttribute('width',W);
   const H=220,mL=46,mR=16,mT=18,mB=30,cW=W-mL-mR,cH=H-mT-mB;
 
-  const pts=calcImpactPts(rev,enf,rev2,5000,undefined,age);
+  // Paliers personnalisés : plus détaillés au tout début (0-1k-3k-5k), puis tranches de 5000$
+  const breakpoints=[0,1000,3000,5000];
+  for(let c=10000;c<=Math.min(85000,rev)+5000;c+=5000) breakpoints.push(c);
+  const pts=calcImpactPtsBreaks(rev,enf,rev2,breakpoints,age);
   if(!pts.length){svg.innerHTML='<text x="20" y="30" font-size="12" fill="#999">Aucune donnée</text>';return;}
 
   const segs=[['1E293B','475569','imp','Impôt (fédéral + Québec)'],['0D9488','2DD4BF','ace','Allocation canadienne pour enfants (ACE)'],['0284C7','38BDF8','af','Allocation famille (Québec)'],['7C3AED','A78BFA','act','Allocation canadienne pour travailleurs (ACT)'],['DB2777','F472B6','pat','Prime au travail (Québec)'],['D97706','FBBF24','sol','Crédit de solidarité (Québec)'],['64748B','94A3B8','psv','Récupération pension féd. (PSV)']];
@@ -3386,9 +3452,10 @@ function drawChart(rev,tm,enf,rev2,age){
   const stackTotals = pts.map(t=>{
     let sum=0;
     segs.forEach(([,,k])=>{
-      const growing = t[k]/5000 > 0.0001;
-      if(growing){ preActivated[k]=true; preLastVal[k]=t[k]; sum+=t[k]/5000; }
-      else if(preActivated[k]) sum+=preLastVal[k]/5000;
+      const rate = t[k]/t.w;
+      const growing = rate > 0.0001;
+      if(growing){ preActivated[k]=true; preLastVal[k]=Math.max(preLastVal[k],rate); sum+=rate; }
+      else if(preActivated[k]) sum+=preLastVal[k];
     });
     return sum;
   });
@@ -3445,20 +3512,21 @@ function drawChart(rev,tm,enf,rev2,age){
     const isBest = t.c===best.c;
     let cy=0;
     segs.forEach(([col,,k,label])=>{
-      const growing = t[k]/5000 > 0.0001; // aide en croissance dans cette tranche précise
-      if(growing) { activated[k]=true; lastVal[k]=t[k]; }
+      const rate = t[k]/t.w;
+      const growing = rate > 0.0001; // aide en croissance dans cette tranche précise
+      if(growing) { activated[k]=true; lastVal[k]=Math.max(lastVal[k],rate); }
       const isHeld = !growing && activated[k]; // déjà maximisée, mais toujours reçue
 
       if(growing){
-        const h2=ys(t[k]/5000);
+        const h2=ys(rate);
         if(h2<0.5) return;
         const y=cH-cy-h2;
-        h+=`<rect x="${x}" y="${y}" width="${bW}" height="${h2}" fill="url(#grad-${k})" rx="3" filter="url(#softShadow)"><title>${label} : ${fmt(Math.round(t[k]))} (${fp(t[k]/5000)}) — en croissance dans cette tranche</title></rect>`;
+        h+=`<rect x="${x}" y="${y}" width="${bW}" height="${h2}" fill="url(#grad-${k})" rx="3" filter="url(#softShadow)"><title>${label} : ${fmt(Math.round(t[k]))} (${fp(rate)}) — en croissance dans cette tranche</title></rect>`;
         cy+=h2;
       } else if(isHeld){
-        const h2=Math.max(4,ys(lastVal[k]/5000)); // même hauteur que sa dernière tranche de croissance
+        const h2=Math.max(4,ys(lastVal[k]));
         const y=cH-cy-h2;
-        h+=`<rect x="${x}" y="${y}" width="${bW}" height="${h2}" fill="url(#held-${k})" rx="1.5"><title>${label} : déjà à son maximum (${fmt(Math.round(lastVal[k]))}) — toujours reçue intégralement, mais ne croît plus dans cette tranche</title></rect>`;
+        h+=`<rect x="${x}" y="${y}" width="${bW}" height="${h2}" fill="url(#held-${k})" rx="1.5"><title>${label} : déjà à son maximum (${fp(lastVal[k])} par dollar) — toujours reçue intégralement, mais ne croît plus dans cette tranche</title></rect>`;
         cy+=h2;
       }
     });
@@ -3514,7 +3582,7 @@ function drawChart(rev,tm,enf,rev2,age){
 
   const actCat = enf>0 ? (rev2>0?'couple_avec':'monoparental') : (rev2>0?'couple_sans':'seul');
   const catLabel={seul:'personne seule',couple_sans:'couple sans enfant',monoparental:'famille monoparentale',couple_avec:'couple avec enfant(s)'}[actCat];
-  $('imp-note').innerHTML=`<strong>Tranche optimale (★) : ${fmt(best.c-4999)} – ${fmt(best.c)}</strong> — ${fp(best.eff)} de retour combiné par dollar cotisé.<br>
+  $('imp-note').innerHTML=`<strong>Tranche optimale (★) : ${fmt(best.c-best.w+1)} – ${fmt(best.c)}</strong> — ${fp(best.eff)} de retour combiné par dollar cotisé.<br>
   Calculé pour : ${catLabel}. Survolez une barre pour le détail exact. Estimations indicatives — plusieurs mesures dépendent aussi de facteurs non modélisés ici (garde d'enfants, autres revenus, admissibilité complète). Consultez un fiscaliste pour une analyse précise.`;
 }
 
