@@ -3350,7 +3350,7 @@ function drawImpactTable(rev, enf, rev2, tm, tm2, age){
       <thead><tr>
         <th style="text-align:left">Cotisation</th>
         <th>Qui cotise</th>
-        <th>Impôt évité</th>
+        <th>Impôt évité<br><span style="font-weight:400;font-size:9px;color:#9CA3AF">(sans les aides)</span></th>
         <th>ACE</th>
         <th>Alloc. famille</th>
         <th>ACT</th>
@@ -3363,7 +3363,7 @@ function drawImpactTable(rev, enf, rev2, tm, tm2, age){
       <tbody>${rows}</tbody>
     </table>
     </div>
-    <div class="note" style="margin-top:10px">Montants <strong>cumulatifs</strong> : à chaque palier, le total représente ce qui serait récupéré (impôt + toutes les aides applicables) si ce montant était cotisé au REER cette année. Le "—" indique qu'aucun montant n'est applicable à ce palier pour cette mesure. Le palier <strong>★ aides épuisées</strong> marque le point au-delà duquel seul le remboursement d'impôt standard continue (les bonis ACE/ACT/Prime travail/Alloc. famille/Solidarité sont à leur minimum). <strong>Ce tableau ne tient pas compte des plafonds de cotisation disponibles</strong> — validez les droits réels du client avant de recommander un montant. Estimations indicatives.</div>
+    <div class="note" style="margin-top:10px"><strong>Impôt évité</strong> = remboursement d'impôt pur (fédéral + Québec), sans compter les autres aides — c'est le montant que vous recevriez même une fois toutes les aides ci-dessous épuisées. Montants <strong>cumulatifs</strong> : à chaque palier, le total représente ce qui serait récupéré (impôt + toutes les aides applicables) si ce montant était cotisé au REER cette année. Le "—" indique qu'aucun montant n'est applicable à ce palier pour cette mesure. Le palier <strong>★ aides épuisées</strong> marque le point au-delà duquel seul l'impôt évité continue (les bonis ACE/ACT/Prime travail/Alloc. famille/Solidarité sont à leur minimum, mais restent acquis). <strong>Ce tableau ne tient pas compte des plafonds de cotisation disponibles</strong> — validez les droits réels du client avant de recommander un montant. Estimations indicatives.</div>
   `;
 }
 
@@ -3394,7 +3394,19 @@ function drawChart(rev,tm,enf,rev2,age){
   defs+=`<filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
     <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#000" flood-opacity="0.18"/>
   </filter>`;
+  // Motifs hachurés pour les aides déjà maximisées (toujours reçues, mais qui ne croissent plus)
+  segs.forEach(([c1,,k])=>{
+    defs+=`<pattern id="held-${k}" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+      <rect width="6" height="6" fill="#${c1}" opacity="0.35"/>
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#${c1}" stroke-width="2.5" opacity="0.75"/>
+    </pattern>`;
+  });
   defs+=`</defs>`;
+
+  // Suivi de l'activation de chaque aide à travers les tranches, pour distinguer
+  // « en croissance » (dégradé plein) de « déjà à son maximum, toujours reçue » (hachuré)
+  const activated = {};
+  segs.forEach(([,,k])=>{ activated[k]=false; });
 
   let h=defs+`<g transform="translate(${mL},${mT})">`;
 
@@ -3416,11 +3428,22 @@ function drawChart(rev,tm,enf,rev2,age){
     const isBest = t.c===best.c;
     let cy=0;
     segs.forEach(([col,,k,label])=>{
-      const h2=ys(t[k]/5000);
-      if(h2<0.5) return;
-      const y=cH-cy-h2;
-      h+=`<rect x="${x}" y="${y}" width="${bW}" height="${h2}" fill="url(#grad-${k})" rx="3" filter="url(#softShadow)"><title>${label} : ${fmt(Math.round(t[k]))} (${fp(t[k]/5000)})</title></rect>`;
-      cy+=h2;
+      const growing = t[k]/5000 > 0.0001; // aide en croissance dans cette tranche précise
+      if(growing) activated[k]=true;
+      const isHeld = !growing && activated[k]; // déjà maximisée, mais toujours reçue
+
+      if(growing){
+        const h2=ys(t[k]/5000);
+        if(h2<0.5) return;
+        const y=cH-cy-h2;
+        h+=`<rect x="${x}" y="${y}" width="${bW}" height="${h2}" fill="url(#grad-${k})" rx="3" filter="url(#softShadow)"><title>${label} : ${fmt(Math.round(t[k]))} (${fp(t[k]/5000)}) — en croissance dans cette tranche</title></rect>`;
+        cy+=h2;
+      } else if(isHeld){
+        const h2=6; // bande fixe et fine : indique une aide déjà maximisée, toujours reçue
+        const y=cH-cy-h2;
+        h+=`<rect x="${x}" y="${y}" width="${bW}" height="${h2}" fill="url(#held-${k})" rx="1.5"><title>${label} : déjà à son maximum — toujours reçue intégralement, mais ne croît plus dans cette tranche</title></rect>`;
+        cy+=h2;
+      }
     });
     // Marqueur étoile discret sur la tranche optimale
     if(isBest){
@@ -3465,6 +3488,10 @@ function drawChart(rev,tm,enf,rev2,age){
       <span style="font-size:11px;color:var(--gry);line-height:1.5"><strong style="color:#0F0F0F">Retour effectif</strong> — somme de toutes les mesures ci-dessus, en % du montant cotisé dans cette tranche.</span>
     </div>`;
     lh+=`</div>`;
+    lh+=`<div style="display:flex;gap:8px;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--gry-l)">
+      <span style="width:16px;height:11px;border-radius:2px;background:repeating-linear-gradient(45deg,#999,#999 2px,#ccc 2px,#ccc 4px);flex-shrink:0"></span>
+      <span style="font-size:11px;color:var(--gry);line-height:1.5">Bande <strong style="color:#0F0F0F">hachurée</strong> — l'aide a déjà atteint son maximum ; elle est toujours reçue en entier, mais ne croît plus dans cette tranche.</span>
+    </div>`;
     legZone.innerHTML = lh;
   }
 
