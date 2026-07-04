@@ -955,10 +955,16 @@ body.dark .new-client-form input{background:#2a2a2a;border-color:#444;color:#e0e
   <div class="card">
     <div class="ch gd">Impact fiscal complet — par tranche de 5 000 $ cotisée</div>
     <div class="cb">
+      <div id="imp-kpi-zone"></div>
       <div class="chart-wrap"><svg id="imp-svg" height="220" style="min-width:500px"></svg></div>
       <div id="imp-legend-zone"></div>
       <div class="note" id="imp-note"></div>
-      <div style="margin-top:18px">
+      <div id="imp-opportunity-zone"></div>
+      <div style="margin-top:22px">
+        <div style="font-size:12px;font-weight:700;color:#0F0F0F;margin-bottom:8px">Récupération cumulative selon le montant cotisé</div>
+        <div class="chart-wrap"><svg id="imp-area-svg" height="150" style="min-width:500px"></svg></div>
+      </div>
+      <div style="margin-top:22px">
         <div style="font-size:12px;font-weight:700;color:#0F0F0F;margin-bottom:8px">Détail par palier de cotisation</div>
         <div id="imp-table-zone"></div>
       </div>
@@ -3059,7 +3065,10 @@ function calcReer(){
   const tm2=marg(rev2), plaf2=Math.min(rev2*.18,33810), remb2=getAnnualCot('r-cot2')*tm2;
   $('conj-res').innerHTML=rr('Taux marginal conjoint(e)',fp(tm2))+rr('Plafond REER conjoint(e)',fmt(plaf2))+rr('Remboursement conjoint(e)',`<span class="ok">${fmt(remb2)}</span>`,'hi')+rr('Total remboursements couple',`<span class="ok">${fmt(remb+remb2)}</span>`,'hi');
 
+  drawImpactKPI(rev, enf, plaf, rev2, age, plaf2);
   drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2, age);
+  drawOpportunityBanner(rev, enf, plaf, rev2, age, plaf2);
+  drawCumulativeArea(rev, enf, plaf, rev2, age, plaf2);
   drawChart(rev,tm,enf,plaf,rev2,age);
 
 }
@@ -3144,6 +3153,114 @@ function calcImpactPts(rev, enf, plaf, rev2, step, maxC, dedCap, age){
 }
 
 // Tableau détaillé cumulatif : "à X$ cotisé, voici le total récupéré"
+// Gros KPI en tête de carte : tranche optimale + plafond combiné à respecter
+function drawImpactKPI(rev, enf, plaf, rev2, age, plaf2){
+  const zone = $('imp-kpi-zone');
+  if(!zone) return;
+  const dedCapCombine = plaf + (rev2>0 ? (plaf2||0) : 0);
+  const pts = calcImpactPts(rev, enf, plaf, rev2, 5000, undefined, undefined, age);
+  if(!pts.length){ zone.innerHTML=''; return; }
+  const inRange = pts.filter(t=>t.c<=dedCapCombine);
+  const best = (inRange.length?inRange:pts).reduce((a,b)=>b.eff>a.eff?b:a, pts[0]);
+  zone.innerHTML = `
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px">
+      <div style="flex:1;min-width:220px;background:linear-gradient(135deg,#0F0F0F,#2E2E2E);border-radius:var(--r-lg);padding:18px 20px;color:#fff">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--gold-br);font-weight:700;margin-bottom:6px">★ Tranche optimale</div>
+        <div style="font-size:26px;font-weight:800;line-height:1.15">${fmt(best.c-4999)} – ${fmt(best.c)}</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:5px">${fp(best.eff)} de retour combiné par dollar cotisé dans cette tranche</div>
+      </div>
+      <div style="flex:1;min-width:220px;background:var(--gold-p);border-radius:var(--r-lg);padding:18px 20px">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:#7F6000;font-weight:700;margin-bottom:6px">Plafond ${rev2>0?'combiné du couple':'de cotisation'}</div>
+        <div style="font-size:26px;font-weight:800;color:#0F0F0F;line-height:1.15">${fmt(dedCapCombine)}</div>
+        <div style="font-size:12px;color:#7F6000;margin-top:5px">Au-delà : aucun gain fiscal additionnel possible</div>
+      </div>
+    </div>`;
+}
+
+// Bannière comparant le rendement des premiers dollars cotisés vs les dollars hors plafond
+function drawOpportunityBanner(rev, enf, plaf, rev2, age, plaf2){
+  const zone = $('imp-opportunity-zone');
+  if(!zone) return;
+  const dedCapCombine = plaf + (rev2>0 ? (plaf2||0) : 0);
+  const fine = calcImpactPts(rev, enf, plaf, rev2, 250, Math.min(dedCapCombine+10000, rev+(rev2||0), 85000), dedCapCombine, age);
+  if(!fine.length){ zone.innerHTML=''; return; }
+  const maxC = fine[fine.length-1].c;
+  if(dedCapCombine+5000 > maxC){ zone.innerHTML=''; return; } // pas assez de marge pour comparer
+
+  const sumRange = (lo,hi) => {
+    const slice = fine.filter(t=>t.c>lo && t.c<=hi);
+    const s = k => slice.reduce((a,t)=>a+t[k],0);
+    return {imp:s('imp'),ace:s('ace'),act:s('act'),pat:s('pat'),af:s('af'),sol:s('sol'),psv:s('psv')};
+  };
+  const totalOf = o => o.imp+o.ace+o.act+o.pat+o.af+o.sol+o.psv;
+  const firstAmt = Math.min(5000, dedCapCombine);
+  const first = sumRange(0, firstAmt);
+  const after = sumRange(dedCapCombine, dedCapCombine+5000);
+  const firstTotal = totalOf(first), afterTotal = totalOf(after);
+  const firstEff = firstAmt>0 ? firstTotal/firstAmt : 0;
+  const afterEff = afterTotal/5000;
+
+  zone.innerHTML = `
+    <div style="display:flex;align-items:center;gap:16px;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:var(--r-lg);padding:14px 18px;margin-top:14px;flex-wrap:wrap">
+      <div style="font-size:22px;flex-shrink:0">⚖️</div>
+      <div style="flex:1;min-width:260px;font-size:12px;color:#7F1D1D;line-height:1.7">
+        <strong>Coût d'opportunité :</strong> les ${fmt(firstAmt)} les plus efficaces rapportent
+        <strong style="color:#166534">${fmt(Math.round(firstTotal))}</strong> (${fp(firstEff)}) —
+        alors que 5 000 $ cotisés <strong>au-delà du plafond</strong> ne rapportent que
+        <strong style="color:#991B1B">${fmt(Math.round(afterTotal))}</strong> (${fp(afterEff)}). Chaque dollar excédentaire perd toute sa valeur fiscale.
+      </div>
+    </div>`;
+}
+
+// Graphique en aire montrant la récupération cumulative — s'aplatit visuellement au plafond
+function drawCumulativeArea(rev, enf, plaf, rev2, age, plaf2){
+  const svg = $('imp-area-svg');
+  if(!svg) return;
+  const dedCapCombine = plaf + (rev2>0 ? (plaf2||0) : 0);
+  const W = Math.max(500, svg.parentElement.offsetWidth||700);
+  svg.setAttribute('width', W);
+  const H=150, mL=54, mR=16, mT=14, mB=26, cW=W-mL-mR, cH=H-mT-mB;
+
+  const fine = calcImpactPts(rev, enf, plaf, rev2, 250, Math.min(dedCapCombine+10000, rev+(rev2||0), 85000), dedCapCombine, age);
+  if(!fine.length){ svg.innerHTML=''; return; }
+
+  let cum=0;
+  const cpts = fine.map(t=>{ cum += t.imp+t.ace+t.act+t.pat+t.af+t.sol+t.psv; return {c:t.c, total:cum}; });
+  const maxC = cpts[cpts.length-1].c;
+  const maxTotal = Math.max(...cpts.map(p=>p.total), 1);
+  const xs = c => (c/maxC)*cW;
+  const ys = v => cH - (v/maxTotal)*cH;
+
+  let path = `M0,${cH} `;
+  cpts.forEach(p=>{ path += `L${xs(p.c).toFixed(1)},${ys(p.total).toFixed(1)} `; });
+  path += `L${cW},${cH} Z`;
+  let line = '';
+  cpts.forEach((p,i)=>{ line += (i===0?'M':'L') + `${xs(p.c).toFixed(1)},${ys(p.total).toFixed(1)} `; });
+
+  const capX = xs(dedCapCombine);
+  let h = `<defs><linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#BF8F00" stop-opacity="0.35"/><stop offset="100%" stop-color="#BF8F00" stop-opacity="0.03"/>
+    </linearGradient></defs>`;
+  h += `<g transform="translate(${mL},${mT})">`;
+  [0,.25,.5,.75,1].forEach(f=>{
+    const y = cH - f*cH;
+    h += `<line x1="0" y1="${y}" x2="${cW}" y2="${y}" stroke="#eef1f5" stroke-width="1" stroke-dasharray="3,3"/>`;
+    h += `<text x="-6" y="${y+3}" font-size="9" fill="#9aa0a6" text-anchor="end">${fmt(Math.round(f*maxTotal))}</text>`;
+  });
+  h += `<path d="${path}" fill="url(#areaGrad)"/>`;
+  h += `<path d="${line}" fill="none" stroke="#BF8F00" stroke-width="2.5" stroke-linecap="round"/>`;
+  if(capX>0 && capX<cW){
+    h += `<line x1="${capX}" y1="0" x2="${capX}" y2="${cH}" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="4,3"/>`;
+    h += `<text x="${capX+4}" y="12" font-size="9.5" fill="#DC2626" font-weight="700">Plafond</text>`;
+  }
+  [0,.25,.5,.75,1].forEach(f=>{
+    const c = Math.round(f*maxC);
+    h += `<text x="${xs(c)}" y="${cH+16}" font-size="9" fill="#888" text-anchor="middle">${fmt(c)}</text>`;
+  });
+  h += `</g>`;
+  svg.innerHTML = h;
+}
+
 function drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2, age){
   const zone = $('imp-table-zone');
   if(!zone) return;
@@ -3171,6 +3288,7 @@ function drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2, age){
     .filter((p,i,arr)=>i===arr.length-1||p!==arr[i+1]); // dédoublonner, garder le plafond exact
 
   let rows='';
+  let dividerInserted = false;
   paliers.forEach(target=>{
     const slice = fine.filter(t=>t.c<=target);
     const sum = k => slice.reduce((s,t)=>s+t[k],0);
@@ -3191,6 +3309,23 @@ function drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2, age){
     const isPlaf = target===plaf && !hasConjoint;
     const isPlafCombine = target===dedCapCombine && hasConjoint;
     const isBeyond = target>dedCapCombine;
+
+    // Bannière de séparation, une seule fois, juste avant le premier palier hors plafond
+    if(isBeyond && !dividerInserted){
+      dividerInserted = true;
+      rows += `<tr><td colspan="${hasConjoint?10:9}" style="background:#1F2937;color:#fff;text-align:center;font-weight:700;padding:8px;font-size:11px">
+        🛑 Au-delà de ce point — aucun gain fiscal supplémentaire, peu importe le montant cotisé
+      </td></tr>`;
+    }
+
+    // Carte de chaleur sur le % de retour
+    let pctBg='#F3F4F6', pctFg='#6B7280';
+    if(!isBeyond){
+      if(pct>=45){ pctBg='#DCFCE7'; pctFg='#166534'; }
+      else if(pct>=25){ pctBg='#FEF3C7'; pctFg='#92400E'; }
+      else { pctBg='#FEE2E2'; pctFg='#991B1B'; }
+    }
+
     rows += `<tr style="${(isPlaf||isPlafCombine)?'background:#FFFAED;font-weight:700':isBeyond?'opacity:.55':''}">
       <td>${fmt(target)}${isPlaf?' <span style="font-size:9px;color:#BF8F00">★ plafond</span>':''}${isPlafCombine?' <span style="font-size:9px;color:#BF8F00">★ plafond combiné</span>':''}${isBeyond?' <span style="font-size:9px;color:#999">hors plafond</span>':''}</td>
       <td style="font-size:10px;color:var(--gry);font-weight:500">${repart}</td>
@@ -3202,7 +3337,7 @@ function drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2, age){
       <td>${sol>0?fmt(Math.round(sol)):'—'}</td>
       <td>${psv>0?fmt(Math.round(psv)):'—'}</td>
       <td style="font-weight:700;color:${isBeyond?'#999':'var(--grn)'}">${fmt(Math.round(total))}</td>
-      <td style="font-weight:700">${pct.toFixed(0)}%</td>
+      <td style="font-weight:700;background:${pctBg};color:${pctFg};border-radius:4px;text-align:center">${pct.toFixed(0)}%</td>
     </tr>`;
   });
 
