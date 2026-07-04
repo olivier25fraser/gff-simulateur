@@ -2848,6 +2848,56 @@ body.dark .new-client-form input{background:#2a2a2a;border-color:#444;color:#e0e
 </div><!-- body -->
 <script>
 // ══ DONNÉES FISCALES ══
+// ══════════════════════════════════════════
+// DONNÉES FISCALES CENTRALISÉES 2026 — SOURCE UNIQUE
+// Toute valeur ci-dessous qui change d'une année à l'autre ne doit être
+// modifiée qu'ICI. Les onglets (REER, REEE, REEI, CELI, Achat, Objectif,
+// Succession, Bilan) doivent tous lire FISCAL.xxx plutôt que de recopier
+// le chiffre — c'est ce qui a causé plusieurs incohérences par le passé
+// (seuil PSV différent entre onglets, exonération PME périmée, etc.)
+// SOURCES: ARC, Retraite Québec, Revenu Québec, CQFF, CFFP Sherbrooke.
+// ══════════════════════════════════════════
+const FISCAL = {
+  annee: 2026,
+  reer_plafond: 33810,
+  celi_annuel: 7000,
+  celi_cumul: 109000,
+  celiapp_annuel: 8000,
+  celiapp_vie: 40000,
+  rap_max: 60000,
+  psv_annuel: 8916.60,           // 743,05$/mois (65-74 ans)
+  psv_seuil_recup: 93454,        // en vigueur juil. 2026-juin 2027 (revenu 2025)
+  psv_taux_recup: 0.15,
+  rrq_rente_max_65_annuel: 1507.65*12, // 18 091,80$ — base + régime supplémentaire
+  rrq_mga: 74600,
+  rrq_taux: 0.063,
+  rrq_max: 4479.30,              // cotisation salariale maximale
+  rrq_exemption: 3500,
+  rqap_taux: 0.00430,
+  rqap_max: 442.90,
+  ae_taux: 0.0130,
+  ae_max_sal: 68900,
+  ae_max_cotis: 895.70,
+  exo_pme: 1275000,
+  ace_seuil1: 38237,
+  ace_seuil2: 82847,
+  scee_taux: 0.20,
+  scee_max_an: 500,
+  scee_max_vie: 7200,
+  iqee_taux: 0.10,
+  iqee_max_an: 250,
+  iqee_max_vie: 3600,
+  bcei_max_an: 1000,
+  bcei_max_vie: 20000,
+  bcei_seuil_bas: 38237,
+  bcei_seuil_haut: 58523,
+  scei_max_an: 3500,
+  scei_max_vie: 70000,
+  scei_seuil: 117045,
+  derniere_maj: '2026-06-17',
+  portefeuilles_maj: '2026-04-30',
+};
+
 const PAL=[
   {min:0,     max:54345, t:.2569,tq:.14,  tf:.1169},
   {min:54345, max:58523, t:.3069,tq:.19,  tf:.1169},
@@ -2933,7 +2983,7 @@ function calc(){
         enf=g('p-enf'), sit=g('p-sit'), rev2=g('p-rev2');
   const tm=marg(rev), pi=PAL.findIndex(p=>rev>=p.min&&rev<p.max);
   const yrs=Math.max(1,ret-age);
-  const plafReer=Math.min(rev*.18,33810);
+  const plafReer=Math.min(rev*.18,FISCAL.reer_plafond);
   const rrq=Math.min(Math.max(0,rev-3500)*.063,4479.30);
   const rqap=Math.min(rev*.00430,442.90);
   const ae=Math.min(Math.min(rev,68900)*.0130,895.70);
@@ -3119,9 +3169,9 @@ function calcReer(){
   const rev=g('rr-rev'), age=g('rr-age'), ret=g('rr-ret'), enf=g('rr-enf'), rev2=g('rr-rev2');
   const tm=marg(rev);
   const yrs=Math.max(1,ret-age);
-  const plaf=Math.min(rev*.18,33810);
+  const plaf=Math.min(rev*.18,FISCAL.reer_plafond);
   const cot=getAnnualCot('r'),rend=g('r-rend')/100,sol=g('r-sol'),dro=g('r-dro'),rpd=g('r-rpd');
-  const plafD=Math.max(0,Math.min(rev*.18,33810)+dro-rpd);
+  const plafD=Math.max(0,Math.min(rev*.18,FISCAL.reer_plafond)+dro-rpd);
   const remb=cot*tm,rembFed=cot*getP(rev).tf,rembQc=cot*getP(rev).tq;
   const cout=Math.max(0,cot-remb);
   const st=cot<=plafD?`<span class="ok">✓ Dans le plafond</span>`:`<span class="warn-txt">⚠ Dépasse le plafond</span>`;
@@ -3131,7 +3181,7 @@ function calcReer(){
 
   $('r-proj').innerHTML=rr('Années restantes',yrs+' ans')+rr('Cotisation annuelle',fmt(cot))+rr('Rendement',fp(rend))+rt('Valeur à la retraite',fmt(val));
 
-  const tm2=marg(rev2), plaf2=Math.min(rev2*.18,33810), remb2=getAnnualCot('r-cot2')*tm2;
+  const tm2=marg(rev2), plaf2=Math.min(rev2*.18,FISCAL.reer_plafond), remb2=getAnnualCot('r-cot2')*tm2;
   $('conj-res').innerHTML=rr('Taux marginal conjoint(e)',fp(tm2))+rr('Plafond REER conjoint(e)',fmt(plaf2))+rr('Remboursement conjoint(e)',`<span class="ok">${fmt(remb2)}</span>`,'hi')+rr('Total remboursements couple',`<span class="ok">${fmt(remb+remb2)}</span>`,'hi');
 
   const enfAges = getEnfantsAges();
@@ -3149,7 +3199,7 @@ let rrFutRevManual = false;
 // RRQ proportionnel au revenu actuel (vs MGA), PSV pleine (avant récupération),
 // et retrait FERR minimum sur le solde REER projeté à l'âge de retraite.
 function estimRevenuRetraiteReer(rev, age, ret, val){
-  const MGA=74600, RRQ_MAX_65=1507.65*12, PSV_PLEINE=743.05*12;
+  const MGA=FISCAL.rrq_mga, RRQ_MAX_65=FISCAL.rrq_rente_max_65_annuel, PSV_PLEINE=FISCAL.psv_annuel;
   const rrqEst = Math.min(1, rev/MGA) * RRQ_MAX_65;
   const ferrRetrait = val * ferrMin(Math.max(65, ret));
   let psvEst = PSV_PLEINE;
@@ -3234,7 +3284,7 @@ const AF_MAX_ENFANT=3068, AF_MIN_ENFANT=1221, AF_MONO_MAX=1077, AF_MONO_MIN=430;
 const AF_SEUIL_COUPLE=60398, AF_SEUIL_MONO=44032, AF_TAUX_RED=0.04;
 
 // PSV — récupération 2026-2027 (source : Service Canada / CFFP). Seuil corrigé (était 80000$ à tort).
-const PSV_SEUIL=93454, PSV_TAUX=0.15, PSV_MAX_ANNUEL=743.05*12;
+const PSV_SEUIL=FISCAL.psv_seuil_recup, PSV_TAUX=FISCAL.psv_taux_recup, PSV_MAX_ANNUEL=FISCAL.psv_annuel;
 const PSV_PLAFOND=PSV_SEUIL+PSV_MAX_ANNUEL/PSV_TAUX; // point où la PSV est entièrement récupérée
 
 // Calcule, pour un revenu/situation donnés, la ventilation marginale de chaque
@@ -3251,7 +3301,7 @@ function makeCreditFuncs(enf, rev2, enfAges){
   // Réduction à 2 paliers selon le NOMBRE d'enfants (ceci, en revanche, est exact peu importe l'âge) :
   //   38 237$-82 847$ : 7%(1 enf.) / 13,5%(2) / 19%(3) / 23%(4+)
   //   au-delà de 82 847$ : 3,2%(1) / 5,7%(2) / 8%(3) / 9,5%(4+)
-  const ACE_SEUIL1=38237, ACE_SEUIL2=82847;
+  const ACE_SEUIL1=FISCAL.ace_seuil1, ACE_SEUIL2=FISCAL.ace_seuil2;
   const ACE_TIER1={1:.07,2:.135,3:.19}, ACE_TIER2={1:.032,2:.057,3:.08};
   function aceF(r){
     if(enf<=0) return 0;
@@ -3761,10 +3811,10 @@ function calcReee(){
 function calcReei(){
   const n=g('ei-n'),d=g('ei-d'),f=g('ei-f'),c=getAnnualCot('ei'),r=g('ei-r')/100,rev=g('ei-rev');
   // Seuil de revenu pour la SCEI bonifiée (2e palier fédéral 2026)
-  const SEUIL_SCEI=117045;
+  const SEUIL_SCEI=FISCAL.scei_seuil;
   // Seuils de revenu familial pour le BCEI 2026 (indexés, source Canada.ca) :
   // plein bon (1000$) si revenu ≤ 38 237$, dégressif jusqu'à 58 523$, nul au-delà
-  const BCEI_SEUIL_BAS=38237, BCEI_SEUIL_HAUT=58523;
+  const BCEI_SEUIL_BAS=FISCAL.bcei_seuil_bas, BCEI_SEUIL_HAUT=FISCAL.bcei_seuil_haut;
   let sol=0,totC=0,totBCEI=0,totSCEI=0,rows='';
   for(let a=d;a<=Math.min(f,59);a++){
     // SCEI: versée jusqu'à la fin de l'année des 49 ans
@@ -4421,7 +4471,7 @@ function calcSucc() {
   const cieVal=g('ss-cie-val'), ciePBR=g('ss-cie-pbr');
   const ciePME=document.getElementById('ss-cie-pme')?.value||'non';
   const cieExoDeja=g('ss-cie-exo-deja');
-  const exoPME2026=1275000; // Plafond 2026 de l'exonération cumulative des gains en capital (actions PME admissibles), indexé
+  const exoPME2026=FISCAL.exo_pme; // Plafond 2026 de l'exonération cumulative des gains en capital (actions PME admissibles)
 
   const av1=g('ss-av1'), av2=g('ss-av2'), av3=g('ss-av3'), prime=g('ss-prime');
   const typeAv=document.getElementById('ss-type-av')?.value||'temporaire';
@@ -4605,50 +4655,48 @@ function calcSuccCouple() {
   const totalPrime=prime1+prime2;
   const actifCoupleTotal=reer1+reer2+celi1+celi2+maison;
 
-  document.getElementById('bud-results-col').innerHTML = `
-
-    <!-- SURPLUS / DÉFICIT -->
-    <div class="bud-surplus ${surplus>=0?'ok':'warn'}">
-      <div>
-        <div class="bs-label">${surplus>=0?'Surplus mensuel':'Déficit mensuel'}</div>
-        <div style="font-size:11px;color:${surplus>=0?'#375623':'#C55A11'};margin-top:2px">
-          Revenus ${fmt(Math.round(sumRev))} — Dépenses ${fmt(Math.round(sumDep))}
+  const zoneRes = document.getElementById('succ-res-couple');
+  if (zoneRes) zoneRes.innerHTML = `
+    <div class="g2">
+      <div class="card">
+        <div class="ch ${manqueC1>0?'nv':'gn'}">Si Client 1 décède en premier</div>
+        <div class="cb">
+          ${rr('Besoins totaux estimés', fmt(Math.round(besoinC1)))}
+          ${rr("Impôt REER au décès (taux "+Math.round(tm1*100)+"%)", fmt(impotReer1),'warn')}
+          ${rr('Assurance vie disponible (Client 1)', fmt(av1),'hi')}
+          ${rr(manqueC1>0?'MANQUE DE COUVERTURE':'COUVERTURE SUFFISANTE',
+            manqueC1>0
+              ? '<span style="color:var(--org);font-weight:700">'+fmt(Math.round(manqueC1))+'</span>'
+              : '<span style="color:var(--grn);font-weight:700">Couverture suffisante</span>')}
         </div>
       </div>
-      <div class="bs-val">${surplus>=0?'+':''}${fmt(Math.round(surplus))}</div>
-    </div>
-
-    <!-- DONUT + LÉGENDE -->
-    <div class="card" style="margin-top:14px">
-      <div class="ch nv">Répartition des dépenses</div>
-      <div class="cb" style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap">
-        ${donutHTML}
-        <div style="flex:1;min-width:160px">${legendHTML}</div>
+      <div class="card">
+        <div class="ch ${manqueC2>0?'nv':'gn'}">Si Client 2 décède en premier</div>
+        <div class="cb">
+          ${rr('Besoins totaux estimés', fmt(Math.round(besoinC2)))}
+          ${rr("Impôt REER au décès (taux "+Math.round(tm2*100)+"%)", fmt(impotReer2),'warn')}
+          ${rr('Assurance vie disponible (Client 2)', fmt(av2),'hi')}
+          ${rr(manqueC2>0?'MANQUE DE COUVERTURE':'COUVERTURE SUFFISANTE',
+            manqueC2>0
+              ? '<span style="color:var(--org);font-weight:700">'+fmt(Math.round(manqueC2))+'</span>'
+              : '<span style="color:var(--grn);font-weight:700">Couverture suffisante</span>')}
+        </div>
       </div>
     </div>
-
-    <!-- RÈGLE 50/30/20 -->
-    <div class="card" style="margin-top:14px">
-      <div class="ch gd">Règle 50 / 30 / 20 — Comment vous vous situez</div>
+    <div class="card" style="margin-top:16px">
+      <div class="ch gd">Portrait financier du couple</div>
       <div class="cb">
-        <div style="font-size:11px;color:var(--gry);margin-bottom:4px">
-          Une règle simple pour équilibrer son budget : 50% pour les besoins, 30% pour les désirs, 20% pour l'épargne.
-        </div>
-        ${regle50_30_20}
+        ${rr('Actif combiné (REER + CELI + résidence)', fmt(Math.round(actifCoupleTotal)),'hi')}
+        ${rr('Assurance vie totale en vigueur', fmt(totalAvCouple),'hi')}
+        ${rr('Primes mensuelles totales', fmt(totalPrime))}
+        ${rr('Hypothèque (dette commune)', fmt(hypo))}
+        ${rr("Résidence principale — exempte d'impôt", fmt(maison),'hi')}
+        ${rr('Enfants à charge', enf+'')}
       </div>
-    </div>
+    </div>`;
 
-    <!-- KPIs annuels -->
-    <div class="kpis" style="margin-top:14px">
-      <div class="kpi"><div class="kl">Revenus annuels</div><div class="kv">${fmt(Math.round(sumRev*12))}</div><div class="ks">${fmt(Math.round(sumRev))}/mois</div></div>
-      <div class="kpi gd"><div class="kl">Dépenses annuelles</div><div class="kv">${fmt(Math.round(sumDep*12))}</div><div class="ks">${fmt(Math.round(sumDep))}/mois</div></div>
-      <div class="kpi ${taux_ep>=15?'gn':'or'}"><div class="kl">Taux d'épargne</div><div class="kv">${taux_ep}%</div><div class="ks">Cible: 15-20%</div></div>
-      <div class="kpi ${surplus>=0?'gn':'or'}"><div class="kl">Surplus annuel</div><div class="kv">${fmt(Math.round(surplus*12))}</div><div class="ks">${surplus>=0?'Disponible à investir':'À corriger'}</div></div>
-    </div>
-
-    <!-- CONSEILS -->
-    ${conseils.length?`<div class="bud-conseil"><strong>Recommandations :</strong><ul style="margin:6px 0 0 16px">${conseils.map(c=>`<li style="margin-bottom:4px">${c}</li>`).join('')}</ul></div>`:'<div class="bud-conseil">Votre budget semble bien équilibré. Continuez à suivre vos dépenses mensuellement.</div>'}
-  `;
+  const noteEl = document.getElementById('succ-note-couple');
+  if (noteEl) noteEl.textContent = "Chaque scénario suppose le décès d'un seul conjoint. Les besoins incluent le remplacement de revenu du survivant sur " + ans + " ans, l'hypothèque, les frais funéraires (15 000$ estimés) et 40 000$ par enfant à charge. L'impôt REER est calculé sur le taux marginal du conjoint décédé; un transfert au REER du survivant permet généralement de le reporter. Calculs basés sur les règles fiscales canadiennes 2026 — consultez un notaire et un planificateur financier agréé.";
 }
 
 
@@ -4676,7 +4724,7 @@ function calcAchatCouple() {
     const rembCel=celTot*tm;
     let rF=reerSol, rTot=0;
     for(let i=0;i<horizon;i++){
-      const plaf=Math.min(rev*0.18,33810);
+      const plaf=Math.min(rev*0.18,FISCAL.reer_plafond);
       const a=Math.min(cotReer,plaf);
       rF=(rF+a)*(1+mRendNet); rTot+=a;
     }
@@ -4830,7 +4878,7 @@ function calcAchat() {
   let reerFutur = reerSol;
   let reerCotTotale = 0;
   for (let i = 0; i < horizon; i++) {
-    const plaf = Math.min(rev * 0.18, 33810);
+    const plaf = Math.min(rev * 0.18, FISCAL.reer_plafond);
     const cotAn = Math.min(cotReer, plaf);
     reerFutur = (reerFutur + cotAn) * (1 + rend);
     reerCotTotale += cotAn;
@@ -4935,13 +4983,13 @@ function calcAchat() {
 // ── Estimation RRQ et PSV selon revenu et âge (paramètres officiels 2026) ──
 // Sources : Retraite Québec (retraitequebec.gouv.qc.ca/fr/montants-prestations-et-donnees-base)
 //           Service Canada — Sécurité de la vieillesse (avril 2026)
-const RRQ_MGA_2026      = 74600;      // Maximum des gains admissibles
-const RRQ_MAX_65_AN     = 1507.65*12; // Rente maximale à 65 ans (base + supplémentaire) = 18 091,80 $
+const RRQ_MGA_2026      = FISCAL.rrq_mga;      // Maximum des gains admissibles
+const RRQ_MAX_65_AN     = FISCAL.rrq_rente_max_65_annuel; // Rente maximale à 65 ans (base + supplémentaire) = 18 091,80 $
 const RRQ_REDUC_MOIS    = 0.006;      // Réduction avant 65 ans (~0,6 %/mois)
 const RRQ_MAJ_MOIS      = 0.007;      // Majoration après 65 ans (0,7 %/mois, jusqu'à 72 ans)
-const PSV_MAX_65_74_AN  = 743.05*12;  // Pension maximale 65-74 ans = 8 916,60 $ (T2 2026)
+const PSV_MAX_65_74_AN  = FISCAL.psv_annuel;  // Pension maximale 65-74 ans = 8 916,60 $ (T2 2026)
 const PSV_MAJ_MOIS      = 0.006;      // Majoration pour report (0,6 %/mois, jusqu'à 70 ans)
-const PSV_SEUIL_RECUP   = 93454;      // Seuil de récupération fiscale en vigueur (juil. 2026-juin 2027, basé sur revenu 2025) — aligné avec l'onglet REER
+const PSV_SEUIL_RECUP   = FISCAL.psv_seuil_recup;      // Seuil de récupération fiscale en vigueur (juil. 2026-juin 2027, basé sur revenu 2025)
 
 function estimRRQPSV() {
   const revenu = g('ob-revenu');
@@ -5608,45 +5656,6 @@ function toggleDark() {
     : '<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> Mode sombre';
   try { localStorage.setItem('gff_dark', dark ? '1' : '0'); } catch(e){}
 }
-
-// ══════════════════════════════════════════
-// DONNÉES FISCALES CENTRALISÉES 2026
-// ══════════════════════════════════════════
-const FISCAL = {
-  annee: 2026,
-  reer_plafond: 33810,
-  celi_annuel: 7000,
-  celi_cumul: 109000,
-  celiapp_annuel: 8000,
-  celiapp_vie: 40000,
-  rap_max: 60000,
-  psv_annuel: 8916.60,
-  psv_seuil_recup: 93454,
-  rrq_taux: 0.063,
-  rrq_max: 4479.30,
-  rrq_mga: 74600,
-  rrq_exemption: 3500,
-  rqap_taux: 0.00430,
-  rqap_max: 442.90,
-  ae_taux: 0.0130,
-  ae_max_sal: 68900,
-  ae_max_cotis: 895.70,
-  exo_pme: 1275000,
-  scee_taux: 0.20,
-  scee_max_an: 500,
-  scee_max_vie: 7200,
-  iqee_taux: 0.10,
-  iqee_max_an: 250,
-  iqee_max_vie: 3600,
-  bcei_max_an: 1000,
-  bcei_max_vie: 20000,
-  scei_max_an: 3500,
-  scei_max_vie: 70000,
-  // SOURCES: ARC, Retraite Québec, RAMQ, Revenu Québec — vérifié 17 juin 2026
-  // MISE À JOUR: Janvier 2027
-  derniere_maj: '2026-06-17',
-  portefeuilles_maj: '2026-04-30',
-};
 
 // ══════════════════════════════════════════
 // ALERTE MISE À JOUR ANNUELLE
