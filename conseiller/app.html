@@ -3052,7 +3052,7 @@ function calcReer(){
   const yrs=Math.max(1,ret-age);
   const plaf=Math.min(rev*.18,33810);
   const cot=getAnnualCot('r'),rend=g('r-rend')/100,sol=g('r-sol'),dro=g('r-dro'),rpd=g('r-rpd');
-  const plafD=Math.max(0,Math.min(rev*.18+dro,33810)-rpd);
+  const plafD=Math.max(0,Math.min(rev*.18,33810)+dro-rpd);
   const remb=cot*tm,rembFed=cot*getP(rev).tf,rembQc=cot*getP(rev).tq;
   const cout=Math.max(0,cot-remb);
   const st=cot<=plafD?`<span class="ok">✓ Dans le plafond</span>`:`<span class="warn-txt">⚠ Dépasse le plafond</span>`;
@@ -3065,11 +3065,11 @@ function calcReer(){
   const tm2=marg(rev2), plaf2=Math.min(rev2*.18,33810), remb2=getAnnualCot('r-cot2')*tm2;
   $('conj-res').innerHTML=rr('Taux marginal conjoint(e)',fp(tm2))+rr('Plafond REER conjoint(e)',fmt(plaf2))+rr('Remboursement conjoint(e)',`<span class="ok">${fmt(remb2)}</span>`,'hi')+rr('Total remboursements couple',`<span class="ok">${fmt(remb+remb2)}</span>`,'hi');
 
-  drawImpactKPI(rev, enf, plaf, rev2, age, plaf2);
-  drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2, age);
-  drawOpportunityBanner(rev, enf, plaf, rev2, age, plaf2);
-  drawCumulativeArea(rev, enf, plaf, rev2, age, plaf2);
-  drawChart(rev,tm,enf,plaf,rev2,age);
+  drawImpactKPI(rev, enf, plafD, rev2, age, plaf2);
+  drawImpactTable(rev, enf, plafD, rev2, tm, tm2, plaf2, age);
+  drawOpportunityBanner(rev, enf, plafD, rev2, age, plaf2);
+  drawCumulativeArea(rev, enf, plafD, rev2, age, plaf2);
+  drawChart(rev,tm,enf,plafD,rev2,age);
 
 }
 
