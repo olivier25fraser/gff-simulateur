@@ -130,6 +130,20 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#eef2f9;color:var(--n
 /* NOTE */
 .note{font-size:10px;color:var(--gry);line-height:1.6;background:var(--gold-p);border-left:3px solid var(--gold);padding:10px 14px;border-radius:0 var(--r) var(--r) 0;margin-top:14px}
 
+/* ── FAQ accordéon ── */
+.faq-card{margin-top:20px}
+.faq-item{border-bottom:1px solid var(--gry-l)}
+.faq-item:last-child{border-bottom:none}
+.faq-item summary{cursor:pointer;padding:13px 4px;font-weight:700;font-size:12.5px;color:#0F0F0F;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:'+';font-size:16px;font-weight:400;color:var(--gold);flex-shrink:0;transition:transform .2s}
+.faq-item[open] summary::after{content:'\2212'}
+.faq-item summary:hover{color:var(--gold)}
+.faq-answer{padding:0 22px 15px 4px;font-size:12px;color:var(--gry);line-height:1.7}
+.faq-answer strong{color:#0F0F0F}
+body.dark .faq-item{border-color:#333}
+body.dark .faq-item summary{color:#eee}
+
 /* CHART */
 #imp-svg{display:block;width:100%}
 .chart-wrap{overflow-x:auto}
@@ -748,10 +762,9 @@ body.dark .new-client-form input{background:#2a2a2a;border-color:#444;color:#e0e
 </header>
 
 <div class="tabs" id="tabs">
-  <button class="tab on" onclick="show('profil',this)">Profil client</button>
+  <button class="tab on" onclick="show('profil',this)">Bilan patrimonial</button>
   <button class="tab" onclick="show('reer',this)">REER</button>
   <button class="tab" onclick="show('celi',this)">CELI</button>
-  <button class="tab" onclick="show('comp',this)">Comparatif</button>
   <button class="tab" onclick="show('reee',this)">REEE</button>
   <button class="tab" onclick="show('reei',this)">REEI</button>
   <button class="tab" onclick="show('achat',this)">CELIAPP / RAP</button>
@@ -988,67 +1001,45 @@ body.dark .new-client-form input{background:#2a2a2a;border-color:#444;color:#e0e
     </div>
   </div>
 
-  <!-- Notice REEE privé vs public -->
-  <div class="card" style="margin-top:0">
-    <div class="ch nv">REEE individuel ou familial vs régime collectif &mdash; Ce qu&apos;il faut savoir</div>
-    <div class="cb">
+  <div class="card faq-card">
+    <div class="ch nv">Questions et réponses — REEE</div>
+    <div class="cb" style="padding:4px 14px">
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
-
-        <div style="background:#E2EFDA;border-radius:10px;padding:18px 20px;border-left:4px solid #375623">
-          <div style="font-size:13px;font-weight:700;color:#375623;margin-bottom:10px">REEE individuel ou familial</div>
-          <div style="font-size:11px;color:#595959;line-height:1.8">
-            <div>&#10003; <strong>Flexibilit&eacute; totale</strong> &mdash; vous choisissez o&ugrave; investir (FNB, fonds, obligations)</div>
-            <div>&#10003; <strong>Frais bas</strong> &mdash; surtout avec des FNB &agrave; faible RFG</div>
-            <div>&#10003; <strong>Pas de contrat contraignant</strong> &mdash; modifier ou arr&ecirc;ter les cotisations en tout temps</div>
-            <div>&#10003; <strong>Cotisations r&eacute;cup&eacute;rables</strong> &mdash; si l&apos;enfant ne fait pas d&apos;&eacute;tudes, vous r&eacute;cup&eacute;rez vos cotisations sans p&eacute;nalit&eacute;</div>
-            <div>&#10003; <strong>REEE familial</strong> &mdash; une cotisation pour plusieurs enfants, subventions transf&eacute;rables</div>
-            <div>&#10003; <strong>Aucun frais d&apos;inscription ni de rachat</strong></div>
-          </div>
+      <details class="faq-item">
+        <summary>Quelle est la différence entre un REEE individuel/familial et un régime collectif (Kaleido, CST, Héritage...)?</summary>
+        <div class="faq-answer">
+          Un REEE individuel ou familial ouvert dans une institution financière offre une flexibilité totale (vous choisissez les placements, modifiez ou arrêtez les cotisations en tout temps) et des frais généralement bas (0,2&nbsp;% à 2&nbsp;%). Un régime collectif impose un calendrier de cotisations fixe, facture souvent des frais plus élevés (2&nbsp;% à 3,5&nbsp;% plus des frais cachés) et peut appliquer des pénalités importantes en cas d'arrêt prématuré. Les subventions gouvernementales (SCEE et IQEE) sont identiques dans les deux types de régimes.
         </div>
+      </details>
 
-        <div style="background:#FCE4D6;border-radius:10px;padding:18px 20px;border-left:4px solid #C55A11">
-          <div style="font-size:13px;font-weight:700;color:#C55A11;margin-bottom:10px">R&eacute;gimes collectifs (Kaleido, CST, H&eacute;ritage...)</div>
-          <div style="font-size:11px;color:#595959;line-height:1.8">
-            <div>&#9888; <strong>Contrat rigide</strong> &mdash; cotisations fixes selon un calendrier impos&eacute;</div>
-            <div>&#9888; <strong>Frais &eacute;lev&eacute;s</strong> &mdash; inscription, gestion, vente, commissions cach&eacute;es</div>
-            <div>&#9888; <strong>P&eacute;nalit&eacute;s importantes</strong> &mdash; si vous arr&ecirc;tez, vous perdez des ann&eacute;es de rendement</div>
-            <div>&#9888; <strong>Rendement partag&eacute;</strong> &mdash; les gains sont mis en commun entre tous les souscripteurs</div>
-            <div>&#9888; <strong>Conditions strictes</strong> &mdash; l&apos;enfant doit s&apos;inscrire dans un programme pr&eacute;cis admissible</div>
-            <div>&#9888; <strong>Frais de rachat</strong> &mdash; p&eacute;nalit&eacute;s substantielles si l&apos;enfant ne poursuit pas ses &eacute;tudes</div>
-          </div>
+      <details class="faq-item">
+        <summary>Combien de subventions gouvernementales puis-je recevoir?</summary>
+        <div class="faq-answer">
+          La SCEE fédérale verse 20&nbsp;% sur les premiers 2&nbsp;500&nbsp;$ cotisés par année (max 500&nbsp;$/an, 7&nbsp;200&nbsp;$ à vie), avec un supplément de 10&nbsp;% à 20&nbsp;% sur 500&nbsp;$ pour les familles à revenu plus faible. L'IQEE du Québec ajoute 10&nbsp;% sur les mêmes cotisations (max 250&nbsp;$/an, 3&nbsp;600&nbsp;$ à vie), avec un supplément similaire selon le revenu.
         </div>
-      </div>
+      </details>
 
-      <div style="overflow-x:auto;margin-bottom:16px">
-        <table style="width:100%;border-collapse:collapse;font-size:11px">
-          <thead>
-            <tr>
-              <th style="padding:8px 12px;background:#0F0F0F;color:#fff;text-align:left">Crit&egrave;re</th>
-              <th style="padding:8px 12px;background:#375623;color:#fff;text-align:center">REEE individuel / familial</th>
-              <th style="padding:8px 12px;background:#C55A11;color:#fff;text-align:center">R&eacute;gime collectif</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td style="padding:7px 12px;font-weight:600;color:#595959;border-bottom:1px solid #e8e8e8">Flexibilit&eacute; des cotisations</td><td style="padding:7px 12px;text-align:center;color:#375623;font-weight:600;border-bottom:1px solid #e8e8e8">&#10003; Totale</td><td style="padding:7px 12px;text-align:center;color:#C55A11;border-bottom:1px solid #e8e8e8">&#9888; Calendrier fix&eacute;</td></tr>
-            <tr style="background:#f8f8f8"><td style="padding:7px 12px;font-weight:600;color:#595959;border-bottom:1px solid #e8e8e8">Frais de gestion (RFG)</td><td style="padding:7px 12px;text-align:center;color:#375623;font-weight:600;border-bottom:1px solid #e8e8e8">&#10003; 0,2% &agrave; 2%</td><td style="padding:7px 12px;text-align:center;color:#C55A11;border-bottom:1px solid #e8e8e8">&#9888; 2% &agrave; 3,5% + frais cach&eacute;s</td></tr>
-            <tr><td style="padding:7px 12px;font-weight:600;color:#595959;border-bottom:1px solid #e8e8e8">Frais d&apos;inscription</td><td style="padding:7px 12px;text-align:center;color:#375623;font-weight:600;border-bottom:1px solid #e8e8e8">&#10003; Aucun</td><td style="padding:7px 12px;text-align:center;color:#C55A11;border-bottom:1px solid #e8e8e8">&#9888; 200 &agrave; 400 $</td></tr>
-            <tr style="background:#f8f8f8"><td style="padding:7px 12px;font-weight:600;color:#595959;border-bottom:1px solid #e8e8e8">P&eacute;nalit&eacute; si arr&ecirc;t pr&eacute;matur&eacute;</td><td style="padding:7px 12px;text-align:center;color:#375623;font-weight:600;border-bottom:1px solid #e8e8e8">&#10003; Aucune sur vos cotisations</td><td style="padding:7px 12px;text-align:center;color:#C55A11;border-bottom:1px solid #e8e8e8">&#9888; Perte du rendement pass&eacute;</td></tr>
-            <tr><td style="padding:7px 12px;font-weight:600;color:#595959;border-bottom:1px solid #e8e8e8">Choix de placements</td><td style="padding:7px 12px;text-align:center;color:#375623;font-weight:600;border-bottom:1px solid #e8e8e8">&#10003; Libre (FNB, fonds, actions)</td><td style="padding:7px 12px;text-align:center;color:#C55A11;border-bottom:1px solid #e8e8e8">&#9888; Portefeuille collectif impos&eacute;</td></tr>
-            <tr style="background:#f8f8f8"><td style="padding:7px 12px;font-weight:600;color:#595959;border-bottom:1px solid #e8e8e8">SCEE f&eacute;d&eacute;rale (20%)</td><td style="padding:7px 12px;text-align:center;color:#375623;font-weight:600;border-bottom:1px solid #e8e8e8">&#10003; Oui</td><td style="padding:7px 12px;text-align:center;color:#375623;font-weight:600;border-bottom:1px solid #e8e8e8">&#10003; Oui</td></tr>
-            <tr><td style="padding:7px 12px;font-weight:600;color:#595959;border-bottom:1px solid #e8e8e8">IQEE Qu&eacute;bec (10%)</td><td style="padding:7px 12px;text-align:center;color:#375623;font-weight:600;border-bottom:1px solid #e8e8e8">&#10003; Oui</td><td style="padding:7px 12px;text-align:center;color:#375623;font-weight:600;border-bottom:1px solid #e8e8e8">&#10003; Oui</td></tr>
-            <tr style="background:#f8f8f8"><td style="padding:7px 12px;font-weight:600;color:#595959">Si enfant ne fait pas d&apos;&eacute;tudes</td><td style="padding:7px 12px;text-align:center;color:#375623;font-weight:600">&#10003; Cotisations r&eacute;cup&eacute;r&eacute;es librement</td><td style="padding:7px 12px;text-align:center;color:#C55A11">&#9888; P&eacute;nalit&eacute;s selon contrat</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <details class="faq-item">
+        <summary>Que se passe-t-il si mon enfant ne fait pas d'études postsecondaires?</summary>
+        <div class="faq-answer">
+          Dans un REEE individuel ou familial, vous récupérez vos cotisations sans pénalité. Les subventions gouvernementales non utilisées doivent être remboursées au gouvernement. Dans un régime collectif, des pénalités contractuelles peuvent s'appliquer en plus, selon les termes du contrat signé.
+        </div>
+      </details>
 
-      <div style="background:#FFFAED;border-left:3px solid #BF8F00;padding:14px 16px;border-radius:0 6px 6px 0;font-size:12px;color:#7F6000;line-height:1.7">
-        <strong>Notre recommandation :</strong> Dans la grande majorit&eacute; des cas, un REEE individuel ou familial ouvert aupr&egrave;s d&apos;une institution financi&egrave;re offre plus de flexibilit&eacute;, des frais plus bas et de meilleures conditions. Les r&eacute;gimes collectifs utilisent souvent des techniques de vente agressives &mdash; lisez attentivement le contrat avant de signer.
-        <strong>Les subventions gouvernementales (SCEE et IQEE) sont identiques dans les deux types de r&eacute;gimes.</strong>
+      <details class="faq-item">
+        <summary>Quel est le plafond de cotisation et jusqu'à quel âge peut-on cotiser?</summary>
+        <div class="faq-answer">
+          Le plafond de cotisation à vie est de 50&nbsp;000&nbsp;$ par bénéficiaire. Les subventions gouvernementales sont versées jusqu'aux 17&nbsp;ans du bénéficiaire.
+        </div>
+      </details>
+
+      <div style="background:#FFFAED;border-left:3px solid #BF8F00;padding:14px 16px;border-radius:0 6px 6px 0;font-size:12px;color:#7F6000;line-height:1.7;margin-top:14px">
+        <strong>Notre recommandation :</strong> Dans la grande majorité des cas, un REEE individuel ou familial ouvert auprès d'une institution financière offre plus de flexibilité, des frais plus bas et de meilleures conditions que les régimes collectifs.
       </div>
 
     </div>
   </div>
+
 
 </div>
 
@@ -1094,116 +1085,52 @@ body.dark .new-client-form input{background:#2a2a2a;border-color:#444;color:#e0e
     </div>
   </div>
 
-  <!-- Notice REEI avantages et admissibilité -->
-  <div class="card" style="margin-top:18px">
-    <div class="ch nv">REEI &mdash; Avantages, admissibilit&eacute; et cas d&apos;application</div>
-    <div class="cb">
+  <div class="card faq-card">
+    <div class="ch nv">Questions et réponses — REEI</div>
+    <div class="cb" style="padding:4px 14px">
 
-      <div style="background:#0F0F0F;border-radius:var(--r-lg);padding:16px 20px;margin-bottom:20px;display:flex;gap:14px;align-items:flex-start">
-        <div style="font-size:28px;flex-shrink:0;color:var(--gold-br)">&#9888;</div>
-        <div>
-          <div style="color:var(--gold-br);font-weight:700;font-size:14px;margin-bottom:4px">Condition obligatoire : Cr&eacute;dit d&apos;imp&ocirc;t pour personnes handicap&eacute;es (CIPH)</div>
-          <div style="color:rgba(255,255,255,.75);font-size:12px;line-height:1.6">Pour ouvrir un REEI, le b&eacute;n&eacute;ficiaire doit &ecirc;tre admissible au CIPH f&eacute;d&eacute;ral. Ce cr&eacute;dit est accord&eacute; par l&apos;ARC sur recommandation d&apos;un m&eacute;decin ou d&apos;un professionnel de la sant&eacute; d&eacute;sign&eacute;. Sans le CIPH, aucun REEI ne peut &ecirc;tre ouvert.</div>
+      <details class="faq-item">
+        <summary>Qui est admissible à un REEI?</summary>
+        <div class="faq-answer">
+          Le bénéficiaire doit être admissible au Crédit d'impôt pour personnes handicapées (CIPH) fédéral, accordé par l'ARC sur recommandation d'un médecin ou d'un professionnel de la santé désigné. Sans le CIPH, aucun REEI ne peut être ouvert. Cela couvre notamment les personnes avec un handicap physique ou intellectuel, les enfants avec des besoins particuliers (autisme, paralysie cérébrale, déficiences visuelles ou auditives graves), les maladies chroniques graves (diabète de type 1, épilepsie sévère) et les blessures permanentes reconnues par l'ARC.
         </div>
-      </div>
+      </details>
 
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--gry);margin-bottom:12px">&#192; qui s&apos;adresse le REEI ?</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:20px">
-        <div style="background:var(--blue-p);border-radius:var(--r-lg);padding:13px 15px">
-          <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:5px">Personnes handicap&eacute;es</div>
-          <div style="font-size:11px;color:var(--gry);line-height:1.5">Toute personne physique ou intellectuelle admissible au CIPH &mdash; enfant ou adulte.</div>
+      <details class="faq-item">
+        <summary>Qu'est-ce que la SCEI et combien puis-je recevoir?</summary>
+        <div class="faq-answer">
+          La Subvention canadienne pour l'épargne-invalidité verse jusqu'à 3&nbsp;500&nbsp;$/an. Pour un revenu familial ≤&nbsp;106&nbsp;717&nbsp;$ : 300&nbsp;% sur les premiers 500&nbsp;$ cotisés (1&nbsp;500&nbsp;$) et 200&nbsp;% sur les 1&nbsp;000&nbsp;$ suivants (2&nbsp;000&nbsp;$). Pour un revenu supérieur : 100&nbsp;% sur le premier 1&nbsp;000&nbsp;$. Le plafond à vie est de 70&nbsp;000&nbsp;$, versé jusqu'à la fin de l'année des 49&nbsp;ans du bénéficiaire.
         </div>
-        <div style="background:var(--blue-p);border-radius:var(--r-lg);padding:13px 15px">
-          <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:5px">Enfants avec besoins particuliers</div>
-          <div style="font-size:11px;color:var(--gry);line-height:1.5">Autisme, paralysie c&eacute;r&eacute;brale, d&eacute;ficiences visuelles ou auditives graves, TSA.</div>
-        </div>
-        <div style="background:var(--blue-p);border-radius:var(--r-lg);padding:13px 15px">
-          <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:5px">Maladies chroniques graves</div>
-          <div style="font-size:11px;color:var(--gry);line-height:1.5">Diab&egrave;te de type&nbsp;1, &eacute;pilepsie s&eacute;v&egrave;re, maladies mentales s&eacute;v&egrave;res, d&eacute;ficiences cognitives.</div>
-        </div>
-        <div style="background:var(--blue-p);border-radius:var(--r-lg);padding:13px 15px">
-          <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:5px">Blessures permanentes</div>
-          <div style="font-size:11px;color:var(--gry);line-height:1.5">Accident ayant caus&eacute; une incapacit&eacute; physique significative et durable reconnue par l&apos;ARC.</div>
-        </div>
-      </div>
+      </details>
 
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--gry);margin-bottom:12px">Les 3 grands avantages du REEI</div>
-      <div class="g3" style="margin-bottom:20px">
+      <details class="faq-item">
+        <summary>Qu'est-ce que le BCEI?</summary>
+        <div class="faq-answer">
+          Le Bon canadien pour l'épargne-invalidité verse jusqu'à 1&nbsp;000&nbsp;$/an <strong>sans aucune cotisation requise</strong>, précieux pour les familles à faible revenu. Le montant plein s'applique pour un revenu familial ≤&nbsp;35&nbsp;999&nbsp;$, un montant partiel entre 36&nbsp;000&nbsp;$ et 55&nbsp;867&nbsp;$. Le plafond à vie est de 20&nbsp;000&nbsp;$.
+        </div>
+      </details>
 
-        <div style="background:var(--grn-l);border-radius:var(--r-lg);padding:16px;border-top:3px solid var(--grn)">
-          <div style="font-size:20px;margin-bottom:8px">&#128181;</div>
-          <div style="font-size:12px;font-weight:700;color:var(--grn);margin-bottom:8px">SCEI &mdash; Subvention canadienne</div>
-          <div style="font-size:11px;color:var(--gry);line-height:1.7">
-            Jusqu&apos;&agrave; <strong>3&nbsp;500&nbsp;$/an</strong> de subvention f&eacute;d&eacute;rale.<br><br>
-            <strong>Revenu fam. &le;&nbsp;106&nbsp;717&nbsp;$&nbsp;:</strong><br>
-            300&nbsp;% sur les 500&nbsp;$ cotis&eacute;s = 1&nbsp;500&nbsp;$<br>
-            200&nbsp;% sur les 1&nbsp;000&nbsp;$ suivants = 2&nbsp;000&nbsp;$<br><br>
-            <strong>Revenu fam. &gt;&nbsp;106&nbsp;717&nbsp;$&nbsp;:</strong><br>
-            100&nbsp;% sur 1&nbsp;000&nbsp;$ = 1&nbsp;000&nbsp;$<br><br>
-            Plafond &agrave; vie&nbsp;: <strong>70&nbsp;000&nbsp;$</strong>
-          </div>
+      <details class="faq-item">
+        <summary>Quelle est la « règle des 10 ans »?</summary>
+        <div class="faq-answer">
+          Si des subventions (SCEI ou BCEI) ont été versées, le REEI ne peut pas être fermé avant 10&nbsp;ans sans devoir rembourser ces subventions au gouvernement. C'est un facteur important à considérer avant tout retrait anticipé.
         </div>
+      </details>
 
-        <div style="background:var(--gold-p);border-radius:var(--r-lg);padding:16px;border-top:3px solid var(--gold)">
-          <div style="font-size:20px;margin-bottom:8px">&#127381;</div>
-          <div style="font-size:12px;font-weight:700;color:var(--gold);margin-bottom:8px">BCEI &mdash; Bon canadien</div>
-          <div style="font-size:11px;color:var(--gry);line-height:1.7">
-            Jusqu&apos;&agrave; <strong>1&nbsp;000&nbsp;$/an</strong> vers&eacute; <strong>sans aucune cotisation requise</strong>.<br><br>
-            <strong>Revenu fam. &le;&nbsp;35&nbsp;999&nbsp;$&nbsp;:</strong><br>
-            1&nbsp;000&nbsp;$ automatiquement chaque ann&eacute;e<br><br>
-            <strong>Entre 36&nbsp;000 et 55&nbsp;867&nbsp;$&nbsp;:</strong><br>
-            Montant partiel calcul&eacute; par l&apos;ARC<br><br>
-            Plafond &agrave; vie&nbsp;: <strong>20&nbsp;000&nbsp;$</strong><br><br>
-            <em style="color:#7F6000">Pr&eacute;cieux pour les familles &agrave; faible revenu &mdash; vers&eacute; m&ecirc;me sans cotisation.</em>
-          </div>
+      <details class="faq-item">
+        <summary>Quel est le plafond de cotisation et qui peut cotiser?</summary>
+        <div class="faq-answer">
+          Le plafond de cotisation à vie est de 200&nbsp;000&nbsp;$ par bénéficiaire (subventions exclues), jusqu'au 31&nbsp;décembre de l'année des 59&nbsp;ans du bénéficiaire. Le REEI peut être ouvert par le bénéficiaire (si majeur), ses parents, son tuteur légal ou son représentant. N'importe qui peut y cotiser avec le consentement du titulaire. À partir de 60&nbsp;ans, des paiements annuels minimums (PAI) sont obligatoires.
         </div>
+      </details>
 
-        <div style="background:var(--blue-p);border-radius:var(--r-lg);padding:16px;border-top:3px solid var(--blue)">
-          <div style="font-size:20px;margin-bottom:8px">&#128200;</div>
-          <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:8px">Croissance libre d&apos;imp&ocirc;t</div>
-          <div style="font-size:11px;color:var(--gry);line-height:1.7">
-            Comme le REER, le REEI cro&icirc;t &agrave; l&apos;abri de l&apos;imp&ocirc;t.<br><br>
-            Les retraits (PAI) sont imposables <strong>dans les mains du b&eacute;n&eacute;ficiaire</strong> &mdash; souvent &agrave; un taux tr&egrave;s faible si ses revenus sont bas.<br><br>
-            <strong>R&egrave;gle des 10 ans&nbsp;:</strong> si des subventions ont &eacute;t&eacute; vers&eacute;es, le REEI ne peut pas &ecirc;tre ferm&eacute; avant 10 ans sans rembourser les subventions.<br><br>
-            <em style="color:var(--blue)">Id&eacute;al comme compl&eacute;ment &agrave; une pension d&apos;invalidit&eacute;.</em>
-          </div>
-        </div>
-      </div>
-
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--gry);margin-bottom:12px">R&egrave;gles importantes &agrave; conna&icirc;tre</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px">
-        <div style="background:var(--gry-l);border-radius:var(--r);padding:10px 14px">
-          <div style="font-size:11px;font-weight:700;color:#0F0F0F;margin-bottom:3px">Plafond cotisations &agrave; vie</div>
-          <div style="font-size:11px;color:var(--gry)">200&nbsp;000&nbsp;$ par b&eacute;n&eacute;ficiaire (cotisations seulement, subventions exclues)</div>
-        </div>
-        <div style="background:var(--gry-l);border-radius:var(--r);padding:10px 14px">
-          <div style="font-size:11px;font-weight:700;color:#0F0F0F;margin-bottom:3px">&Acirc;ge limite cotisations</div>
-          <div style="font-size:11px;color:var(--gry)">Jusqu&apos;au 31 d&eacute;cembre de l&apos;ann&eacute;e des 59 ans du b&eacute;n&eacute;ficiaire</div>
-        </div>
-        <div style="background:var(--gry-l);border-radius:var(--r);padding:10px 14px">
-          <div style="font-size:11px;font-weight:700;color:#0F0F0F;margin-bottom:3px">Qui peut ouvrir le REEI</div>
-          <div style="font-size:11px;color:var(--gry)">Le b&eacute;n&eacute;ficiaire (si majeur), ses parents, son tuteur l&eacute;gal ou repr&eacute;sentant</div>
-        </div>
-        <div style="background:var(--gry-l);border-radius:var(--r);padding:10px 14px">
-          <div style="font-size:11px;font-weight:700;color:#0F0F0F;margin-bottom:3px">Qui peut cotiser</div>
-          <div style="font-size:11px;color:var(--gry)">N&apos;importe qui (famille, amis) avec le consentement du titulaire</div>
-        </div>
-        <div style="background:var(--gry-l);border-radius:var(--r);padding:10px 14px">
-          <div style="font-size:11px;font-weight:700;color:#0F0F0F;margin-bottom:3px">R&egrave;gle des 10 ans</div>
-          <div style="font-size:11px;color:var(--gry)">Fermeture avant 10 ans apr&egrave;s subvention = remboursement des subventions au gouvernement</div>
-        </div>
-        <div style="background:var(--gry-l);border-radius:var(--r);padding:10px 14px">
-          <div style="font-size:11px;font-weight:700;color:#0F0F0F;margin-bottom:3px">PAI &mdash; Paiements minimums</div>
-          <div style="font-size:11px;color:var(--gry)">&Agrave; partir de 60 ans, des paiements annuels minimums sont obligatoires selon les r&egrave;gles ARC</div>
-        </div>
-      </div>
-
-      <div style="background:var(--gold-p);border-left:3px solid var(--gold);padding:14px 16px;border-radius:0 var(--r) var(--r) 0;font-size:12px;color:#7F6000;line-height:1.7">
-        <strong>Conseil du planificateur&nbsp;:</strong> Le REEI est souvent sous-utilis&eacute;, m&ecirc;me par les familles qui y sont admissibles. Une personne de 30 ans avec le CIPH peut accumuler jusqu&apos;&agrave; <strong>70&nbsp;000&nbsp;$ en SCEI + 20&nbsp;000&nbsp;$ en BCEI = 90&nbsp;000&nbsp;$ en subventions gouvernementales</strong> &agrave; vie &mdash; sans compter les rendements. V&eacute;rifiez l&apos;admissibilit&eacute; de vos clients d&egrave;s le premier rendez-vous.
+      <div style="background:var(--gold-p);border-left:3px solid var(--gold);padding:14px 16px;border-radius:0 var(--r) var(--r) 0;font-size:12px;color:#7F6000;line-height:1.7;margin-top:14px">
+        <strong>Conseil du planificateur :</strong> Le REEI est souvent sous-utilisé, même par les familles qui y sont admissibles. Une personne de 30&nbsp;ans avec le CIPH peut accumuler jusqu'à <strong>90&nbsp;000&nbsp;$ en subventions gouvernementales</strong> à vie — sans compter les rendements.
       </div>
 
     </div>
   </div>
+
 </div>
 
 <!-- ═══════ CELI ═══════ -->
@@ -1242,22 +1169,6 @@ body.dark .new-client-form input{background:#2a2a2a;border-color:#444;color:#e0e
     </div>
   </div>
 </div>
-
-<!-- ═══════ COMPARATIF ═══════ -->
-<div id="pane-comp" class="pane">
-  <button class="print-btn" onclick="printPane('comp','Comparatif tous régimes')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer / Sauvegarder en PDF</button>
-  <div class="card" style="margin-bottom:18px">
-    <div class="ch nv">Votre situation</div>
-    <div class="cb" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
-      <div class="field"><label>Revenu brut annuel ($)</label><input type="number" id="cp-rev" value="75000" min="0" oninput="calcComp()"></div>
-      <div class="field"><label>Âge actuel</label><input type="number" id="cp-age" value="35" min="18" max="75" oninput="calcComp()"></div>
-      <div class="field"><label>Âge de retraite prévu</label><input type="number" id="cp-ret" value="65" min="50" max="75" oninput="calcComp()"></div>
-    </div>
-  </div>
-  <div id="comp-zone"></div>
-  <div class="note">Sources : ARC, EDSC, CQFF (9 fév. 2026), Revenu Québec. Taux marginaux nets incluant abattement fédéral 16,5 %. Estimations indicatives — consultez un planificateur financier agréé (Pl. Fin. / CPA).</div>
-</div>
-
 
 <!-- ═══════ PORTEFEUILLES ═══════ -->
 <div id="pane-port" class="pane">
@@ -2284,6 +2195,48 @@ body.dark .new-client-form input{background:#2a2a2a;border-color:#444;color:#e0e
   </div>
 
   <div class="note" id="ac-note"></div>
+
+  <div class="card faq-card">
+    <div class="ch nv">Questions et réponses — CELIAPP et RAP</div>
+    <div class="cb" style="padding:4px 14px">
+
+      <details class="faq-item">
+        <summary>Quelle est la différence entre le CELIAPP et le RAP?</summary>
+        <div class="faq-answer">
+          Le CELIAPP (Compte d'épargne libre d'impôt pour l'achat d'une première propriété) offre une double déduction : les cotisations réduisent votre revenu imposable (comme un REER) <strong>et</strong> les retraits pour l'achat d'une première maison sont non imposables (comme un CELI). Le RAP (Régime d'accession à la propriété) permet de retirer des sommes de votre REER sans impôt immédiat, mais ce retrait doit être remboursé sur 15&nbsp;ans, sans quoi le montant non remboursé devient imposable chaque année.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Puis-je combiner CELIAPP et RAP pour le même achat?</summary>
+        <div class="faq-answer">
+          Oui. Les deux régimes sont cumulables pour un même achat, ce qui maximise la mise de fonds disponible sans puiser dans l'épargne non enregistrée. C'est souvent la stratégie optimale pour un premier acheteur qui a accumulé de l'épargne dans les deux véhicules.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Que se passe-t-il si je n'achète finalement pas de maison?</summary>
+        <div class="faq-answer">
+          Les sommes du CELIAPP peuvent être transférées dans un REER (ou FERR) sans incidence fiscale et sans affecter vos droits de cotisation REER existants, avant la fermeture obligatoire du compte (au plus tard 15&nbsp;ans après l'ouverture, ou l'année des 71&nbsp;ans). Pour le RAP, si vous ne finalisez pas l'achat prévu, les sommes retirées doivent être remises dans votre REER selon les règles de remboursement habituelles, sinon elles deviennent imposables.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Quel est le plafond de cotisation au CELIAPP?</summary>
+        <div class="faq-answer">
+          8&nbsp;000&nbsp;$ par année, avec un plafond à vie de 40&nbsp;000&nbsp;$. Contrairement au CELI, les droits inutilisés ne se cumulent que pour l'année suivante (max 8&nbsp;000&nbsp;$ de report). Le RAP permet un retrait maximal de 60&nbsp;000&nbsp;$ par personne (120&nbsp;000&nbsp;$ pour un couple qui sont tous deux premiers acheteurs).
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Comment fonctionne le remboursement du RAP?</summary>
+        <div class="faq-answer">
+          Le remboursement débute la 2<sup>e</sup> année suivant le retrait et s'étale sur 15&nbsp;ans (environ 1/15 du montant par année). Un montant non remboursé dans une année donnée est automatiquement ajouté à votre revenu imposable pour cette année-là.
+        </div>
+      </details>
+
+    </div>
+  </div>
 </div>
 
 
@@ -3010,7 +2963,6 @@ function calcReer(){
 
   drawChart(rev,tm,enf,plaf);
 
-  if(document.getElementById("pane-comp").classList.contains("on")) calcComp();
 }
 
 // ══ IMPACT CHART ══
@@ -3176,165 +3128,6 @@ function calcCeli(dr){
   }).join('');
 }
 
-// ══ COMPARATIF ══
-function calcComp(){
-  const rev=g('cp-rev'), age=g('cp-age'), ret=g('cp-ret');
-  const tm=marg(rev);
-  const yrs=Math.max(1,ret-age);
-  const cot   = getAnnualCot('r');
-  const rend  = g('r-rend')/100;
-  const celiCot = getAnnualCot('c');
-  const celiRen = g('c-ren')/100;
-  const eeCot = getAnnualCot('ee');
-  const eeRen = g('ee-r')/100;
-
-  // REER
-  const remb = Math.round(cot * tm);
-  const coutReel = Math.max(0, cot - remb);
-  let vReer = g('r-sol');
-  for(let i=0;i<yrs;i++) vReer=(vReer+cot)*(1+rend);
-  vReer = Math.round(vReer);
-  const impotRet = Math.round(vReer * 0.30);
-  const netReer = vReer - impotRet;
-
-  // CELI
-  const celiYrs = Math.max(1, g('c-obj')-g('c-age'));
-  let vCeli = g('c-sol');
-  for(let i=0;i<celiYrs;i++) vCeli=(vCeli+celiCot)*(1+celiRen);
-  vCeli = Math.round(vCeli);
-
-  // REEE
-  let vEE=0, subvEE=0;
-  for(let a=g('ee-d');a<=Math.min(g('ee-f'),17);a++){
-    const s=Math.min(eeCot,2500)*0.30;
-    vEE=(vEE+eeCot+s)*(1+eeRen); subvEE+=s;
-  }
-  vEE=Math.round(vEE); subvEE=Math.round(subvEE);
-
-  // Recommandation
-  let recoTitre, recoDesc, recoColor;
-  if(tm>=0.46){
-    recoTitre="Maximisez le REER en priorité";
-    recoDesc="Votre taux marginal de "+fp(tm)+" est élevé. Chaque dollar cotisé au REER vous rapporte "+fp(tm)+" immédiatement. C'est votre meilleur outil fiscal cette année.";
-    recoColor="#0F0F0F";
-  } else if(tm>=0.36){
-    recoTitre="Combinez REER et CELI";
-    recoDesc="À "+fp(tm)+" de taux marginal, les deux régimes sont complémentaires. Maximisez d'abord le REER pour le remboursement immédiat, puis placez le reste en CELI.";
-    recoColor="#BF8F00";
-  } else {
-    recoTitre="Le CELI mérite réflexion";
-    recoDesc="À "+fp(tm)+" de taux marginal, votre avantage REER est plus limité. Si vous anticipez un revenu plus élevé à la retraite, le CELI pourrait être plus avantageux. Consultez un planificateur.";
-    recoColor="#2E75B6";
-  }
-
-  // Barre de comparaison REER vs CELI
-  const maxVal = Math.max(netReer, vCeli, 1);
-  const pctReer = Math.round(netReer/maxVal*100);
-  const pctCeli = Math.round(vCeli/maxVal*100);
-
-  document.getElementById('comp-zone').innerHTML = `
-
-    <!-- RECOMMANDATION EN TÊTE -->
-    <div style="background:${recoColor};border-radius:10px;padding:20px 24px;margin-bottom:20px;display:flex;gap:16px;align-items:flex-start">
-      <div style="font-size:28px;flex-shrink:0">
-        ${tm>=0.46?"★":tm>=0.36?"◆":"●"}
-      </div>
-      <div>
-        <div style="color:#fff;font-size:16px;font-weight:700;margin-bottom:6px">${recoTitre}</div>
-        <div style="color:rgba(255,255,255,.8);font-size:13px;line-height:1.6">${recoDesc}</div>
-      </div>
-    </div>
-
-    <!-- 3 CHIFFRES CLÉS -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
-      <div style="background:#fff;border-radius:10px;border:1px solid #e8edf3;padding:16px;text-align:center">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#888;margin-bottom:8px">Remboursement REER</div>
-        <div style="font-size:26px;font-weight:700;color:#0F0F0F">${fmt(remb)}</div>
-        <div style="font-size:11px;color:#888;margin-top:4px">sur ${fmt(cot)} cotisé</div>
-      </div>
-      <div style="background:#fff;border-radius:10px;border:1px solid #e8edf3;padding:16px;text-align:center">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#888;margin-bottom:8px">Coût réel REER</div>
-        <div style="font-size:26px;font-weight:700;color:#C55A11">${fmt(coutReel)}</div>
-        <div style="font-size:11px;color:#888;margin-top:4px">après remboursement</div>
-      </div>
-      <div style="background:#fff;border-radius:10px;border:1px solid #e8edf3;padding:16px;text-align:center">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#888;margin-bottom:8px">Taux marginal</div>
-        <div style="font-size:26px;font-weight:700;color:${tm>=0.46?"#C55A11":tm>=0.36?"#BF8F00":"#375623"}">${fp(tm)}</div>
-        <div style="font-size:11px;color:#888;margin-top:4px">palier ${PAL.findIndex(p=>rev>=p.min&&rev<p.max)+1} sur 8</div>
-      </div>
-    </div>
-
-    <!-- COMPARAISON REER vs CELI -->
-    <div style="background:#fff;border-radius:10px;border:1px solid #e8edf3;padding:20px 24px;margin-bottom:20px">
-      <div style="font-size:13px;font-weight:700;color:#0F0F0F;margin-bottom:16px">Valeur projetée à la retraite (${ret} ans)</div>
-
-      <div style="margin-bottom:14px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-          <span style="font-size:13px;font-weight:600;color:#0F0F0F">REER — valeur nette (après impôt estimé 30%)</span>
-          <span style="font-size:14px;font-weight:700;color:#0F0F0F">${fmt(netReer)}</span>
-        </div>
-        <div style="background:#e8edf3;border-radius:4px;height:10px;overflow:hidden">
-          <div style="width:${pctReer}%;height:100%;background:#0F0F0F;border-radius:4px;transition:width .4s"></div>
-        </div>
-        <div style="font-size:10px;color:#aaa;margin-top:3px">Valeur brute: ${fmt(vReer)} — Impôt estimé au retrait: ${fmt(impotRet)}</div>
-      </div>
-
-      <div style="margin-bottom:8px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-          <span style="font-size:13px;font-weight:600;color:#BF8F00">CELI — valeur nette (0% d'impôt au retrait)</span>
-          <span style="font-size:14px;font-weight:700;color:#BF8F00">${fmt(vCeli)}</span>
-        </div>
-        <div style="background:#e8edf3;border-radius:4px;height:10px;overflow:hidden">
-          <div style="width:${pctCeli}%;height:100%;background:#BF8F00;border-radius:4px;transition:width .4s"></div>
-        </div>
-        <div style="font-size:10px;color:#aaa;margin-top:3px">Croissance 100% libre d'impôt — retraits sans impact sur PSV/SRG</div>
-      </div>
-    </div>
-
-    <!-- EXPLICATION SIMPLE -->
-    <div style="background:#fff;border-radius:10px;border:1px solid #e8edf3;padding:20px 24px;margin-bottom:20px">
-      <div style="font-size:13px;font-weight:700;color:#0F0F0F;margin-bottom:14px">Comprendre la différence — en termes simples</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-        <div style="padding:14px;background:#f8f9fa;border-radius:8px;border-left:3px solid #0F0F0F">
-          <div style="font-size:12px;font-weight:700;color:#0F0F0F;margin-bottom:8px">REER</div>
-          <div style="font-size:12px;color:#595959;line-height:1.6">
-            Vous cotisez <strong>avant</strong> impôt → remboursement immédiat de ${fmt(remb)} cette année.<br><br>
-            À la retraite, vous payez l'impôt sur chaque retrait.<br><br>
-            <strong>Avantageux si</strong> : votre taux d'impôt aujourd'hui est plus élevé qu'à la retraite.
-          </div>
-        </div>
-        <div style="padding:14px;background:#f8f9fa;border-radius:8px;border-left:3px solid #BF8F00">
-          <div style="font-size:12px;font-weight:700;color:#BF8F00;margin-bottom:8px">CELI</div>
-          <div style="font-size:12px;color:#595959;line-height:1.6">
-            Vous cotisez <strong>après</strong> impôt → pas de remboursement immédiat.<br><br>
-            À la retraite, vous retirez sans jamais payer d'impôt.<br><br>
-            <strong>Avantageux si</strong> : vous anticipez un taux d'impôt plus élevé à la retraite.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TOUS LES RÉGIMES -->
-    <div style="background:#fff;border-radius:10px;border:1px solid #e8edf3;padding:20px 24px">
-      <div style="font-size:13px;font-weight:700;color:#0F0F0F;margin-bottom:14px">Vue d'ensemble — tous vos régimes</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px">
-        ${[
-          ['REER','Valeur brute',fmt(vReer),'#0F0F0F'],
-          ['REER net','Après impôt 30%',fmt(netReer),'#0F0F0F'],
-          ["CELI","Libre d'impôt",fmt(vCeli),"#BF8F00"],
-          ['REEE','Solde final',fmt(vEE),'#2E75B6'],
-          ['REEE','Subventions',fmt(subvEE),'#375623'],
-        ].map(([titre,sous,val,col])=>`
-          <div style="padding:14px;background:#f8f9fa;border-radius:8px;text-align:center">
-            <div style="font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#888;margin-bottom:4px">${titre}</div>
-            <div style="font-size:11px;color:#aaa;margin-bottom:6px">${sous}</div>
-            <div style="font-size:18px;font-weight:700;color:${col}">${val}</div>
-          </div>`).join('')}
-      </div>
-    </div>
-  `;
-}
-
 // ══ NAV ══
 function show(id,el){
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
@@ -3357,7 +3150,6 @@ function show(id,el){
       if(id==='achat') calcAchat();
       if(id==='pret') calcPret();
       if(id==='budget') calcBudget();
-      if(id==='comp') calcComp();
       if(id==='succession'){ var su=document.getElementById('succ-seul'); if(su&&su.classList.contains('on')) calcSucc(); else if(typeof calcSuccCouple==='function') calcSuccCouple(); }
     }catch(e){console.error('calc onglet '+id+':',e);}
   },50);
