@@ -969,17 +969,15 @@ body.dark .new-client-form input{background:#2a2a2a;border-color:#444;color:#e0e
     </div>
   </div>
   <div class="card">
-    <div class="ch nv">REER ou CELI ? — Comparaison rapide</div>
+    <div class="ch nv">REER ou CELI ? — Comparaison adaptée au profil</div>
     <div class="cb">
-      <div class="field" style="margin-bottom:14px">
-        <label>Revenu prévu à la retraite, par rapport à aujourd'hui</label>
-        <div class="freq-group">
-          <button type="button" class="freq-btn on" id="rr-fut-bas" onclick="setRevRetraite('bas')">Plus bas</button>
-          <button type="button" class="freq-btn" id="rr-fut-sim" onclick="setRevRetraite('similaire')">Similaire</button>
-          <button type="button" class="freq-btn" id="rr-fut-haut" onclick="setRevRetraite('eleve')">Plus élevé</button>
-        </div>
+      <div class="field" style="margin-bottom:6px">
+        <label>Revenu net imposable estimé à la retraite ($/an)</label>
+        <input type="number" id="rr-fut-rev" min="0" oninput="rrFutRevManual=true;calcReer()">
       </div>
-      <div id="r-verdict"></div>
+      <div class="freq-equiv" id="rr-fut-rev-note" style="margin-bottom:14px"></div>
+      <a href="#" onclick="rrFutRevManual=false;calcReer();return false;" style="font-size:11px;color:var(--gold-br);text-decoration:underline">↺ Revenir à l'estimation automatique</a>
+      <div id="r-verdict" style="margin-top:14px"></div>
     </div>
   </div>
   <div class="card">
@@ -3141,51 +3139,73 @@ function calcReer(){
   drawImpactTable(rev, enf, rev2, tm, tm2, age, enfAges);
   drawOpportunityBanner(rev, enf, rev2, age, enfAges);
   drawChart(rev,tm,enf,rev2,age,enfAges);
-  drawReerCeliVerdict(rev, tm, enf, age, ret);
+  drawReerCeliVerdict(rev, tm, age, ret, val);
 
 }
 
-// ══ REER vs CELI — verdict rapide (sans onglet dédié) ══
-let reerCeliRevFutur = 'bas';
-function setRevRetraite(v, el){
-  reerCeliRevFutur = v;
-  ['bas','similaire','eleve'].forEach(k=>{
-    const btn = document.getElementById('rr-fut-'+(k==='bas'?'bas':k==='similaire'?'sim':'haut'));
-    if(btn) btn.classList.toggle('on', k===v);
-  });
-  calcReer();
-}
-function drawReerCeliVerdict(rev, tm, enf, age, ret){
-  const el = document.getElementById('r-verdict');
-  if(!el) return;
-  const palierActuel = PAL.findIndex(p=>rev>=p.min&&rev<p.max)+1;
-  let verdict, explication, bg, coul;
-  if(reerCeliRevFutur==='bas'){
-    verdict='REER généralement avantagé';
-    bg='#E2EFDA'; coul='#375623';
-    explication=`Vous déduisez aujourd'hui à ${fp(tm)} et vous retirerez probablement à un taux plus bas à la retraite — l'écart entre les deux taux joue en faveur du REER.`;
-  } else if(reerCeliRevFutur==='eleve'){
-    verdict='CELI généralement avantagé';
-    bg='#FCE4D6'; coul='#C55A11';
-    explication=`Si votre taux d'imposition sera plus élevé à la retraite qu'aujourd'hui, cotiser au CELI (sans déduction, mais retrait 100% libre d'impôt) évite de payer plus tard un impôt supérieur à la déduction obtenue maintenant.`;
-  } else {
-    verdict='Écart fiscal neutre — les deux se valent mathématiquement';
-    bg='var(--blue-p)'; coul='var(--blue)';
-    explication = enf>0
-      ? `À taux d'imposition identique aujourd'hui et à la retraite, REER et CELI donnent le même résultat net avant impact des aides. Avec des enfants à charge, le REER garde un léger avantage : le remboursement d'impôt inclut aussi la hausse de l'ACE, de l'Allocation famille et/ou de la Prime au travail (voir le graphique d'impact ci-dessous).`
-      : `À taux d'imposition identique aujourd'hui et à la retraite, REER et CELI donnent le même résultat net. Le CELI garde l'avantage de la flexibilité : retraits libres d'impôt en tout temps, droits de cotisation récupérés l'année suivante, et aucun effet sur les prestations basées sur le revenu (SRG, PSV) à la retraite.`;
+// ══ REER vs CELI — verdict adapté au profil (sans onglet dédié) ══
+let rrFutRevManual = false;
+// Estimation simplifiée du revenu imposable à la retraite POUR CE profil précis :
+// RRQ proportionnel au revenu actuel (vs MGA), PSV pleine (avant récupération),
+// et retrait FERR minimum sur le solde REER projeté à l'âge de retraite.
+function estimRevenuRetraiteReer(rev, age, ret, val){
+  const MGA=74600, RRQ_MAX_65=1507.65*12, PSV_PLEINE=743.05*12;
+  const rrqEst = Math.min(1, rev/MGA) * RRQ_MAX_65;
+  const ferrRetrait = val * ferrMin(Math.max(65, ret));
+  let psvEst = PSV_PLEINE;
+  let revuBrut = rrqEst + ferrRetrait + psvEst;
+  // Récupération PSV si le revenu combiné dépasse le seuil
+  if (revuBrut > PSV_SEUIL) {
+    const recup = Math.min(psvEst, (revuBrut - PSV_SEUIL) * PSV_TAUX);
+    psvEst = Math.max(0, psvEst - recup);
   }
+  return {revuRetraite: Math.round(rrqEst + ferrRetrait + psvEst), rrqEst, psvEst, ferrRetrait};
+}
+function drawReerCeliVerdict(rev, tm, age, ret, val){
+  const el = document.getElementById('r-verdict');
+  const inputEl = document.getElementById('rr-fut-rev');
+  const noteEl = document.getElementById('rr-fut-rev-note');
+  if(!el || !inputEl) return;
+
+  const estim = estimRevenuRetraiteReer(rev, age, ret, val);
+  if (!rrFutRevManual) inputEl.value = estim.revuRetraite;
+
+  const revRetraiteUtilise = parseFloat(inputEl.value) || 0;
+  const tmRetraite = marg(revRetraiteUtilise);
+
+  if (noteEl) noteEl.textContent = rrFutRevManual
+    ? 'Valeur ajustée manuellement — ne tient plus compte de la mise à jour automatique.'
+    : `Estimé pour ce profil : RRQ ${fmt(Math.round(estim.rrqEst))} + PSV ${fmt(Math.round(estim.psvEst))} + retrait FERR min. ${fmt(Math.round(estim.ferrRetrait))} (sur ${fmt(Math.round(val))} projeté au REER à ${ret} ans).`;
+
+  const ecartPts = Math.round((tm - tmRetraite) * 100);
+  let verdict, explication, bg, coul;
+  if (ecartPts >= 2) {
+    verdict = 'REER généralement avantagé pour ce profil';
+    bg='#E2EFDA'; coul='#375623';
+    explication = `Taux marginal actuel estimé à ${fp(tm)} contre ${fp(tmRetraite)} à la retraite — un écart de ${ecartPts} points en faveur du REER : la déduction vaut plus aujourd'hui que l'impôt payé au retrait.`;
+  } else if (ecartPts <= -2) {
+    verdict = 'CELI généralement avantagé pour ce profil';
+    bg='#FCE4D6'; coul='#C55A11';
+    explication = `Taux marginal actuel estimé à ${fp(tm)} contre ${fp(tmRetraite)} à la retraite — le revenu de retraite projeté serait imposé à un taux plus élevé qu'aujourd'hui. Cotiser au CELI (sans déduction, retrait libre d'impôt) évite ce désavantage.`;
+  } else {
+    verdict = 'Écart fiscal quasi neutre pour ce profil';
+    bg='var(--blue-p)'; coul='var(--blue)';
+    explication = `Taux marginal actuel (${fp(tm)}) et taux estimé à la retraite (${fp(tmRetraite)}) sont proches. Sur le strict plan fiscal, REER et CELI donnent un résultat net similaire pour ce client.`;
+  }
+
   const pts=[];
-  if(tm>=0.45) pts.push(`Taux marginal actuel élevé (${fp(tm)}, palier ${palierActuel}) — la déduction REER vaut cher maintenant.`);
-  if(rev<58523) pts.push(`Taux marginal actuel bas (${fp(tm)}, palier ${palierActuel}) — la déduction REER vaut peu; le CELI mérite souvent d'être priorisé.`);
-  if(ret-age>=20) pts.push(`Horizon long (${ret-age} ans) — la croissance à l'abri de l'impôt profite autant aux deux régimes; le choix dépend surtout du taux d'imposition futur.`);
+  const palierActuel = PAL.findIndex(p=>rev>=p.min&&rev<p.max)+1;
+  if (g('rr-enf')>0 && ecartPts>-2) pts.push(`Avec des enfants à charge, le REER garde un avantage additionnel : le remboursement d'impôt inclut aussi la hausse de l'ACE, de l'Allocation famille et/ou de la Prime au travail (voir le graphique d'impact ci-dessous).`);
+  if (ecartPts>-2 && ecartPts<2) pts.push(`Le CELI garde toutefois l'avantage de la flexibilité : retraits libres d'impôt en tout temps, droits récupérés l'année suivante, et aucun effet sur les prestations basées sur le revenu (SRG, PSV) à la retraite.`);
+  if (tm >= 0.45) pts.push(`Taux marginal actuel élevé (palier ${palierActuel}) — la déduction REER vaut particulièrement cher maintenant.`);
+
   el.innerHTML = `
     <div style="padding:14px;border-radius:var(--r);background:${bg}">
       <div style="font-size:14px;font-weight:700;color:${coul};margin-bottom:6px">${verdict}</div>
       <div style="font-size:12px;color:#333;line-height:1.6">${explication}</div>
     </div>
     ${pts.length?'<div class="note" style="margin-top:10px">'+pts.join(' ')+'</div>':''}
-    <div class="note" style="margin-top:8px">Comparaison indicative basée sur le taux marginal actuel et l'hypothèse de revenu à la retraite sélectionnée ci-dessus. Ne remplace pas une analyse personnalisée.</div>
+    <div class="note" style="margin-top:8px">Estimation indicative basée sur le profil entré ci-dessus (revenu, âge, âge de retraite, projection REER). Ne remplace pas une analyse de retraite complète (voir l'onglet Objectif retraite pour une projection détaillée).</div>
   `;
 }
 
