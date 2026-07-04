@@ -955,7 +955,8 @@ body.dark .new-client-form input{background:#2a2a2a;border-color:#444;color:#e0e
   <div class="card">
     <div class="ch gd">Impact fiscal complet — par tranche de 5 000 $ cotisée</div>
     <div class="cb">
-      <div class="chart-wrap"><svg id="imp-svg" height="240" style="min-width:500px"></svg></div>
+      <div class="chart-wrap"><svg id="imp-svg" height="220" style="min-width:500px"></svg></div>
+      <div id="imp-legend-zone"></div>
       <div class="note" id="imp-note"></div>
       <div style="margin-top:18px">
         <div style="font-size:12px;font-weight:700;color:#0F0F0F;margin-bottom:8px">Détail par palier de cotisation</div>
@@ -3058,8 +3059,8 @@ function calcReer(){
   const tm2=marg(rev2), plaf2=Math.min(rev2*.18,33810), remb2=getAnnualCot('r-cot2')*tm2;
   $('conj-res').innerHTML=rr('Taux marginal conjoint(e)',fp(tm2))+rr('Plafond REER conjoint(e)',fmt(plaf2))+rr('Remboursement conjoint(e)',`<span class="ok">${fmt(remb2)}</span>`,'hi')+rr('Total remboursements couple',`<span class="ok">${fmt(remb+remb2)}</span>`,'hi');
 
+  drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2);
   drawChart(rev,tm,enf,plaf,rev2);
-  drawImpactTable(rev,enf,plaf,rev2);
 
 }
 
@@ -3140,11 +3141,22 @@ function calcImpactPts(rev, enf, plaf, rev2, step, maxC){
 }
 
 // Tableau détaillé cumulatif : "à X$ cotisé, voici le total récupéré"
-function drawImpactTable(rev, enf, plaf, rev2){
+function drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2){
   const zone = $('imp-table-zone');
   if(!zone) return;
+  const hasConjoint = rev2>0;
   const fine = calcImpactPts(rev, enf, plaf, rev2, 250, Math.min(plaf+5000, rev, 85000));
   if(!fine.length){ zone.innerHTML=''; return; }
+
+  // Qui devrait cotiser en priorité : celui des deux avec le taux marginal le plus élevé.
+  // Les aides familiales (ACE, ACT, Prime au travail, Alloc. famille, Solidarité) dépendent du revenu
+  // FAMILIAL total, donc elles restent identiques peu importe qui cotise — seul le remboursement
+  // d'impôt personnel varie selon le taux marginal de la personne qui cotise.
+  const clientPrio = tm >= tm2;
+  const tmPrio = clientPrio ? tm : tm2, plafPrio = clientPrio ? plaf : plaf2;
+  const tmSec  = clientPrio ? tm2 : tm, plafSec  = clientPrio ? plaf2 : plaf;
+  const labelPrio = clientPrio ? 'vous' : 'conjoint(e)';
+  const labelSec  = clientPrio ? 'conjoint(e)' : 'vous';
 
   // Paliers usuels à présenter (filtrés selon le plafond/revenu disponible)
   const maxDispo = fine[fine.length-1].c;
@@ -3157,12 +3169,24 @@ function drawImpactTable(rev, enf, plaf, rev2){
   paliers.forEach(target=>{
     const slice = fine.filter(t=>t.c<=target);
     const sum = k => slice.reduce((s,t)=>s+t[k],0);
-    const imp=sum('imp'), ace=sum('ace'), act=sum('act'), pat=sum('pat'), af=sum('af'), sol=sum('sol'), psv=sum('psv');
+    const ace=sum('ace'), act=sum('act'), pat=sum('pat'), af=sum('af'), sol=sum('sol'), psv=sum('psv');
+
+    // Répartition optimale de CE palier entre les deux conjoints
+    const fromPrio = hasConjoint ? Math.min(target, plafPrio) : target;
+    const fromSec  = hasConjoint ? Math.max(0, Math.min(target-plafPrio, plafSec)) : 0;
+    const imp = fromPrio*tmPrio + fromSec*tmSec;
+
+    let repart;
+    if(!hasConjoint){ repart = `100% vous`; }
+    else if(fromSec<=0){ repart = `${fmt(fromPrio)} (${labelPrio})`; }
+    else { repart = `${fmt(fromPrio)} (${labelPrio}) + ${fmt(fromSec)} (${labelSec})`; }
+
     const total = imp+ace+act+pat+af+sol+psv;
     const pct = target>0 ? (total/target*100) : 0;
     const isPlaf = target===plaf;
     rows += `<tr${isPlaf?' style="background:#FFFAED;font-weight:700"':''}>
-      <td>${fmt(target)}${isPlaf?' <span style="font-size:9px;color:#BF8F00">★ plafond</span>':''}</td>
+      <td>${fmt(target)}${isPlaf?' <span style="font-size:9px;color:#BF8F00">★ plafond principal</span>':''}</td>
+      <td style="font-size:10px;color:var(--gry);font-weight:500">${repart}</td>
       <td>${fmt(Math.round(imp))}</td>
       <td>${ace>0?fmt(Math.round(ace)):'—'}</td>
       <td>${af>0?fmt(Math.round(af)):'—'}</td>
@@ -3175,11 +3199,25 @@ function drawImpactTable(rev, enf, plaf, rev2){
     </tr>`;
   });
 
-  zone.innerHTML = `
+  const recoHtml = hasConjoint ? `
+    <div style="background:#0F0F0F;border-radius:var(--r-lg);padding:14px 18px;margin-bottom:14px;display:flex;gap:12px;align-items:flex-start">
+      <div style="font-size:20px;flex-shrink:0">💡</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.85);line-height:1.7">
+        <strong style="color:var(--gold-br)">Qui devrait cotiser en premier :</strong>
+        ${clientPrio?'Vous avez':'Votre conjoint(e) a'} le taux marginal le plus élevé (<strong style="color:#fff">${clientPrio?fp(tm):fp(tm2)}</strong> vs ${clientPrio?fp(tm2):fp(tm)}).
+        Priorisez les cotisations de <strong style="color:#fff">${labelPrio}</strong> jusqu'à son plafond de <strong style="color:#fff">${fmt(plafPrio)}</strong> —
+        chaque dollar y génère un remboursement d'impôt plus élevé. Les aides familiales (ACE, ACT, Prime au travail, Allocation famille, Solidarité)
+        restent les mêmes peu importe qui cotise, puisqu'elles dépendent du revenu familial total, pas de la personne. Au-delà du plafond de ${labelPrio},
+        la colonne « Répartition suggérée » indique combien basculer chez ${labelSec}.
+      </div>
+    </div>` : '';
+
+  zone.innerHTML = recoHtml + `
     <div style="overflow-x:auto">
     <table class="tbl" style="font-size:11px;white-space:nowrap">
       <thead><tr>
         <th style="text-align:left">Cotisation</th>
+        ${hasConjoint?'<th>Répartition suggérée</th>':''}
         <th>Impôt évité</th>
         <th>ACE</th>
         <th>Alloc. famille</th>
@@ -3202,7 +3240,7 @@ function drawChart(rev,tm,enf,plaf,rev2){
   const svg=$('imp-svg');
   const W=Math.max(500,svg.parentElement.offsetWidth||700);
   svg.setAttribute('width',W);
-  const H=260,mL=46,mR=16,mT=18,mB=46,cW=W-mL-mR,cH=H-mT-mB;
+  const H=220,mL=46,mR=16,mT=18,mB=30,cW=W-mL-mR,cH=H-mT-mB;
 
   const pts=calcImpactPts(rev,enf,plaf,rev2,5000);
   if(!pts.length){svg.innerHTML='<text x="20" y="30" font-size="12" fill="#999">Aucune donnée</text>';return;}
@@ -3215,7 +3253,7 @@ function drawChart(rev,tm,enf,plaf,rev2){
 
   // Dégradés + ombre douce pour chaque segment
   let defs=`<defs>`;
-  const segs=[['0F0F0F','2A2A2A','imp','Impôt (fédéral + Québec)'],['538135','7BAE5A','ace','Allocation canadienne pour enfants (ACE)'],['1F6FB2','5C9BD5','af','Allocation famille (Québec)'],['7030A0','9C63C9','act','Allocation canadienne pour travailleurs (ACT)'],['C0504D','D98280','pat','Prime au travail (Québec)'],['D4A800','E8C640','sol','Crédit de solidarité (Québec)'],['9DC3E6','C3DCF0','psv','Récupération pension féd. (PSV)']];
+  const segs=[['1E293B','475569','imp','Impôt (fédéral + Québec)'],['0D9488','2DD4BF','ace','Allocation canadienne pour enfants (ACE)'],['0284C7','38BDF8','af','Allocation famille (Québec)'],['7C3AED','A78BFA','act','Allocation canadienne pour travailleurs (ACT)'],['DB2777','F472B6','pat','Prime au travail (Québec)'],['D97706','FBBF24','sol','Crédit de solidarité (Québec)'],['64748B','94A3B8','psv','Récupération pension féd. (PSV)']];
   segs.forEach(([c1,c2,k])=>{
     defs+=`<linearGradient id="grad-${k}" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#${c2}"/><stop offset="100%" stop-color="#${c1}"/>
@@ -3236,7 +3274,7 @@ function drawChart(rev,tm,enf,plaf,rev2){
   [0,.1,.2,.3,.4,.5,.6].forEach(v=>{
     const y=cH-ys(v);
     if(y>=0&&y<=cH){
-      h+=`<line x1="0" y1="${y}" x2="${cW}" y2="${y}" stroke="#e8edf3" stroke-width="1"/>`;
+      h+=`<line x1="0" y1="${y}" x2="${cW}" y2="${y}" stroke="#eef1f5" stroke-width="1" stroke-dasharray="3,3"/>`;
       h+=`<text x="-6" y="${y+3}" font-size="9.5" fill="#9aa0a6" text-anchor="end" font-family="inherit">${Math.round(v*100)}%</text>`;
     }
   });
@@ -3250,7 +3288,7 @@ function drawChart(rev,tm,enf,plaf,rev2){
       if(h2<0.5) return;
       const y=cH-cy-h2;
       const op=t.in?'':'55';
-      h+=`<rect x="${x}" y="${y}" width="${bW}" height="${h2}" fill="url(#grad-${k})" opacity="${t.in?1:0.4}" rx="1.5" ${t.in?'filter="url(#softShadow)"':''}><title>${label} : ${fmt(Math.round(t[k]))} (${fp(t[k]/5000)})</title></rect>`;
+      h+=`<rect x="${x}" y="${y}" width="${bW}" height="${h2}" fill="url(#grad-${k})" opacity="${t.in?1:0.4}" rx="3" ${t.in?'filter="url(#softShadow)"':''}><title>${label} : ${fmt(Math.round(t[k]))} (${fp(t[k]/5000)})</title></rect>`;
       cy+=h2;
     });
     // Marqueur étoile discret sur la tranche optimale
@@ -3264,36 +3302,52 @@ function drawChart(rev,tm,enf,plaf,rev2){
 
   // Ligne rouge — taux de retour effectif
   const lp=pts.map((t,i)=>`${i*xS+xS/2},${cH-ys(t.in?t.eff:0)}`).join(' ');
-  h+=`<polyline points="${lp}" fill="none" stroke="#C00000" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+  h+=`<polyline points="${lp}" fill="none" stroke="#DC2626" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
   pts.forEach((t,i)=>{
     if(!t.in) return;
-    h+=`<circle cx="${i*xS+xS/2}" cy="${cH-ys(t.eff)}" r="2.5" fill="#fff" stroke="#C00000" stroke-width="2"><title>Retour effectif à ${fmt(t.c)} : ${fp(t.eff)}</title></circle>`;
+    h+=`<circle cx="${i*xS+xS/2}" cy="${cH-ys(t.eff)}" r="2.5" fill="#fff" stroke="#DC2626" stroke-width="2"><title>Retour effectif à ${fmt(t.c)} : ${fp(t.eff)}</title></circle>`;
   });
 
   // Ligne verticale au plafond REER
   const plafIdx = pts.findIndex(t=>!t.in);
   if(plafIdx>0){
     const xp = plafIdx*xS;
-    h+=`<line x1="${xp}" y1="0" x2="${xp}" y2="${cH}" stroke="#C00000" stroke-width="1" stroke-dasharray="2,3" opacity="0.5"/>`;
+    h+=`<line x1="${xp}" y1="0" x2="${xp}" y2="${cH}" stroke="#DC2626" stroke-width="1" stroke-dasharray="2,3" opacity="0.5"/>`;
   }
 
   h+=`</g>`;
-
-  // Légende
-  const legItems=[['grad-imp','Impôt'],['grad-ace','ACE'],['grad-af','Alloc. famille'],['grad-act','ACT'],['grad-pat','Prime travail'],['grad-sol','Solidarité'],['grad-psv','Pension féd.'],['C00000','Retour effectif']];
-  let lx=mL;
-  legItems.forEach(([c,l])=>{
-    if(c==='C00000'){h+=`<line x1="${lx}" y1="${H-12}" x2="${lx+14}" y2="${H-12}" stroke="#C00000" stroke-width="2.5"/>`;lx+=18;}
-    else{h+=`<rect x="${lx}" y="${H-18}" width="12" height="10" fill="url(#${c})" rx="1.5"/>`;lx+=16;}
-    h+=`<text x="${lx+1}" y="${H-10}" font-size="9.5" fill="#666" font-family="inherit">${l}</text>`;
-    lx+=l.length*5.4+12;
-  });
-
   svg.innerHTML=h;
+
+  // Légende HTML détaillée (plus lisible qu'une légende compacte dans le SVG)
+  const legZone = $('imp-legend-zone');
+  if(legZone){
+    const legDesc = {
+      imp:"Impôt évité — fédéral et provincial, selon votre taux marginal.",
+      ace:"ACE (fédéral) — augmente quand votre revenu net familial baisse.",
+      af:"Allocation famille (Québec) — distincte de l'ACE, avec un minimum garanti par enfant.",
+      act:"ACT (fédéral) — crédit remboursable pour travailleurs à revenu modeste.",
+      pat:"Prime au travail (Québec) — équivalent provincial, distinct de l'ACT.",
+      sol:"Crédit de solidarité (Québec) — réduit progressivement au-dessus de 43 195 $.",
+      psv:"Récupération de la PSV — s'applique entre 80 000 $ et 105 000 $ de revenu."
+    };
+    let lh = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px 16px;margin-top:14px">`;
+    segs.forEach(([c1,,k,fullLabel])=>{
+      lh+=`<div style="display:flex;gap:8px;align-items:flex-start">
+        <span style="width:11px;height:11px;border-radius:50%;background:#${c1};flex-shrink:0;margin-top:3px"></span>
+        <span style="font-size:11px;color:var(--gry);line-height:1.5"><strong style="color:#0F0F0F">${fullLabel.split(' (')[0]}</strong> — ${legDesc[k]}</span>
+      </div>`;
+    });
+    lh+=`<div style="display:flex;gap:8px;align-items:flex-start">
+      <span style="width:14px;height:2.5px;border-radius:2px;background:#DC2626;flex-shrink:0;margin-top:8px"></span>
+      <span style="font-size:11px;color:var(--gry);line-height:1.5"><strong style="color:#0F0F0F">Retour effectif</strong> — somme de toutes les mesures ci-dessus, en % du montant cotisé dans cette tranche.</span>
+    </div>`;
+    lh+=`</div>`;
+    legZone.innerHTML = lh;
+  }
 
   const catLabel={seul:'personne seule',couple_sans:'couple sans enfant',monoparental:'famille monoparentale',couple_avec:'couple avec enfant(s)'}[actCat];
   $('imp-note').innerHTML=`<strong>Tranche optimale (★) : ${fmt(best.c-4999)} – ${fmt(best.c)}</strong> — ${fp(best.eff)} de retour combiné par dollar cotisé. Plafond REER : ${fmt(plaf)}.<br>
-  Inclut : impôt fédéral/provincial, ACE, Allocation famille (Québec), ACT et Prime au travail (calculées pour ${catLabel}), crédit de solidarité Québec, récupération de la PSV. Survolez une barre pour le détail. Estimations indicatives — plusieurs de ces mesures dépendent aussi de facteurs non modélisés ici (garde d'enfants, autres revenus, admissibilité complète). Consultez un fiscaliste pour une analyse précise.`;
+  Calculé pour : ${catLabel}. Survolez une barre pour le détail exact. Estimations indicatives — plusieurs mesures dépendent aussi de facteurs non modélisés ici (garde d'enfants, autres revenus, admissibilité complète). Consultez un fiscaliste pour une analyse précise.`;
 }
 
 // ══ REEE ══
