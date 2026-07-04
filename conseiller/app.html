@@ -3198,19 +3198,26 @@ function drawOpportunityBanner(rev, enf, rev2, age){
     return {imp:s('imp'),ace:s('ace'),act:s('act'),pat:s('pat'),af:s('af'),sol:s('sol'),psv:s('psv')};
   };
   const totalOf = o => o.imp+o.ace+o.act+o.pat+o.af+o.sol+o.psv;
-  const firstAmt = Math.min(5000, seuil);
-  const first = sumRange(0, firstAmt);
+
+  // Même tranche « la plus payante » que celle affichée dans le KPI du haut (grille de 5000$),
+  // pour que les deux chiffres présentés au client soient toujours cohérents entre eux.
+  const coarse = calcImpactPts(rev, enf, rev2, 5000, undefined, age);
+  const best = coarse.reduce((a,b)=>b.eff>a.eff?b:a, coarse[0]);
+  const bestLo = Math.max(0, best.c-5000), bestHi = best.c;
+  const bestSlice = sumRange(bestLo, bestHi);
+  const bestTotal = totalOf(bestSlice);
+  const bestEff = bestTotal/(bestHi-bestLo);
+
   const after = sumRange(seuil, seuil+5000);
-  const firstTotal = totalOf(first), afterTotal = totalOf(after);
-  const firstEff = firstAmt>0 ? firstTotal/firstAmt : 0;
+  const afterTotal = totalOf(after);
   const afterEff = afterTotal/5000;
 
   zone.innerHTML = `
     <div style="display:flex;align-items:center;gap:16px;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:var(--r-lg);padding:14px 18px;margin-top:14px;flex-wrap:wrap">
       <div style="font-size:22px;flex-shrink:0">⚖️</div>
       <div style="flex:1;min-width:260px;font-size:12px;color:#7F1D1D;line-height:1.7">
-        <strong>Comparaison :</strong> les ${fmt(firstAmt)} les plus efficaces rapportent
-        <strong style="color:#166534">${fmt(Math.round(firstTotal))}</strong> (${fp(firstEff)}) —
+        <strong>Comparaison :</strong> la tranche la plus payante (${fmt(bestLo+1)} – ${fmt(bestHi)}, ★ ci-dessus) rapporte
+        <strong style="color:#166534">${fmt(Math.round(bestTotal))}</strong> (${fp(bestEff)}) —
         alors que 5 000 $ cotisés <strong>une fois les aides bonifiées épuisées</strong> (au-delà de ${fmt(seuil)}) ne rapportent plus que
         <strong style="color:#991B1B">${fmt(Math.round(afterTotal))}</strong> (${fp(afterEff)}), soit le remboursement d'impôt standard sans les bonis. Cela reste un rendement réel — juste beaucoup moins élevé.
       </div>
@@ -3441,9 +3448,9 @@ function drawChart(rev,tm,enf,rev2,age){
       imp:"Impôt évité — fédéral et provincial, selon votre taux marginal.",
       ace:"ACE (fédéral) — augmente quand votre revenu net familial baisse.",
       af:"Allocation famille (Québec) — distincte de l'ACE, avec un minimum garanti par enfant.",
-      act:"ACT (fédéral) — crédit remboursable pour travailleurs à revenu modeste.",
+      act:"ACT (fédéral) — crédit remboursable pour travailleurs à revenu modeste. Cesse d'augmenter une fois le maximum atteint.",
       pat:"Prime au travail (Québec) — équivalent provincial, distinct de l'ACT.",
-      sol:"Crédit de solidarité (Québec) — réduit progressivement au-dessus de 43 195 $.",
+      sol:"Crédit de solidarité (Québec) — réduit progressivement au-dessus de 43 195 $. Une fois sous ce seuil, le maximum est déjà atteint et n'augmente plus.",
       psv:"Récupération de la PSV — s'applique seulement à 65 ans et plus, entre 80 000 $ et 105 000 $ de revenu."
     };
     let lh = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px 16px;margin-top:14px">`;
