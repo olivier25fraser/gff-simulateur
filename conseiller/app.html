@@ -917,7 +917,8 @@ body.dark .new-client-form input{background:#2a2a2a;border-color:#444;color:#e0e
               <div class="field"><label>Revenu brut annuel ($)</label><input type="number" id="rr-rev" value="75000" min="0" oninput="calcReer()"></div>
               <div class="field"><label>Âge actuel</label><input type="number" id="rr-age" value="35" min="18" max="75" oninput="calcReer()"></div>
               <div class="field"><label>Âge de retraite prévu</label><input type="number" id="rr-ret" value="65" min="50" max="75" oninput="calcReer()"></div>
-              <div class="field"><label>Enfants à charge</label><input type="number" id="rr-enf" value="0" min="0" max="10" oninput="calcReer()"></div>
+              <div class="field"><label>Enfants à charge</label><input type="number" id="rr-enf" value="0" min="0" max="10" oninput="updateEnfantsAges();calcReer()"></div>
+              <div id="rr-enfants-ages" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"></div>
             </div>
             <div id="rr-conjoint-col" style="display:none">
               <div style="font-size:10px;font-weight:700;color:var(--gold-br);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Conjoint(e)</div>
@@ -2838,12 +2839,12 @@ body.dark .new-client-form input{background:#2a2a2a;border-color:#444;color:#e0e
 const PAL=[
   {min:0,     max:54345, t:.2569,tq:.14,  tf:.1169},
   {min:54345, max:58523, t:.3069,tq:.19,  tf:.1169},
-  {min:58523, max:108680,t:.36118,tq:.19, tf:.17118},
-  {min:108680,max:117045,t:.41118,tq:.24, tf:.17118},
+  {min:58523, max:108680,t:.3612, tq:.19, tf:.1712},
+  {min:108680,max:117045,t:.4112, tq:.24, tf:.1712},
   {min:117045,max:132245,t:.4571, tq:.24, tf:.2171},
   {min:132245,max:181440,t:.4746, tq:.2575,tf:.2171},
-  {min:181440,max:258482,t:.5022, tq:.2575,tf:.2447},
-  {min:258482,max:1e9,   t:.53305,tq:.2575,tf:.27555},
+  {min:181440,max:258482,t:.4997, tq:.2575,tf:.2422},
+  {min:258482,max:1e9,   t:.5331, tq:.2575,tf:.2756},
 ];
 const PLAB=["0 $ – 54 345 $","54 345 $ – 58 523 $","58 523 $ – 108 680 $",
   "108 680 $ – 117 045 $","117 045 $ – 132 245 $","132 245 $ – 181 440 $",
@@ -3058,6 +3059,34 @@ function drawNetWorth() {
 
 // ══ REER ══
 // Bascule Célibataire / En couple — affiche ou masque les champs du conjoint(e)
+// Génère dynamiquement un champ d'âge par enfant (utilisé pour un calcul ACE précis :
+// montant de base différent selon que l'enfant a moins de 6 ans ou 6-17 ans).
+function updateEnfantsAges(){
+  const n = Math.max(0, Math.min(10, g('rr-enf')));
+  const zone = document.getElementById('rr-enfants-ages');
+  if(!zone) return;
+  const existants = zone.querySelectorAll('input');
+  const anciennesValeurs = Array.from(existants).map(el=>el.value);
+  let html = '';
+  for(let i=0;i<n;i++){
+    const val = anciennesValeurs[i] !== undefined ? anciennesValeurs[i] : 10;
+    html += `<div style="display:flex;flex-direction:column;gap:2px">
+      <label style="font-size:9.5px;color:var(--gry)">Âge enfant ${i+1}</label>
+      <input type="number" class="rr-enf-age" value="${val}" min="0" max="17" style="width:70px" oninput="calcReer()">
+    </div>`;
+  }
+  zone.innerHTML = html;
+}
+
+// Retourne le tableau des âges saisis pour chaque enfant (aligné sur le nombre d'enfants actuel)
+function getEnfantsAges(){
+  const n = g('rr-enf');
+  const inputs = document.querySelectorAll('#rr-enfants-ages .rr-enf-age');
+  const ages = Array.from(inputs).map(el=>Number(el.value)||10);
+  while(ages.length < n) ages.push(10); // valeur par défaut si pas encore généré
+  return ages.slice(0, n);
+}
+
 function setSituationReer(sit){
   const isCouple = sit==='couple';
   const btnSeul=document.getElementById('rr-sit-seul'), btnCouple=document.getElementById('rr-sit-couple');
@@ -3093,10 +3122,11 @@ function calcReer(){
   const tm2=marg(rev2), plaf2=Math.min(rev2*.18,33810), remb2=getAnnualCot('r-cot2')*tm2;
   $('conj-res').innerHTML=rr('Taux marginal conjoint(e)',fp(tm2))+rr('Plafond REER conjoint(e)',fmt(plaf2))+rr('Remboursement conjoint(e)',`<span class="ok">${fmt(remb2)}</span>`,'hi')+rr('Total remboursements couple',`<span class="ok">${fmt(remb+remb2)}</span>`,'hi');
 
-  drawImpactKPI(rev, enf, rev2, age);
-  drawImpactTable(rev, enf, rev2, tm, tm2, age);
-  drawOpportunityBanner(rev, enf, rev2, age);
-  drawChart(rev,tm,enf,rev2,age);
+  const enfAges = getEnfantsAges();
+  drawImpactKPI(rev, enf, rev2, age, enfAges);
+  drawImpactTable(rev, enf, rev2, tm, tm2, age, enfAges);
+  drawOpportunityBanner(rev, enf, rev2, age, enfAges);
+  drawChart(rev,tm,enf,rev2,age,enfAges);
 
 }
 
@@ -3124,25 +3154,29 @@ const PAT_TAUX_RED = 0.10;
 const AF_MAX_ENFANT=3068, AF_MIN_ENFANT=1221, AF_MONO_MAX=1077, AF_MONO_MIN=430;
 const AF_SEUIL_COUPLE=60398, AF_SEUIL_MONO=44032, AF_TAUX_RED=0.04;
 
+// PSV — récupération 2026-2027 (source : Service Canada / CFFP). Seuil corrigé (était 80000$ à tort).
+const PSV_SEUIL=93454, PSV_TAUX=0.15, PSV_MAX_ANNUEL=743.05*12;
+const PSV_PLAFOND=PSV_SEUIL+PSV_MAX_ANNUEL/PSV_TAUX; // point où la PSV est entièrement récupérée
+
 // Calcule, pour un revenu/situation donnés, la ventilation marginale de chaque
 // mesure fiscale/aide gouvernementale par tranche de "step" $ cotisée au REER.
 // Réutilisé par le graphique (drawChart) et le tableau détaillé (drawImpactTable).
 // Fabrique les fonctions de calcul des aides (ACE, ACT, Prime travail, Alloc. famille)
 // pour un profil donné — réutilisée par calcImpactPts (paliers uniformes) et
 // calcImpactPtsBreaks (paliers personnalisés, ex. pour le début du graphique).
-function makeCreditFuncs(enf, rev2){
+function makeCreditFuncs(enf, rev2, enfAges){
   // ACE (2026-2027, année de base 2025) — source : ARC / CFFP.
-  // Montant de base : 8157$/enfant sous 6 ans, 6883$/enfant 6-17 ans. Comme l'app ne demande
-  // pas la répartition par âge des enfants, on utilise 6883$/enfant (taux 6-17 ans) par défaut —
-  // une hypothèse prudente : le montant réel peut être plus élevé si un ou des enfants ont moins de 6 ans.
-  // Réduction à 2 paliers selon le NOMBRE d'enfants (ceci, en revanche, est exact) :
+  // Montant de base : 8157$/enfant sous 6 ans, 6883$/enfant 6-17 ans. Si les âges précis sont
+  // fournis (enfAges), le montant de base exact est calculé enfant par enfant ; sinon, 6883$/enfant
+  // par défaut (hypothèse prudente : le montant réel peut être plus élevé si un enfant a moins de 6 ans).
+  // Réduction à 2 paliers selon le NOMBRE d'enfants (ceci, en revanche, est exact peu importe l'âge) :
   //   38 237$-82 847$ : 7%(1 enf.) / 13,5%(2) / 19%(3) / 23%(4+)
   //   au-delà de 82 847$ : 3,2%(1) / 5,7%(2) / 8%(3) / 9,5%(4+)
   const ACE_SEUIL1=38237, ACE_SEUIL2=82847;
   const ACE_TIER1={1:.07,2:.135,3:.19}, ACE_TIER2={1:.032,2:.057,3:.08};
   function aceF(r){
     if(enf<=0) return 0;
-    const base = enf*6883;
+    const base = (enfAges && enfAges.length===enf) ? enfAges.reduce((s,a)=>s+(a<6?8157:6883),0) : enf*6883;
     const t1 = ACE_TIER1[enf] ?? .23, t2 = ACE_TIER2[enf] ?? .095;
     let reduction=0;
     if(r>ACE_SEUIL1) reduction += (Math.min(r,ACE_SEUIL2)-ACE_SEUIL1)*t1;
@@ -3179,9 +3213,9 @@ function makeCreditFuncs(enf, rev2){
   return {aceF, actF, patF, afF, actCat};
 }
 
-function calcImpactPts(rev, enf, rev2, step, maxC, age){
+function calcImpactPts(rev, enf, rev2, step, maxC, age, enfAges){
   rev2 = rev2 || 0;
-  const {aceF, actF, patF, afF} = makeCreditFuncs(enf, rev2);
+  const {aceF, actF, patF, afF} = makeCreditFuncs(enf, rev2, enfAges);
 
   const pts=[];
   const plafond = Math.min(maxC||85000, rev);
@@ -3194,7 +3228,7 @@ function calcImpactPts(rev, enf, rev2, step, maxC, age){
     const pat=Math.max(0,patF(rn)-patF(rp));
     const af=Math.max(0,afF(rn)-afF(rp));
     const sol=Math.max(0,Math.max(0,rp-43195)-Math.max(0,rn-43195))*0.06;
-    const psv=(age>=65&&rev>80000&&rev<=105000)?Math.max(0,(Math.min(105000,rp)-Math.min(105000,rn))*.15):0;
+    const psv=(age>=65&&rev>PSV_SEUIL)?Math.max(0,(Math.min(PSV_PLAFOND,rp)-Math.min(PSV_PLAFOND,rn))*PSV_TAUX):0;
     pts.push({c,imp,ace,act,pat,af,sol,psv,eff:(imp+ace+act+pat+af+sol+psv)/step});
   }
   return pts;
@@ -3202,9 +3236,9 @@ function calcImpactPts(rev, enf, rev2, step, maxC, age){
 
 // Variante à paliers personnalisés (largeur variable), ex. [0,1000,3000,5000,10000,15000,...]
 // pour détailler le tout début de la cotisation avant de continuer par tranches de 5000$.
-function calcImpactPtsBreaks(rev, enf, rev2, breakpoints, age){
+function calcImpactPtsBreaks(rev, enf, rev2, breakpoints, age, enfAges){
   rev2 = rev2 || 0;
-  const {aceF, actF, patF, afF} = makeCreditFuncs(enf, rev2);
+  const {aceF, actF, patF, afF} = makeCreditFuncs(enf, rev2, enfAges);
   const pts=[];
   for(let i=1;i<breakpoints.length;i++){
     const lo=breakpoints[i-1], hi=Math.min(breakpoints[i], rev);
@@ -3217,7 +3251,7 @@ function calcImpactPtsBreaks(rev, enf, rev2, breakpoints, age){
     const pat=Math.max(0,patF(rn)-patF(rp));
     const af=Math.max(0,afF(rn)-afF(rp));
     const sol=Math.max(0,Math.max(0,rp-43195)-Math.max(0,rn-43195))*0.06;
-    const psv=(age>=65&&rev>80000&&rev<=105000)?Math.max(0,(Math.min(105000,rp)-Math.min(105000,rn))*.15):0;
+    const psv=(age>=65&&rev>PSV_SEUIL)?Math.max(0,(Math.min(PSV_PLAFOND,rp)-Math.min(PSV_PLAFOND,rn))*PSV_TAUX):0;
     pts.push({c:hi,w,imp,ace,act,pat,af,sol,psv,eff:(imp+ace+act+pat+af+sol+psv)/w});
     if(hi>=rev) break;
   }
@@ -3234,13 +3268,13 @@ function findSeuilEpuisement(fine){
   return seuil;
 }
 
-function drawImpactKPI(rev, enf, rev2, age){
+function drawImpactKPI(rev, enf, rev2, age, enfAges){
   const zone = $('imp-kpi-zone');
   if(!zone) return;
-  const pts = calcImpactPts(rev, enf, rev2, 5000, undefined, age);
+  const pts = calcImpactPts(rev, enf, rev2, 5000, undefined, age, enfAges);
   if(!pts.length){ zone.innerHTML=''; return; }
   const best = pts.reduce((a,b)=>b.eff>a.eff?b:a, pts[0]);
-  const fine = calcImpactPts(rev, enf, rev2, 250, undefined, age);
+  const fine = calcImpactPts(rev, enf, rev2, 250, undefined, age, enfAges);
   const seuil = findSeuilEpuisement(fine);
   zone.innerHTML = `
     <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px">
@@ -3258,10 +3292,10 @@ function drawImpactKPI(rev, enf, rev2, age){
 }
 
 // Bannière comparant le rendement de la meilleure tranche vs une tranche après épuisement des aides
-function drawOpportunityBanner(rev, enf, rev2, age){
+function drawOpportunityBanner(rev, enf, rev2, age, enfAges){
   const zone = $('imp-opportunity-zone');
   if(!zone) return;
-  const fine = calcImpactPts(rev, enf, rev2, 250, undefined, age);
+  const fine = calcImpactPts(rev, enf, rev2, 250, undefined, age, enfAges);
   if(!fine.length){ zone.innerHTML=''; return; }
   const seuil = findSeuilEpuisement(fine);
   const maxC = fine[fine.length-1].c;
@@ -3276,7 +3310,7 @@ function drawOpportunityBanner(rev, enf, rev2, age){
 
   // Même tranche « la plus payante » que celle affichée dans le KPI du haut (grille de 5000$),
   // pour que les deux chiffres présentés au client soient toujours cohérents entre eux.
-  const coarse = calcImpactPts(rev, enf, rev2, 5000, undefined, age);
+  const coarse = calcImpactPts(rev, enf, rev2, 5000, undefined, age, enfAges);
   const best = coarse.reduce((a,b)=>b.eff>a.eff?b:a, coarse[0]);
   const bestLo = Math.max(0, best.c-5000), bestHi = best.c;
   const bestSlice = sumRange(bestLo, bestHi);
@@ -3299,11 +3333,11 @@ function drawOpportunityBanner(rev, enf, rev2, age){
     </div>`;
 }
 
-function drawImpactTable(rev, enf, rev2, tm, tm2, age){
+function drawImpactTable(rev, enf, rev2, tm, tm2, age, enfAges){
   const zone = $('imp-table-zone');
   if(!zone) return;
   const hasConjoint = rev2>0;
-  const fine = calcImpactPts(rev, enf, rev2, 250, 100000, age);
+  const fine = calcImpactPts(rev, enf, rev2, 250, 100000, age, enfAges);
   if(!fine.length){ zone.innerHTML=''; return; }
   const seuil = findSeuilEpuisement(fine);
   const maxDispo = fine[fine.length-1].c;
@@ -3316,7 +3350,7 @@ function drawImpactTable(rev, enf, rev2, tm, tm2, age){
   // ACE, ACT, Prime au travail et Allocation famille ont des formules de "niveau" calculables
   // directement au revenu actuel ; la Solidarité et la PSV ne sont modélisées qu'en réduction
   // marginale ici et n'ont pas de montant de base absolu fiable à afficher.
-  const {aceF, actF, patF, afF} = makeCreditFuncs(enf, rev2);
+  const {aceF, actF, patF, afF} = makeCreditFuncs(enf, rev2, enfAges);
   const baseAce = aceF(rev), baseAct = actF(rev), basePat = patF(rev), baseAf = afF(rev);
   const baseHtml = (baseAce+baseAct+basePat+baseAf) > 1 ? `
     <div style="background:#F8FAFC;border:1px solid var(--gry-l);border-radius:var(--r-lg);padding:14px 18px;margin-bottom:14px">
@@ -3453,7 +3487,7 @@ function drawImpactTable(rev, enf, rev2, tm, tm2, age){
   `;
 }
 
-function drawChart(rev,tm,enf,rev2,age){
+function drawChart(rev,tm,enf,rev2,age,enfAges){
   rev2 = rev2 || 0;
   const svg=$('imp-svg');
   const W=Math.max(500,svg.parentElement.offsetWidth||700);
@@ -3463,7 +3497,7 @@ function drawChart(rev,tm,enf,rev2,age){
   // Paliers personnalisés : plus détaillés au tout début (0-1k-3k-5k), puis tranches de 5000$
   const breakpoints=[0,1000,3000,5000];
   for(let c=10000;c<=Math.min(85000,rev)+5000;c+=5000) breakpoints.push(c);
-  const pts=calcImpactPtsBreaks(rev,enf,rev2,breakpoints,age);
+  const pts=calcImpactPtsBreaks(rev,enf,rev2,breakpoints,age,enfAges);
   if(!pts.length){svg.innerHTML='<text x="20" y="30" font-size="12" fill="#999">Aucune donnée</text>';return;}
 
   const segs=[['1E293B','475569','imp','Impôt (fédéral + Québec)'],['0D9488','2DD4BF','ace','Allocation canadienne pour enfants (ACE)'],['0284C7','38BDF8','af','Allocation famille (Québec)'],['7C3AED','A78BFA','act','Allocation canadienne pour travailleurs (ACT)'],['DB2777','F472B6','pat','Prime au travail (Québec)'],['D97706','FBBF24','sol','Crédit de solidarité (Québec)'],['64748B','94A3B8','psv','Récupération pension féd. (PSV)']];
@@ -3577,12 +3611,12 @@ function drawChart(rev,tm,enf,rev2,age){
   if(legZone){
     const legDesc = {
       imp:"Impôt évité — fédéral et provincial, selon votre taux marginal.",
-      ace:"ACE (fédéral) — augmente quand votre revenu net familial baisse. Estimée pour des enfants de 6 à 17 ans ; peut être plus élevée si un enfant a moins de 6 ans.",
+      ace:"ACE (fédéral) — augmente quand votre revenu net familial baisse. Calculée précisément selon l'âge de chaque enfant saisi ci-dessus.",
       af:"Allocation famille (Québec) — distincte de l'ACE, avec un minimum garanti par enfant.",
       act:"ACT (fédéral) — crédit remboursable pour travailleurs à revenu modeste. Cesse d'augmenter une fois le maximum atteint.",
       pat:"Prime au travail (Québec) — équivalent provincial, distinct de l'ACT.",
       sol:"Crédit de solidarité (Québec) — réduit progressivement au-dessus de 43 195 $. Une fois sous ce seuil, le maximum est déjà atteint et n'augmente plus.",
-      psv:"Récupération de la PSV — s'applique seulement à 65 ans et plus, entre 80 000 $ et 105 000 $ de revenu."
+      psv:"Récupération de la PSV — s'applique seulement à 65 ans et plus, au-delà de 93 454 $ de revenu (2026)."
     };
     let lh = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px 16px;margin-top:14px">`;
     segs.forEach(([c1,,k,fullLabel])=>{
@@ -5569,6 +5603,7 @@ calc();
 verifierAlerteMaj();
 // Restaurer mode sombre
 try{if(localStorage.getItem('gff_dark')==='1'){document.body.classList.add('dark');const b=document.getElementById('dark-btn');if(b)b.innerHTML='<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg> Mode clair';}}catch(e){}
+updateEnfantsAges();
 calcSucc();
 calcObj();
 calcActifNet();
