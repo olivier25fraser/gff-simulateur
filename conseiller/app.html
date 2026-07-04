@@ -957,6 +957,10 @@ body.dark .new-client-form input{background:#2a2a2a;border-color:#444;color:#e0e
     <div class="cb">
       <div class="chart-wrap"><svg id="imp-svg" height="240" style="min-width:500px"></svg></div>
       <div class="note" id="imp-note"></div>
+      <div style="margin-top:18px">
+        <div style="font-size:12px;font-weight:700;color:#0F0F0F;margin-bottom:8px">Détail par palier de cotisation</div>
+        <div id="imp-table-zone"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -3055,6 +3059,7 @@ function calcReer(){
   $('conj-res').innerHTML=rr('Taux marginal conjoint(e)',fp(tm2))+rr('Plafond REER conjoint(e)',fmt(plaf2))+rr('Remboursement conjoint(e)',`<span class="ok">${fmt(remb2)}</span>`,'hi')+rr('Total remboursements couple',`<span class="ok">${fmt(remb+remb2)}</span>`,'hi');
 
   drawChart(rev,tm,enf,plaf,rev2);
+  drawImpactTable(rev,enf,plaf,rev2);
 
 }
 
@@ -3082,13 +3087,11 @@ const PAT_TAUX_RED = 0.10;
 const AF_MAX_ENFANT=3068, AF_MIN_ENFANT=1221, AF_MONO_MAX=1077, AF_MONO_MIN=430;
 const AF_SEUIL_COUPLE=60398, AF_SEUIL_MONO=44032, AF_TAUX_RED=0.04;
 
-function drawChart(rev,tm,enf,plaf,rev2){
+// Calcule, pour un revenu/situation donnés, la ventilation marginale de chaque
+// mesure fiscale/aide gouvernementale par tranche de "step" $ cotisée au REER.
+// Réutilisé par le graphique (drawChart) et le tableau détaillé (drawImpactTable).
+function calcImpactPts(rev, enf, plaf, rev2, step, maxC){
   rev2 = rev2 || 0;
-  const svg=$('imp-svg');
-  const W=Math.max(500,svg.parentElement.offsetWidth||700);
-  svg.setAttribute('width',W);
-  const H=260,mL=46,mR=16,mT=18,mB=46,cW=W-mL-mR,cH=H-mT-mB;
-
   function aceF(r){return enf>0?enf*7000*Math.max(0,1-Math.max(0,r-36502)*.032/7000):0;}
 
   const actCat = enf>0 ? (rev2>0?'couple_avec':'monoparental') : (rev2>0?'couple_sans':'seul');
@@ -3120,18 +3123,88 @@ function drawChart(rev,tm,enf,plaf,rev2){
   }
 
   const pts=[];
-  for(let c=5000;c<=Math.min(Math.ceil(plaf/5000)*5000+5000,85000);c+=5000){
-    if(c>rev+5000) break;
-    const rn=Math.max(0,rev-c), rp=Math.max(0,rev-(c-5000));
-    const imp=(marg(rp)+marg(rn))/2*5000;
+  const plafond = Math.min(Math.ceil(plaf/step)*step+step, maxC||85000);
+  for(let c=step;c<=plafond;c+=step){
+    if(c>rev+step) break;
+    const rn=Math.max(0,rev-c), rp=Math.max(0,rev-(c-step));
+    const imp=(marg(rp)+marg(rn))/2*step;
     const ace=Math.max(0,aceF(rn)-aceF(rp));
     const act=Math.max(0,actF(rn)-actF(rp));
     const pat=Math.max(0,patF(rn)-patF(rp));
     const af=Math.max(0,afF(rn)-afF(rp));
     const sol=Math.max(0,Math.max(0,rp-43195)-Math.max(0,rn-43195))*0.06;
     const psv=rev>80000&&rev<=105000?Math.max(0,(Math.min(105000,rp)-Math.min(105000,rn))*.15):0;
-    pts.push({c,imp,ace,act,pat,af,sol,psv,eff:(imp+ace+act+pat+af+sol+psv)/5000,in:c<=plaf});
+    pts.push({c,imp,ace,act,pat,af,sol,psv,eff:(imp+ace+act+pat+af+sol+psv)/step,in:c<=plaf});
   }
+  return pts;
+}
+
+// Tableau détaillé cumulatif : "à X$ cotisé, voici le total récupéré"
+function drawImpactTable(rev, enf, plaf, rev2){
+  const zone = $('imp-table-zone');
+  if(!zone) return;
+  const fine = calcImpactPts(rev, enf, plaf, rev2, 250, Math.min(plaf+5000, rev, 85000));
+  if(!fine.length){ zone.innerHTML=''; return; }
+
+  // Paliers usuels à présenter (filtrés selon le plafond/revenu disponible)
+  const maxDispo = fine[fine.length-1].c;
+  const paliers = [500,1000,1500,2000,2500,3000,4000,5000,7500,10000,12500,15000,20000,25000,plaf]
+    .filter(p=>p<=maxDispo)
+    .sort((a,b)=>a-b)
+    .filter((p,i,arr)=>i===arr.length-1||p!==arr[i+1]); // dédoublonner, garder le plafond exact
+
+  let rows='';
+  paliers.forEach(target=>{
+    const slice = fine.filter(t=>t.c<=target);
+    const sum = k => slice.reduce((s,t)=>s+t[k],0);
+    const imp=sum('imp'), ace=sum('ace'), act=sum('act'), pat=sum('pat'), af=sum('af'), sol=sum('sol'), psv=sum('psv');
+    const total = imp+ace+act+pat+af+sol+psv;
+    const pct = target>0 ? (total/target*100) : 0;
+    const isPlaf = target===plaf;
+    rows += `<tr${isPlaf?' style="background:#FFFAED;font-weight:700"':''}>
+      <td>${fmt(target)}${isPlaf?' <span style="font-size:9px;color:#BF8F00">★ plafond</span>':''}</td>
+      <td>${fmt(Math.round(imp))}</td>
+      <td>${ace>0?fmt(Math.round(ace)):'—'}</td>
+      <td>${af>0?fmt(Math.round(af)):'—'}</td>
+      <td>${act>0?fmt(Math.round(act)):'—'}</td>
+      <td>${pat>0?fmt(Math.round(pat)):'—'}</td>
+      <td>${sol>0?fmt(Math.round(sol)):'—'}</td>
+      <td>${psv>0?fmt(Math.round(psv)):'—'}</td>
+      <td style="font-weight:700;color:var(--grn)">${fmt(Math.round(total))}</td>
+      <td style="font-weight:700">${pct.toFixed(0)}%</td>
+    </tr>`;
+  });
+
+  zone.innerHTML = `
+    <div style="overflow-x:auto">
+    <table class="tbl" style="font-size:11px;white-space:nowrap">
+      <thead><tr>
+        <th style="text-align:left">Cotisation</th>
+        <th>Impôt évité</th>
+        <th>ACE</th>
+        <th>Alloc. famille</th>
+        <th>ACT</th>
+        <th>Prime travail</th>
+        <th>Solidarité</th>
+        <th>PSV</th>
+        <th>Total récupéré</th>
+        <th>% retour</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    </div>
+    <div class="note" style="margin-top:10px">Montants <strong>cumulatifs</strong> : à chaque palier, le total représente ce qui serait récupéré (impôt + toutes les aides applicables) si ce montant était cotisé au REER cette année. Le "—" indique qu'aucun montant n'est applicable à ce palier pour cette mesure. Estimations indicatives.</div>
+  `;
+}
+
+function drawChart(rev,tm,enf,plaf,rev2){
+  rev2 = rev2 || 0;
+  const svg=$('imp-svg');
+  const W=Math.max(500,svg.parentElement.offsetWidth||700);
+  svg.setAttribute('width',W);
+  const H=260,mL=46,mR=16,mT=18,mB=46,cW=W-mL-mR,cH=H-mT-mB;
+
+  const pts=calcImpactPts(rev,enf,plaf,rev2,5000);
   if(!pts.length){svg.innerHTML='<text x="20" y="30" font-size="12" fill="#999">Aucune donnée</text>';return;}
 
   const maxE=Math.max(...pts.map(t=>t.eff),.5);
