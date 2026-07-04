@@ -3091,8 +3091,9 @@ const AF_SEUIL_COUPLE=60398, AF_SEUIL_MONO=44032, AF_TAUX_RED=0.04;
 // Calcule, pour un revenu/situation donnés, la ventilation marginale de chaque
 // mesure fiscale/aide gouvernementale par tranche de "step" $ cotisée au REER.
 // Réutilisé par le graphique (drawChart) et le tableau détaillé (drawImpactTable).
-function calcImpactPts(rev, enf, plaf, rev2, step, maxC){
+function calcImpactPts(rev, enf, plaf, rev2, step, maxC, dedCap){
   rev2 = rev2 || 0;
+  dedCap = dedCap===undefined ? plaf : dedCap;
   function aceF(r){return enf>0?enf*7000*Math.max(0,1-Math.max(0,r-36502)*.032/7000):0;}
 
   const actCat = enf>0 ? (rev2>0?'couple_avec':'monoparental') : (rev2>0?'couple_sans':'seul');
@@ -3124,11 +3125,13 @@ function calcImpactPts(rev, enf, plaf, rev2, step, maxC){
   }
 
   const pts=[];
-  const plafond = Math.min(Math.ceil(plaf/step)*step+step, maxC||85000);
+  const plafond = Math.min(Math.max(dedCap,step)+step*40, maxC||85000); // quelques paliers au-delà du plafond, pour démontrer l'absence de gain
   for(let c=step;c<=plafond;c+=step){
     if(c>rev+step) break;
-    const rn=Math.max(0,rev-c), rp=Math.max(0,rev-(c-step));
-    const imp=(marg(rp)+marg(rn))/2*step;
+    // Au-delà du plafond REER, l'excédent n'est pas déductible : le revenu net ne baisse plus.
+    const cDed=Math.min(c,dedCap), cDedPrec=Math.min(c-step,dedCap);
+    const rn=Math.max(0,rev-cDed), rp=Math.max(0,rev-cDedPrec);
+    const imp=(marg(rp)+marg(rn))/2*(cDed-cDedPrec);
     const ace=Math.max(0,aceF(rn)-aceF(rp));
     const act=Math.max(0,actF(rn)-actF(rp));
     const pat=Math.max(0,patF(rn)-patF(rp));
@@ -3145,7 +3148,8 @@ function drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2){
   const zone = $('imp-table-zone');
   if(!zone) return;
   const hasConjoint = rev2>0;
-  const fine = calcImpactPts(rev, enf, plaf, rev2, 250, Math.min(plaf+5000, rev, 85000));
+  const dedCapCombine = plaf + (hasConjoint ? (plaf2||0) : 0);
+  const fine = calcImpactPts(rev, enf, plaf, rev2, 250, Math.min(dedCapCombine+10000, rev+(rev2||0), 85000), dedCapCombine);
   if(!fine.length){ zone.innerHTML=''; return; }
 
   // Qui devrait cotiser en priorité : celui des deux avec le taux marginal le plus élevé.
@@ -3160,7 +3164,8 @@ function drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2){
 
   // Paliers usuels à présenter (filtrés selon le plafond/revenu disponible)
   const maxDispo = fine[fine.length-1].c;
-  const paliers = [500,1000,1500,2000,2500,3000,4000,5000,7500,10000,12500,15000,20000,25000,plaf]
+  const paliers = [500,1000,1500,2000,2500,3000,4000,5000,7500,10000,12500,15000,20000,25000,plaf,dedCapCombine,dedCapCombine+2000,dedCapCombine+5000,dedCapCombine+10000]
+    .filter(p=>p>0)
     .filter(p=>p<=maxDispo)
     .sort((a,b)=>a-b)
     .filter((p,i,arr)=>i===arr.length-1||p!==arr[i+1]); // dédoublonner, garder le plafond exact
@@ -3183,9 +3188,11 @@ function drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2){
 
     const total = imp+ace+act+pat+af+sol+psv;
     const pct = target>0 ? (total/target*100) : 0;
-    const isPlaf = target===plaf;
-    rows += `<tr${isPlaf?' style="background:#FFFAED;font-weight:700"':''}>
-      <td>${fmt(target)}${isPlaf?' <span style="font-size:9px;color:#BF8F00">★ plafond principal</span>':''}</td>
+    const isPlaf = target===plaf && !hasConjoint;
+    const isPlafCombine = target===dedCapCombine && hasConjoint;
+    const isBeyond = target>dedCapCombine;
+    rows += `<tr style="${(isPlaf||isPlafCombine)?'background:#FFFAED;font-weight:700':isBeyond?'opacity:.55':''}">
+      <td>${fmt(target)}${isPlaf?' <span style="font-size:9px;color:#BF8F00">★ plafond</span>':''}${isPlafCombine?' <span style="font-size:9px;color:#BF8F00">★ plafond combiné</span>':''}${isBeyond?' <span style="font-size:9px;color:#999">hors plafond</span>':''}</td>
       <td style="font-size:10px;color:var(--gry);font-weight:500">${repart}</td>
       <td>${fmt(Math.round(imp))}</td>
       <td>${ace>0?fmt(Math.round(ace)):'—'}</td>
@@ -3194,7 +3201,7 @@ function drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2){
       <td>${pat>0?fmt(Math.round(pat)):'—'}</td>
       <td>${sol>0?fmt(Math.round(sol)):'—'}</td>
       <td>${psv>0?fmt(Math.round(psv)):'—'}</td>
-      <td style="font-weight:700;color:var(--grn)">${fmt(Math.round(total))}</td>
+      <td style="font-weight:700;color:${isBeyond?'#999':'var(--grn)'}">${fmt(Math.round(total))}</td>
       <td style="font-weight:700">${pct.toFixed(0)}%</td>
     </tr>`;
   });
@@ -3231,7 +3238,7 @@ function drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2){
       <tbody>${rows}</tbody>
     </table>
     </div>
-    <div class="note" style="margin-top:10px">Montants <strong>cumulatifs</strong> : à chaque palier, le total représente ce qui serait récupéré (impôt + toutes les aides applicables) si ce montant était cotisé au REER cette année. Le "—" indique qu'aucun montant n'est applicable à ce palier pour cette mesure. Estimations indicatives.</div>
+    <div class="note" style="margin-top:10px">Montants <strong>cumulatifs</strong> : à chaque palier, le total représente ce qui serait récupéré (impôt + toutes les aides applicables) si ce montant était cotisé au REER cette année. Le "—" indique qu'aucun montant n'est applicable à ce palier pour cette mesure. Les paliers grisés <strong>« hors plafond »</strong> montrent ce qui se passe au-delà du plafond de cotisation disponible : puisque l'excédent n'est plus déductible, le revenu net ne baisse plus et <strong>aucun gain supplémentaire n'est possible</strong> — cotiser plus que le plafond ne rapporte rien de plus sur le plan fiscal. Estimations indicatives.</div>
   `;
 }
 
