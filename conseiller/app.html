@@ -3069,6 +3069,19 @@ const ACT_PARAMS = {
 };
 const ACT_EXEMPTION_2E = 16386;
 
+// Prime au travail générale — Québec, année d'imposition 2026 (distincte de l'ACT fédérale)
+const PAT_PARAMS = {
+  seul:         {exclus:2400, max:1207.33, seuilRed:12808},
+  couple_sans:  {exclus:3600, max:1882.45, seuilRed:19828},
+  monoparental: {exclus:2400, max:3122.40, seuilRed:12808},
+  couple_avec:  {exclus:3600, max:4057.00, seuilRed:19828},
+};
+const PAT_TAUX_RED = 0.10;
+
+// Allocation famille — Québec, année d'imposition 2026 (distincte de l'ACE fédérale)
+const AF_MAX_ENFANT=3068, AF_MIN_ENFANT=1221, AF_MONO_MAX=1077, AF_MONO_MIN=430;
+const AF_SEUIL_COUPLE=60398, AF_SEUIL_MONO=44032, AF_TAUX_RED=0.04;
+
 function drawChart(rev,tm,enf,plaf,rev2){
   rev2 = rev2 || 0;
   const svg=$('imp-svg');
@@ -3089,6 +3102,22 @@ function drawChart(rev,tm,enf,plaf,rev2){
     const reduction = p.tauxRed*Math.max(0, netRed-p.seuilRed);
     return Math.max(0, base-reduction);
   }
+  function patF(rn){
+    const p=PAT_PARAMS[actCat];
+    const familyNet = actIsCouple ? rn+rev2 : rn;
+    const reduction = PAT_TAUX_RED*Math.max(0, familyNet-p.seuilRed);
+    return Math.max(0, p.max-reduction);
+  }
+  function afF(rn){
+    if(enf<=0) return 0;
+    const isMono = actCat==='monoparental';
+    const totalMax = enf*AF_MAX_ENFANT + (isMono?AF_MONO_MAX:0);
+    const totalMin = enf*AF_MIN_ENFANT + (isMono?AF_MONO_MIN:0);
+    const seuil = isMono ? AF_SEUIL_MONO : AF_SEUIL_COUPLE;
+    const familyNet = actIsCouple ? rn+rev2 : rn;
+    const reduction = AF_TAUX_RED*Math.max(0, familyNet-seuil);
+    return Math.max(totalMin, totalMax-reduction);
+  }
 
   const pts=[];
   for(let c=5000;c<=Math.min(Math.ceil(plaf/5000)*5000+5000,85000);c+=5000){
@@ -3097,9 +3126,11 @@ function drawChart(rev,tm,enf,plaf,rev2){
     const imp=(marg(rp)+marg(rn))/2*5000;
     const ace=Math.max(0,aceF(rn)-aceF(rp));
     const act=Math.max(0,actF(rn)-actF(rp));
-    const sol=Math.max(0,(Math.min(60000,rn)-Math.min(60000,rp))*(-0.02));
+    const pat=Math.max(0,patF(rn)-patF(rp));
+    const af=Math.max(0,afF(rn)-afF(rp));
+    const sol=Math.max(0,Math.max(0,rp-43195)-Math.max(0,rn-43195))*0.06;
     const psv=rev>80000&&rev<=105000?Math.max(0,(Math.min(105000,rp)-Math.min(105000,rn))*.15):0;
-    pts.push({c,imp,ace,act,sol,psv,eff:(imp+ace+act+sol+psv)/5000,in:c<=plaf});
+    pts.push({c,imp,ace,act,pat,af,sol,psv,eff:(imp+ace+act+pat+af+sol+psv)/5000,in:c<=plaf});
   }
   if(!pts.length){svg.innerHTML='<text x="20" y="30" font-size="12" fill="#999">Aucune donnée</text>';return;}
 
@@ -3111,7 +3142,7 @@ function drawChart(rev,tm,enf,plaf,rev2){
 
   // Dégradés + ombre douce pour chaque segment
   let defs=`<defs>`;
-  const segs=[['0F0F0F','2A2A2A','imp','Impôt (fédéral + Québec)'],['538135','7BAE5A','ace','Allocation canadienne pour enfants (ACE)'],['7030A0','9C63C9','act','Allocation canadienne pour travailleurs (ACT)'],['D4A800','E8C640','sol','Crédit de solidarité (Québec)'],['9DC3E6','C3DCF0','psv','Récupération pension féd. (PSV)']];
+  const segs=[['0F0F0F','2A2A2A','imp','Impôt (fédéral + Québec)'],['538135','7BAE5A','ace','Allocation canadienne pour enfants (ACE)'],['1F6FB2','5C9BD5','af','Allocation famille (Québec)'],['7030A0','9C63C9','act','Allocation canadienne pour travailleurs (ACT)'],['C0504D','D98280','pat','Prime au travail (Québec)'],['D4A800','E8C640','sol','Crédit de solidarité (Québec)'],['9DC3E6','C3DCF0','psv','Récupération pension féd. (PSV)']];
   segs.forEach(([c1,c2,k])=>{
     defs+=`<linearGradient id="grad-${k}" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#${c2}"/><stop offset="100%" stop-color="#${c1}"/>
@@ -3176,7 +3207,7 @@ function drawChart(rev,tm,enf,plaf,rev2){
   h+=`</g>`;
 
   // Légende
-  const legItems=[['grad-imp','Impôt'],['grad-ace','ACE'],['grad-act','ACT'],['grad-sol','Solidarité'],['grad-psv','Pension féd.'],['C00000','Retour effectif']];
+  const legItems=[['grad-imp','Impôt'],['grad-ace','ACE'],['grad-af','Alloc. famille'],['grad-act','ACT'],['grad-pat','Prime travail'],['grad-sol','Solidarité'],['grad-psv','Pension féd.'],['C00000','Retour effectif']];
   let lx=mL;
   legItems.forEach(([c,l])=>{
     if(c==='C00000'){h+=`<line x1="${lx}" y1="${H-12}" x2="${lx+14}" y2="${H-12}" stroke="#C00000" stroke-width="2.5"/>`;lx+=18;}
@@ -3189,7 +3220,7 @@ function drawChart(rev,tm,enf,plaf,rev2){
 
   const catLabel={seul:'personne seule',couple_sans:'couple sans enfant',monoparental:'famille monoparentale',couple_avec:'couple avec enfant(s)'}[actCat];
   $('imp-note').innerHTML=`<strong>Tranche optimale (★) : ${fmt(best.c-4999)} – ${fmt(best.c)}</strong> — ${fp(best.eff)} de retour combiné par dollar cotisé. Plafond REER : ${fmt(plaf)}.<br>
-  Inclut : impôt fédéral/provincial, ACE, ACT (calculée pour ${catLabel}), crédit de solidarité Québec, récupération de la PSV. Survolez une barre pour le détail. Estimations indicatives — l'ACT et l'ACE dépendent aussi de facteurs non modélisés ici (garde d'enfants, autres revenus). Consultez un fiscaliste pour une analyse précise.`;
+  Inclut : impôt fédéral/provincial, ACE, Allocation famille (Québec), ACT et Prime au travail (calculées pour ${catLabel}), crédit de solidarité Québec, récupération de la PSV. Survolez une barre pour le détail. Estimations indicatives — plusieurs de ces mesures dépendent aussi de facteurs non modélisés ici (garde d'enfants, autres revenus, admissibilité complète). Consultez un fiscaliste pour une analyse précise.`;
 }
 
 // ══ REEE ══
