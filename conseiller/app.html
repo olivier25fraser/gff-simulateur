@@ -3345,12 +3345,6 @@ function drawImpactTable(rev, enf, rev2, tm, tm2, age){
   const seuil = findSeuilEpuisement(fine);
   const maxDispo = fine[fine.length-1].c;
 
-  // Qui devrait cotiser en priorité : celui des deux avec le taux marginal le plus élevé.
-  // Les aides familiales (ACE, ACT, Prime au travail, Alloc. famille, Solidarité) dépendent du revenu
-  // FAMILIAL total, donc elles restent identiques peu importe qui cotise — seul le remboursement
-  // d'impôt personnel varie selon le taux marginal de la personne qui cotise. Comme ce tableau ne
-  // tient pas compte des plafonds de cotisation (à valider séparément avec le conseiller), on
-  // recommande simplement de prioriser la personne au taux marginal le plus élevé pour 100% du montant.
   const clientPrio = tm >= tm2;
   const tmPrio = clientPrio ? tm : tm2;
   const labelPrio = clientPrio ? 'vous' : 'conjoint(e)';
@@ -3369,37 +3363,70 @@ function drawImpactTable(rev, enf, rev2, tm, tm2, age){
     </div>` : '';
 
   const maxDetail = Math.min(100000, maxDispo);
-  let rows1k='';
+
+  // Passe 1 : calculer chaque palier + détecter quelles colonnes d'aide sont
+  // réellement utiles pour CE client (pour ne pas afficher des colonnes toujours vides).
+  const rowsData = [];
+  const colActive = {ace:false, af:false, act:false, pat:false, sol:false, psv:false};
+  let prevTotal = 0;
   for(let target=1000; target<=maxDetail; target+=1000){
     const slice = fine.filter(t=>t.c<=target);
     const sum = k => slice.reduce((s,t)=>s+t[k],0);
     const ace=sum('ace'), act=sum('act'), pat=sum('pat'), af=sum('af'), sol=sum('sol'), psv=sum('psv');
     const imp = target*tmPrio;
-    const repart = hasConjoint ? `100% (${labelPrio})` : `100% vous`;
-    const total = imp+ace+act+pat+af+sol+psv;
-    const pct = target>0 ? (total/target*100) : 0;
-    const pctRound = Math.round(pct);
-    const isSeuil = target===seuil && seuil>0;
-    let pctBg='#F3F4F6', pctFg='#6B7280';
-    if(pctRound>=45){ pctBg='#DCFCE7'; pctFg='#166534'; }
-    else if(pctRound>=25){ pctBg='#FEF3C7'; pctFg='#92400E'; }
-    else { pctBg='#FEE2E2'; pctFg='#991B1B'; }
-    rows1k += `<tr style="${isSeuil?'background:#F5F3FF;font-weight:700':''}">
-      <td>${fmt(target)}${isSeuil?' <span style="font-size:9px;color:#7C3AED">★ aides épuisées</span>':''}</td>
-      <td style="font-size:10px;color:var(--gry);font-weight:500">${repart}</td>
-      <td>${fmt(Math.round(imp))}</td>
-      <td>${ace>0?fmt(Math.round(ace)):'—'}</td>
-      <td>${af>0?fmt(Math.round(af)):'—'}</td>
-      <td>${act>0?fmt(Math.round(act)):'—'}</td>
-      <td>${pat>0?fmt(Math.round(pat)):'—'}</td>
-      <td>${sol>0?fmt(Math.round(sol)):'—'}</td>
-      <td>${psv>0?fmt(Math.round(psv)):'—'}</td>
-      <td style="font-weight:700;color:var(--grn)">${fmt(Math.round(total))}</td>
-      <td style="font-weight:700;background:${pctBg};color:${pctFg};border-radius:4px;text-align:center">${pctRound}%</td>
-    </tr>`;
+    const vals = {ace,af,act,pat,sol,psv};
+    const total = imp+ace+af+act+pat+sol+psv;
+    const marginal = total-prevTotal;
+    Object.keys(vals).forEach(k=>{ if(vals[k]>0.5) colActive[k]=true; });
+    rowsData.push({target, imp, ace, af, act, pat, sol, psv, total, marginal});
+    prevTotal = total;
   }
 
+  const tauxBase = tmPrio; // taux marginal d'impôt "de base", une fois les bonis épuisés
+  const colDefs = [
+    ['ace','ACE'], ['af','Alloc. famille'], ['act','ACT'], ['pat','Prime travail'], ['sol','Solidarité'], ['psv','PSV']
+  ].filter(([k])=>colActive[k]);
+
+  let rows='';
+  let bannerInserted = false;
+  let prevBonusSum = null;
+  rowsData.forEach(r=>{
+    const repart = hasConjoint ? `100% (${labelPrio})` : `100% vous`;
+    const pctCum = r.target>0 ? Math.round(r.total/r.target*100) : 0;
+    const pctMarg = Math.round(r.marginal/1000*100);
+    const bonusSumCum = r.ace+r.af+r.act+r.pat+r.sol+r.psv; // cumulatif — plafonne, ne redescend jamais à 0
+
+    let pctBg='#F3F4F6', pctFg='#6B7280';
+    if(pctCum>=45){ pctBg='#DCFCE7'; pctFg='#166534'; }
+    else if(pctCum>=25){ pctBg='#FEF3C7'; pctFg='#92400E'; }
+    else { pctBg='#FEE2E2'; pctFg='#991B1B'; }
+
+    // Bannière insérée dès que le cumulatif des bonis cesse de progresser (plafonne)
+    const bonusGrowth = prevBonusSum!==null ? bonusSumCum-prevBonusSum : 999;
+    const justExhausted = prevBonusSum!==null && bonusGrowth<0.5 && bonusSumCum>0.5;
+    if(justExhausted && !bannerInserted){
+      bannerInserted = true;
+      rows += `<tr><td colspan="${5+colDefs.length}" style="background:#1F2937;color:#fff;text-align:center;font-weight:700;padding:9px;font-size:11px">
+        🎯 Aides bonifiées épuisées ici — au-delà, chaque dollar rapporte votre taux d'impôt de base (${fp(tauxBase)}), sans les bonis
+      </td></tr>`;
+    }
+    prevBonusSum = bonusSumCum;
+
+    rows += `<tr>
+      <td>${fmt(r.target)}</td>
+      <td style="font-size:10px;color:var(--gry);font-weight:500">${repart}</td>
+      <td>${fmt(Math.round(r.imp))}</td>
+      ${colDefs.map(([k])=>`<td>${r[k]>0?fmt(Math.round(r[k])):'—'}</td>`).join('')}
+      <td style="font-weight:600;color:${pctMarg<25?'#991B1B':pctMarg<45?'#92400E':'#166534'}">+${fmt(Math.round(r.marginal))} <span style="font-size:9px;color:var(--gry)">(${pctMarg}%)</span></td>
+      <td style="font-weight:700;color:var(--grn)">${fmt(Math.round(r.total))}</td>
+      <td style="font-weight:700;background:${pctBg};color:${pctFg};border-radius:4px;text-align:center">${pctCum}%</td>
+    </tr>`;
+  });
+
   zone.innerHTML = recoHtml + `
+    <div style="background:#EFF6FF;border-left:3px solid #2563EB;border-radius:0 var(--r) var(--r) 0;padding:12px 16px;margin-bottom:14px;font-size:12px;color:#1E3A8A;line-height:1.7">
+      💡 <strong>Comment lire ce tableau :</strong> la colonne <strong>« Gain de cette tranche »</strong> montre combien rapporte <em>seulement</em> le dernier 1 000 $ cotisé. La colonne <strong>« % retour »</strong> est une <em>moyenne depuis 0 $</em> — elle diminue tranquillement une fois les bonis épuisés, même si le total récupéré continue de grossir. Repérez la bannière grise ci-dessous : c'est le moment exact où les aides bonifiées cessent de croître.
+    </div>
     <details class="faq-item" open style="border:1px solid var(--gry-l);border-radius:var(--r-lg);padding:0 14px">
       <summary style="padding:12px 4px">Détail par tranche de 1 000 $ — jusqu'à ${fmt(maxDetail)}</summary>
       <div class="faq-answer" style="padding:0 0 14px">
@@ -3409,19 +3436,15 @@ function drawImpactTable(rev, enf, rev2, tm, tm2, age){
               <th style="text-align:left">Cotisation</th>
               <th>Qui cotise</th>
               <th>Impôt évité<br><span style="font-weight:400;font-size:9px;color:#9CA3AF">(sans les aides)</span></th>
-              <th>ACE</th>
-              <th>Alloc. famille</th>
-              <th>ACT</th>
-              <th>Prime travail</th>
-              <th>Solidarité</th>
-              <th>PSV</th>
-              <th>Total récupéré</th>
-              <th>% retour</th>
+              ${colDefs.map(([,label])=>`<th>${label}</th>`).join('')}
+              <th>Gain de cette tranche<br><span style="font-weight:400;font-size:9px;color:#9CA3AF">(marginal)</span></th>
+              <th>Total récupéré<br><span style="font-weight:400;font-size:9px;color:#9CA3AF">(cumulatif)</span></th>
+              <th>% retour<br><span style="font-weight:400;font-size:9px;color:#9CA3AF">(moyenne depuis 0$)</span></th>
             </tr></thead>
-            <tbody>${rows1k}</tbody>
+            <tbody>${rows}</tbody>
           </table>
         </div>
-        <div class="note" style="margin-top:10px"><strong>Impôt évité</strong> = remboursement d'impôt pur (fédéral + Québec), sans compter les autres aides — c'est le montant que vous recevriez même une fois toutes les aides épuisées. Montants <strong>cumulatifs</strong> : à chaque palier, le total représente ce qui serait récupéré (impôt + toutes les aides applicables) si ce montant était cotisé au REER cette année. Le "—" indique qu'aucun montant n'est applicable à ce palier pour cette mesure. Le palier <strong>★ aides épuisées</strong> marque le point au-delà duquel seul l'impôt évité continue. <strong>Ce tableau ne tient pas compte des plafonds de cotisation disponibles</strong> — validez les droits réels du client avant de recommander un montant. Estimations indicatives.</div>
+        <div class="note" style="margin-top:10px"><strong>Impôt évité</strong> = remboursement d'impôt pur (fédéral + Québec) — c'est le montant garanti même une fois les aides épuisées. ${colDefs.length<6?`Les colonnes non applicables à ce profil (toujours à 0) ont été masquées. `:''}Le "—" indique qu'aucun montant n'est applicable à ce palier. <strong>Ce tableau ne tient pas compte des plafonds de cotisation disponibles</strong> — validez les droits réels du client avant de recommander un montant. Estimations indicatives.</div>
       </div>
     </details>
   `;
