@@ -3377,6 +3377,8 @@ function drawChart(rev,tm,enf,rev2,age){
   const pts=calcImpactPts(rev,enf,rev2,5000,undefined,age);
   if(!pts.length){svg.innerHTML='<text x="20" y="30" font-size="12" fill="#999">Aucune donnée</text>';return;}
 
+  const segs=[['1E293B','475569','imp','Impôt (fédéral + Québec)'],['0D9488','2DD4BF','ace','Allocation canadienne pour enfants (ACE)'],['0284C7','38BDF8','af','Allocation famille (Québec)'],['7C3AED','A78BFA','act','Allocation canadienne pour travailleurs (ACT)'],['DB2777','F472B6','pat','Prime au travail (Québec)'],['D97706','FBBF24','sol','Crédit de solidarité (Québec)'],['64748B','94A3B8','psv','Récupération pension féd. (PSV)']];
+
   // Précalcul : hauteur totale réelle de chaque tranche (croissance + bandes maintenues),
   // pour que l'échelle verticale soit correcte même une fois les bandes maintenues ajoutées.
   const preActivated = {}, preLastVal = {};
@@ -3398,7 +3400,6 @@ function drawChart(rev,tm,enf,rev2,age){
 
   // Dégradés + ombre douce pour chaque segment
   let defs=`<defs>`;
-  const segs=[['1E293B','475569','imp','Impôt (fédéral + Québec)'],['0D9488','2DD4BF','ace','Allocation canadienne pour enfants (ACE)'],['0284C7','38BDF8','af','Allocation famille (Québec)'],['7C3AED','A78BFA','act','Allocation canadienne pour travailleurs (ACT)'],['DB2777','F472B6','pat','Prime au travail (Québec)'],['D97706','FBBF24','sol','Crédit de solidarité (Québec)'],['64748B','94A3B8','psv','Récupération pension féd. (PSV)']];
   segs.forEach(([c1,c2,k])=>{
     defs+=`<linearGradient id="grad-${k}" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#${c2}"/><stop offset="100%" stop-color="#${c1}"/>
@@ -3511,6 +3512,7 @@ function drawChart(rev,tm,enf,rev2,age){
     legZone.innerHTML = lh;
   }
 
+  const actCat = enf>0 ? (rev2>0?'couple_avec':'monoparental') : (rev2>0?'couple_sans':'seul');
   const catLabel={seul:'personne seule',couple_sans:'couple sans enfant',monoparental:'famille monoparentale',couple_avec:'couple avec enfant(s)'}[actCat];
   $('imp-note').innerHTML=`<strong>Tranche optimale (★) : ${fmt(best.c-4999)} – ${fmt(best.c)}</strong> — ${fp(best.eff)} de retour combiné par dollar cotisé.<br>
   Calculé pour : ${catLabel}. Survolez une barre pour le détail exact. Estimations indicatives — plusieurs mesures dépendent aussi de facteurs non modélisés ici (garde d'enfants, autres revenus, admissibilité complète). Consultez un fiscaliste pour une analyse précise.`;
