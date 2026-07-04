@@ -3377,7 +3377,20 @@ function drawChart(rev,tm,enf,rev2,age){
   const pts=calcImpactPts(rev,enf,rev2,5000,undefined,age);
   if(!pts.length){svg.innerHTML='<text x="20" y="30" font-size="12" fill="#999">Aucune donnée</text>';return;}
 
-  const maxE=Math.max(...pts.map(t=>t.eff),.5);
+  // Précalcul : hauteur totale réelle de chaque tranche (croissance + bandes maintenues),
+  // pour que l'échelle verticale soit correcte même une fois les bandes maintenues ajoutées.
+  const preActivated = {}, preLastVal = {};
+  segs.forEach(([,,k])=>{ preActivated[k]=false; preLastVal[k]=0; });
+  const stackTotals = pts.map(t=>{
+    let sum=0;
+    segs.forEach(([,,k])=>{
+      const growing = t[k]/5000 > 0.0001;
+      if(growing){ preActivated[k]=true; preLastVal[k]=t[k]; sum+=t[k]/5000; }
+      else if(preActivated[k]) sum+=preLastVal[k]/5000;
+    });
+    return sum;
+  });
+  const maxE=Math.max(...stackTotals,.5);
   const ys=v=>(v/Math.max(maxE*1.2,.55))*cH;
   const bW=Math.max(8,Math.min(30,cW/pts.length*.75));
   const xS=cW/pts.length;
@@ -3404,9 +3417,11 @@ function drawChart(rev,tm,enf,rev2,age){
   defs+=`</defs>`;
 
   // Suivi de l'activation de chaque aide à travers les tranches, pour distinguer
-  // « en croissance » (dégradé plein) de « déjà à son maximum, toujours reçue » (hachuré)
+  // « en croissance » (dégradé plein) de « déjà à son maximum, toujours reçue » (hachuré,
+  // à la même hauteur que sa dernière tranche de croissance — pas une petite bande arbitraire)
   const activated = {};
-  segs.forEach(([,,k])=>{ activated[k]=false; });
+  const lastVal = {};
+  segs.forEach(([,,k])=>{ activated[k]=false; lastVal[k]=0; });
 
   let h=defs+`<g transform="translate(${mL},${mT})">`;
 
@@ -3415,7 +3430,8 @@ function drawChart(rev,tm,enf,rev2,age){
     if(i%2===1) h+=`<rect x="${i*xS}" y="0" width="${xS}" height="${cH}" fill="#FAFAFA"/>`;
   });
 
-  [0,.1,.2,.3,.4,.5,.6].forEach(v=>{
+  const gridStep = maxE<=0.6 ? 0.1 : Math.ceil(maxE/6*10)/10;
+  Array.from({length:7},(_,i)=>i*gridStep).forEach(v=>{
     const y=cH-ys(v);
     if(y>=0&&y<=cH){
       h+=`<line x1="0" y1="${y}" x2="${cW}" y2="${y}" stroke="#eef1f5" stroke-width="1" stroke-dasharray="3,3"/>`;
@@ -3429,7 +3445,7 @@ function drawChart(rev,tm,enf,rev2,age){
     let cy=0;
     segs.forEach(([col,,k,label])=>{
       const growing = t[k]/5000 > 0.0001; // aide en croissance dans cette tranche précise
-      if(growing) activated[k]=true;
+      if(growing) { activated[k]=true; lastVal[k]=t[k]; }
       const isHeld = !growing && activated[k]; // déjà maximisée, mais toujours reçue
 
       if(growing){
@@ -3439,9 +3455,9 @@ function drawChart(rev,tm,enf,rev2,age){
         h+=`<rect x="${x}" y="${y}" width="${bW}" height="${h2}" fill="url(#grad-${k})" rx="3" filter="url(#softShadow)"><title>${label} : ${fmt(Math.round(t[k]))} (${fp(t[k]/5000)}) — en croissance dans cette tranche</title></rect>`;
         cy+=h2;
       } else if(isHeld){
-        const h2=6; // bande fixe et fine : indique une aide déjà maximisée, toujours reçue
+        const h2=Math.max(4,ys(lastVal[k]/5000)); // même hauteur que sa dernière tranche de croissance
         const y=cH-cy-h2;
-        h+=`<rect x="${x}" y="${y}" width="${bW}" height="${h2}" fill="url(#held-${k})" rx="1.5"><title>${label} : déjà à son maximum — toujours reçue intégralement, mais ne croît plus dans cette tranche</title></rect>`;
+        h+=`<rect x="${x}" y="${y}" width="${bW}" height="${h2}" fill="url(#held-${k})" rx="1.5"><title>${label} : déjà à son maximum (${fmt(Math.round(lastVal[k]))}) — toujours reçue intégralement, mais ne croît plus dans cette tranche</title></rect>`;
         cy+=h2;
       }
     });
