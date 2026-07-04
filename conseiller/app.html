@@ -3295,6 +3295,24 @@ function drawImpactTable(rev, enf, rev2, tm, tm2, age){
   const tmPrio = clientPrio ? tm : tm2;
   const labelPrio = clientPrio ? 'vous' : 'conjoint(e)';
 
+  // Montants ANNUELS déjà reçus sans aucune cotisation REER (point de départ, pour contexte).
+  // ACE, ACT, Prime au travail et Allocation famille ont des formules de "niveau" calculables
+  // directement au revenu actuel ; la Solidarité et la PSV ne sont modélisées qu'en réduction
+  // marginale ici et n'ont pas de montant de base absolu fiable à afficher.
+  const {aceF, actF, patF, afF} = makeCreditFuncs(enf, rev2);
+  const baseAce = aceF(rev), baseAct = actF(rev), basePat = patF(rev), baseAf = afF(rev);
+  const baseHtml = (baseAce+baseAct+basePat+baseAf) > 1 ? `
+    <div style="background:#F8FAFC;border:1px solid var(--gry-l);border-radius:var(--r-lg);padding:14px 18px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">📌 Ce que vous recevez déjà — sans aucune cotisation REER (point de départ)</div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:12px;color:#374151">
+        ${baseAce>1?`<div><strong>${fmt(Math.round(baseAce))}/an</strong> ACE <span style="color:var(--gry)">(~${fmt(Math.round(baseAce/12))}/mois)</span></div>`:''}
+        ${baseAf>1?`<div><strong>${fmt(Math.round(baseAf))}/an</strong> Alloc. famille <span style="color:var(--gry)">(~${fmt(Math.round(baseAf/4))}/trimestre)</span></div>`:''}
+        ${baseAct>1?`<div><strong>${fmt(Math.round(baseAct))}/an</strong> ACT <span style="color:var(--gry)">(versé au printemps)</span></div>`:''}
+        ${basePat>1?`<div><strong>${fmt(Math.round(basePat))}/an</strong> Prime travail <span style="color:var(--gry)">(versé au printemps)</span></div>`:''}
+      </div>
+      <div style="font-size:10.5px;color:var(--gry);margin-top:8px">Le tableau ci-dessous montre le <strong>gain additionnel</strong> généré par la cotisation REER — pas ce total de départ. Une cotisation s'ajoute à ces montants, elle ne les remplace pas.</div>
+    </div>` : '';
+
   const recoHtml = hasConjoint ? `
     <div style="background:#0F0F0F;border-radius:var(--r-lg);padding:14px 18px;margin-bottom:14px;display:flex;gap:12px;align-items:flex-start">
       <div style="font-size:20px;flex-shrink:0">💡</div>
@@ -3382,9 +3400,9 @@ function drawImpactTable(rev, enf, rev2, tm, tm2, age){
     </tr>`;
   });
 
-  zone.innerHTML = recoHtml + `
+  zone.innerHTML = baseHtml + recoHtml + `
     <div style="background:#EFF6FF;border-left:3px solid #2563EB;border-radius:0 var(--r) var(--r) 0;padding:12px 16px;margin-bottom:14px;font-size:12px;color:#1E3A8A;line-height:1.7">
-      💡 <strong>Comment lire ce tableau :</strong> tout n'arrive pas en même temps. La zone <strong style="color:#1E3A8A">bleue « Printemps »</strong> (impôt, ACT, Prime au travail) est reçue <strong>en un seul dépôt</strong> avec votre remboursement d'impôt. La zone <strong style="color:#92400E">orangée « Étalé sur 12 mois »</strong> (ACE, Allocation famille, Solidarité, PSV) est versée <strong>mensuellement ou trimestriellement</strong>, recalculée à partir de juillet suivant — pas un chèque unique. La colonne <strong>« Gain de cette tranche »</strong> montre le gain marginal du dernier 1 000 $ cotisé ; le <strong>« % retour »</strong> est une moyenne depuis 0 $ qui diminue une fois les bonis épuisés (voir la bannière grise).
+      💡 <strong>Comment lire ce tableau :</strong> tous les montants sont des <strong>totaux annuels</strong> — l'ACE et l'Allocation famille étant versées mensuellement/trimestriellement, divisez par 12 (ou 4) pour voir l'effet sur un chèque individuel. Tout n'arrive pas en même temps : la zone <strong style="color:#1E3A8A">bleue « Printemps »</strong> (impôt, ACT, Prime au travail) est reçue <strong>en un seul dépôt</strong> avec votre remboursement d'impôt. La zone <strong style="color:#92400E">orangée « Étalé sur 12 mois »</strong> (ACE, Allocation famille, Solidarité, PSV) est versée <strong>mensuellement ou trimestriellement</strong>, recalculée à partir de juillet suivant — pas un chèque unique. Les montants affichés sont le <strong>gain additionnel</strong> généré par la cotisation, pas ce que vous recevez déjà (voir l'encart ci-dessus). La colonne <strong>« Gain de cette tranche »</strong> montre le gain marginal du dernier 1 000 $ cotisé ; le <strong>« % retour »</strong> est une moyenne depuis 0 $ qui diminue une fois les bonis épuisés (voir la bannière grise).
     </div>
     <details class="faq-item" open style="border:1px solid var(--gry-l);border-radius:var(--r-lg);padding:0 14px">
       <summary style="padding:12px 4px">Détail par tranche de 1 000 $ — jusqu'à ${fmt(maxDetail)}</summary>
