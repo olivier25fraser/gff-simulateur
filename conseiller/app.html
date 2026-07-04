@@ -969,6 +969,20 @@ body.dark .new-client-form input{background:#2a2a2a;border-color:#444;color:#e0e
     </div>
   </div>
   <div class="card">
+    <div class="ch nv">REER ou CELI ? — Comparaison rapide</div>
+    <div class="cb">
+      <div class="field" style="margin-bottom:14px">
+        <label>Revenu prévu à la retraite, par rapport à aujourd'hui</label>
+        <div class="freq-group">
+          <button type="button" class="freq-btn on" id="rr-fut-bas" onclick="setRevRetraite('bas')">Plus bas</button>
+          <button type="button" class="freq-btn" id="rr-fut-sim" onclick="setRevRetraite('similaire')">Similaire</button>
+          <button type="button" class="freq-btn" id="rr-fut-haut" onclick="setRevRetraite('eleve')">Plus élevé</button>
+        </div>
+      </div>
+      <div id="r-verdict"></div>
+    </div>
+  </div>
+  <div class="card">
     <div class="ch gd">Impact fiscal complet — par tranche de 5 000 $ cotisée</div>
     <div class="cb">
       <div id="imp-kpi-zone"></div>
@@ -3127,7 +3141,52 @@ function calcReer(){
   drawImpactTable(rev, enf, rev2, tm, tm2, age, enfAges);
   drawOpportunityBanner(rev, enf, rev2, age, enfAges);
   drawChart(rev,tm,enf,rev2,age,enfAges);
+  drawReerCeliVerdict(rev, tm, enf, age, ret);
 
+}
+
+// ══ REER vs CELI — verdict rapide (sans onglet dédié) ══
+let reerCeliRevFutur = 'bas';
+function setRevRetraite(v, el){
+  reerCeliRevFutur = v;
+  ['bas','similaire','eleve'].forEach(k=>{
+    const btn = document.getElementById('rr-fut-'+(k==='bas'?'bas':k==='similaire'?'sim':'haut'));
+    if(btn) btn.classList.toggle('on', k===v);
+  });
+  calcReer();
+}
+function drawReerCeliVerdict(rev, tm, enf, age, ret){
+  const el = document.getElementById('r-verdict');
+  if(!el) return;
+  const palierActuel = PAL.findIndex(p=>rev>=p.min&&rev<p.max)+1;
+  let verdict, explication, bg, coul;
+  if(reerCeliRevFutur==='bas'){
+    verdict='REER généralement avantagé';
+    bg='#E2EFDA'; coul='#375623';
+    explication=`Vous déduisez aujourd'hui à ${fp(tm)} et vous retirerez probablement à un taux plus bas à la retraite — l'écart entre les deux taux joue en faveur du REER.`;
+  } else if(reerCeliRevFutur==='eleve'){
+    verdict='CELI généralement avantagé';
+    bg='#FCE4D6'; coul='#C55A11';
+    explication=`Si votre taux d'imposition sera plus élevé à la retraite qu'aujourd'hui, cotiser au CELI (sans déduction, mais retrait 100% libre d'impôt) évite de payer plus tard un impôt supérieur à la déduction obtenue maintenant.`;
+  } else {
+    verdict='Écart fiscal neutre — les deux se valent mathématiquement';
+    bg='var(--blue-p)'; coul='var(--blue)';
+    explication = enf>0
+      ? `À taux d'imposition identique aujourd'hui et à la retraite, REER et CELI donnent le même résultat net avant impact des aides. Avec des enfants à charge, le REER garde un léger avantage : le remboursement d'impôt inclut aussi la hausse de l'ACE, de l'Allocation famille et/ou de la Prime au travail (voir le graphique d'impact ci-dessous).`
+      : `À taux d'imposition identique aujourd'hui et à la retraite, REER et CELI donnent le même résultat net. Le CELI garde l'avantage de la flexibilité : retraits libres d'impôt en tout temps, droits de cotisation récupérés l'année suivante, et aucun effet sur les prestations basées sur le revenu (SRG, PSV) à la retraite.`;
+  }
+  const pts=[];
+  if(tm>=0.45) pts.push(`Taux marginal actuel élevé (${fp(tm)}, palier ${palierActuel}) — la déduction REER vaut cher maintenant.`);
+  if(rev<58523) pts.push(`Taux marginal actuel bas (${fp(tm)}, palier ${palierActuel}) — la déduction REER vaut peu; le CELI mérite souvent d'être priorisé.`);
+  if(ret-age>=20) pts.push(`Horizon long (${ret-age} ans) — la croissance à l'abri de l'impôt profite autant aux deux régimes; le choix dépend surtout du taux d'imposition futur.`);
+  el.innerHTML = `
+    <div style="padding:14px;border-radius:var(--r);background:${bg}">
+      <div style="font-size:14px;font-weight:700;color:${coul};margin-bottom:6px">${verdict}</div>
+      <div style="font-size:12px;color:#333;line-height:1.6">${explication}</div>
+    </div>
+    ${pts.length?'<div class="note" style="margin-top:10px">'+pts.join(' ')+'</div>':''}
+    <div class="note" style="margin-top:8px">Comparaison indicative basée sur le taux marginal actuel et l'hypothèse de revenu à la retraite sélectionnée ci-dessus. Ne remplace pas une analyse personnalisée.</div>
+  `;
 }
 
 // ══ IMPACT CHART ══
