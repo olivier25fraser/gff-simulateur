@@ -3131,7 +3131,24 @@ const AF_SEUIL_COUPLE=60398, AF_SEUIL_MONO=44032, AF_TAUX_RED=0.04;
 // pour un profil donné — réutilisée par calcImpactPts (paliers uniformes) et
 // calcImpactPtsBreaks (paliers personnalisés, ex. pour le début du graphique).
 function makeCreditFuncs(enf, rev2){
-  function aceF(r){return enf>0?enf*7000*Math.max(0,1-Math.max(0,r-36502)*.032/7000):0;}
+  // ACE (2026-2027, année de base 2025) — source : ARC / CFFP.
+  // Montant de base : 8157$/enfant sous 6 ans, 6883$/enfant 6-17 ans. Comme l'app ne demande
+  // pas la répartition par âge des enfants, on utilise 6883$/enfant (taux 6-17 ans) par défaut —
+  // une hypothèse prudente : le montant réel peut être plus élevé si un ou des enfants ont moins de 6 ans.
+  // Réduction à 2 paliers selon le NOMBRE d'enfants (ceci, en revanche, est exact) :
+  //   38 237$-82 847$ : 7%(1 enf.) / 13,5%(2) / 19%(3) / 23%(4+)
+  //   au-delà de 82 847$ : 3,2%(1) / 5,7%(2) / 8%(3) / 9,5%(4+)
+  const ACE_SEUIL1=38237, ACE_SEUIL2=82847;
+  const ACE_TIER1={1:.07,2:.135,3:.19}, ACE_TIER2={1:.032,2:.057,3:.08};
+  function aceF(r){
+    if(enf<=0) return 0;
+    const base = enf*6883;
+    const t1 = ACE_TIER1[enf] ?? .23, t2 = ACE_TIER2[enf] ?? .095;
+    let reduction=0;
+    if(r>ACE_SEUIL1) reduction += (Math.min(r,ACE_SEUIL2)-ACE_SEUIL1)*t1;
+    if(r>ACE_SEUIL2) reduction += (r-ACE_SEUIL2)*t2;
+    return Math.max(0, base-reduction);
+  }
   const actCat = enf>0 ? (rev2>0?'couple_avec':'monoparental') : (rev2>0?'couple_sans':'seul');
   const actIsCouple = actCat==='couple_sans'||actCat==='couple_avec';
   function actF(rn){
@@ -3560,7 +3577,7 @@ function drawChart(rev,tm,enf,rev2,age){
   if(legZone){
     const legDesc = {
       imp:"Impôt évité — fédéral et provincial, selon votre taux marginal.",
-      ace:"ACE (fédéral) — augmente quand votre revenu net familial baisse.",
+      ace:"ACE (fédéral) — augmente quand votre revenu net familial baisse. Estimée pour des enfants de 6 à 17 ans ; peut être plus élevée si un enfant a moins de 6 ans.",
       af:"Allocation famille (Québec) — distincte de l'ACE, avec un minimum garanti par enfant.",
       act:"ACT (fédéral) — crédit remboursable pour travailleurs à revenu modeste. Cesse d'augmenter une fois le maximum atteint.",
       pat:"Prime au travail (Québec) — équivalent provincial, distinct de l'ACT.",
