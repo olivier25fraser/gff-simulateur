@@ -3340,7 +3340,7 @@ function drawImpactTable(rev, enf, rev2, tm, tm2, age){
   const zone = $('imp-table-zone');
   if(!zone) return;
   const hasConjoint = rev2>0;
-  const fine = calcImpactPts(rev, enf, rev2, 250, undefined, age);
+  const fine = calcImpactPts(rev, enf, rev2, 250, 100000, age);
   if(!fine.length){ zone.innerHTML=''; return; }
   const seuil = findSeuilEpuisement(fine);
 
@@ -3427,6 +3427,62 @@ function drawImpactTable(rev, enf, rev2, tm, tm2, age){
     </table>
     </div>
     <div class="note" style="margin-top:10px"><strong>Impôt évité</strong> = remboursement d'impôt pur (fédéral + Québec), sans compter les autres aides — c'est le montant que vous recevriez même une fois toutes les aides ci-dessous épuisées. Montants <strong>cumulatifs</strong> : à chaque palier, le total représente ce qui serait récupéré (impôt + toutes les aides applicables) si ce montant était cotisé au REER cette année. Le "—" indique qu'aucun montant n'est applicable à ce palier pour cette mesure. Le palier <strong>★ aides épuisées</strong> marque le point au-delà duquel seul l'impôt évité continue (les bonis ACE/ACT/Prime travail/Alloc. famille/Solidarité sont à leur minimum, mais restent acquis). <strong>Ce tableau ne tient pas compte des plafonds de cotisation disponibles</strong> — validez les droits réels du client avant de recommander un montant. Estimations indicatives.</div>
+    ${(function(){
+      const maxDetail = Math.min(100000, maxDispo);
+      if(maxDetail<1000) return '';
+      let rows1k='';
+      for(let target=1000; target<=maxDetail; target+=1000){
+        const slice = fine.filter(t=>t.c<=target);
+        const sum = k => slice.reduce((s,t)=>s+t[k],0);
+        const ace=sum('ace'), act=sum('act'), pat=sum('pat'), af=sum('af'), sol=sum('sol'), psv=sum('psv');
+        const imp = target*tmPrio;
+        const repart = hasConjoint ? `100% (${labelPrio})` : `100% vous`;
+        const total = imp+ace+act+pat+af+sol+psv;
+        const pct = target>0 ? (total/target*100) : 0;
+        const isSeuil = target===seuil && seuil>0;
+        let pctBg='#F3F4F6', pctFg='#6B7280';
+        if(pct>=45){ pctBg='#DCFCE7'; pctFg='#166534'; }
+        else if(pct>=25){ pctBg='#FEF3C7'; pctFg='#92400E'; }
+        else { pctBg='#FEE2E2'; pctFg='#991B1B'; }
+        rows1k += `<tr style="${isSeuil?'background:#F5F3FF;font-weight:700':''}">
+          <td>${fmt(target)}${isSeuil?' <span style="font-size:9px;color:#7C3AED">★</span>':''}</td>
+          <td style="font-size:10px;color:var(--gry);font-weight:500">${repart}</td>
+          <td>${fmt(Math.round(imp))}</td>
+          <td>${ace>0?fmt(Math.round(ace)):'—'}</td>
+          <td>${af>0?fmt(Math.round(af)):'—'}</td>
+          <td>${act>0?fmt(Math.round(act)):'—'}</td>
+          <td>${pat>0?fmt(Math.round(pat)):'—'}</td>
+          <td>${sol>0?fmt(Math.round(sol)):'—'}</td>
+          <td>${psv>0?fmt(Math.round(psv)):'—'}</td>
+          <td style="font-weight:700;color:var(--grn)">${fmt(Math.round(total))}</td>
+          <td style="font-weight:700;background:${pctBg};color:${pctFg};border-radius:4px;text-align:center">${pct.toFixed(0)}%</td>
+        </tr>`;
+      }
+      return `
+      <details class="faq-item" style="margin-top:14px;border:1px solid var(--gry-l);border-radius:var(--r-lg);padding:0 14px">
+        <summary style="padding:12px 4px">Voir le détail complet — chaque tranche de 1 000 $ jusqu'à ${fmt(maxDetail)}</summary>
+        <div class="faq-answer" style="padding:0 0 14px">
+          <div style="overflow-x:auto;max-height:420px;overflow-y:auto;border:1px solid var(--gry-l);border-radius:8px">
+            <table class="tbl" style="font-size:10.5px;white-space:nowrap">
+              <thead style="position:sticky;top:0;background:#fff;z-index:1"><tr>
+                <th style="text-align:left">Cotisation</th>
+                <th>Qui cotise</th>
+                <th>Impôt évité</th>
+                <th>ACE</th>
+                <th>Alloc. famille</th>
+                <th>ACT</th>
+                <th>Prime travail</th>
+                <th>Solidarité</th>
+                <th>PSV</th>
+                <th>Total récupéré</th>
+                <th>% retour</th>
+              </tr></thead>
+              <tbody>${rows1k}</tbody>
+            </table>
+          </div>
+        </div>
+      </details>`;
+    })()}
   `;
 }
 
