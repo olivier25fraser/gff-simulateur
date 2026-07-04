@@ -3059,8 +3059,8 @@ function calcReer(){
   const tm2=marg(rev2), plaf2=Math.min(rev2*.18,33810), remb2=getAnnualCot('r-cot2')*tm2;
   $('conj-res').innerHTML=rr('Taux marginal conjoint(e)',fp(tm2))+rr('Plafond REER conjoint(e)',fmt(plaf2))+rr('Remboursement conjoint(e)',`<span class="ok">${fmt(remb2)}</span>`,'hi')+rr('Total remboursements couple',`<span class="ok">${fmt(remb+remb2)}</span>`,'hi');
 
-  drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2);
-  drawChart(rev,tm,enf,plaf,rev2);
+  drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2, age);
+  drawChart(rev,tm,enf,plaf,rev2,age);
 
 }
 
@@ -3091,7 +3091,7 @@ const AF_SEUIL_COUPLE=60398, AF_SEUIL_MONO=44032, AF_TAUX_RED=0.04;
 // Calcule, pour un revenu/situation donnés, la ventilation marginale de chaque
 // mesure fiscale/aide gouvernementale par tranche de "step" $ cotisée au REER.
 // Réutilisé par le graphique (drawChart) et le tableau détaillé (drawImpactTable).
-function calcImpactPts(rev, enf, plaf, rev2, step, maxC, dedCap){
+function calcImpactPts(rev, enf, plaf, rev2, step, maxC, dedCap, age){
   rev2 = rev2 || 0;
   dedCap = dedCap===undefined ? plaf : dedCap;
   function aceF(r){return enf>0?enf*7000*Math.max(0,1-Math.max(0,r-36502)*.032/7000):0;}
@@ -3137,19 +3137,19 @@ function calcImpactPts(rev, enf, plaf, rev2, step, maxC, dedCap){
     const pat=Math.max(0,patF(rn)-patF(rp));
     const af=Math.max(0,afF(rn)-afF(rp));
     const sol=Math.max(0,Math.max(0,rp-43195)-Math.max(0,rn-43195))*0.06;
-    const psv=rev>80000&&rev<=105000?Math.max(0,(Math.min(105000,rp)-Math.min(105000,rn))*.15):0;
+    const psv=(age>=65&&rev>80000&&rev<=105000)?Math.max(0,(Math.min(105000,rp)-Math.min(105000,rn))*.15):0;
     pts.push({c,imp,ace,act,pat,af,sol,psv,eff:(imp+ace+act+pat+af+sol+psv)/step,in:c<=plaf});
   }
   return pts;
 }
 
 // Tableau détaillé cumulatif : "à X$ cotisé, voici le total récupéré"
-function drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2){
+function drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2, age){
   const zone = $('imp-table-zone');
   if(!zone) return;
   const hasConjoint = rev2>0;
   const dedCapCombine = plaf + (hasConjoint ? (plaf2||0) : 0);
-  const fine = calcImpactPts(rev, enf, plaf, rev2, 250, Math.min(dedCapCombine+10000, rev+(rev2||0), 85000), dedCapCombine);
+  const fine = calcImpactPts(rev, enf, plaf, rev2, 250, Math.min(dedCapCombine+10000, rev+(rev2||0), 85000), dedCapCombine, age);
   if(!fine.length){ zone.innerHTML=''; return; }
 
   // Qui devrait cotiser en priorité : celui des deux avec le taux marginal le plus élevé.
@@ -3242,14 +3242,14 @@ function drawImpactTable(rev, enf, plaf, rev2, tm, tm2, plaf2){
   `;
 }
 
-function drawChart(rev,tm,enf,plaf,rev2){
+function drawChart(rev,tm,enf,plaf,rev2,age){
   rev2 = rev2 || 0;
   const svg=$('imp-svg');
   const W=Math.max(500,svg.parentElement.offsetWidth||700);
   svg.setAttribute('width',W);
   const H=220,mL=46,mR=16,mT=18,mB=30,cW=W-mL-mR,cH=H-mT-mB;
 
-  const pts=calcImpactPts(rev,enf,plaf,rev2,5000);
+  const pts=calcImpactPts(rev,enf,plaf,rev2,5000,undefined,undefined,age);
   if(!pts.length){svg.innerHTML='<text x="20" y="30" font-size="12" fill="#999">Aucune donnée</text>';return;}
 
   const maxE=Math.max(...pts.map(t=>t.eff),.5);
@@ -3335,7 +3335,7 @@ function drawChart(rev,tm,enf,plaf,rev2){
       act:"ACT (fédéral) — crédit remboursable pour travailleurs à revenu modeste.",
       pat:"Prime au travail (Québec) — équivalent provincial, distinct de l'ACT.",
       sol:"Crédit de solidarité (Québec) — réduit progressivement au-dessus de 43 195 $.",
-      psv:"Récupération de la PSV — s'applique entre 80 000 $ et 105 000 $ de revenu."
+      psv:"Récupération de la PSV — s'applique seulement à 65 ans et plus, entre 80 000 $ et 105 000 $ de revenu."
     };
     let lh = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px 16px;margin-top:14px">`;
     segs.forEach(([c1,,k,fullLabel])=>{
