@@ -3090,7 +3090,7 @@ function calcReer(){
   drawImpactTable(rev, enf, rev2, tm, tm2, age, enfAges);
   drawOpportunityBanner(rev, enf, rev2, age, enfAges);
   drawChart(rev,tm,enf,rev2,age,enfAges);
-  drawReerCeliVerdict(rev, tm, age, ret, val);
+  drawReerCeliVerdict(rev, tm, age, ret, val, cot, cout, rend, sol);
 
 }
 
@@ -3112,7 +3112,7 @@ function estimRevenuRetraiteReer(rev, age, ret, val){
   }
   return {revuRetraite: Math.round(rrqEst + ferrRetrait + psvEst), rrqEst, psvEst, ferrRetrait};
 }
-function drawReerCeliVerdict(rev, tm, age, ret, val){
+function drawReerCeliVerdict(rev, tm, age, ret, val, cot, cout, rend, sol){
   const el = document.getElementById('r-verdict');
   const inputEl = document.getElementById('rr-fut-rev');
   const noteEl = document.getElementById('rr-fut-rev-note');
@@ -3144,6 +3144,17 @@ function drawReerCeliVerdict(rev, tm, age, ret, val){
     explication = `Taux actuel et taux estimé à la retraite sont proches. Sur le strict plan fiscal, REER et CELI donnent un résultat net similaire pour ce client.`;
   }
 
+  // ── Projection en dollars : REER (brut puis net d'impôt au retrait) vs CELI ──
+  // Le CELI est simulé avec le MÊME coût réel pour le client que le REER
+  // (cot - remboursement d'impôt), car c'est ce que le client peut réellement
+  // se permettre d'investir chaque année sans le REER pour réduire son coût.
+  let valCeli=0; for(let i=0;i<Math.max(1,ret-age);i++) valCeli=(valCeli+cout)*(1+rend);
+  const valReerNet = val*(1-tmRetraite);
+  let dollarWinnerClass, dollarIcon, dollarVerdict;
+  if (valReerNet >= valCeli*1.02) { dollarWinnerClass='reer-wins'; dollarIcon='🏆'; dollarVerdict='REER gagnant en dollars nets à la retraite'; }
+  else if (valCeli >= valReerNet*1.02) { dollarWinnerClass='celi-wins'; dollarIcon='🏆'; dollarVerdict='CELI gagnant en dollars nets à la retraite'; }
+  else { dollarWinnerClass='tied'; dollarIcon='⚖️'; dollarVerdict='Résultat net très similaire entre les deux'; }
+
   const pts=[];
   const palierActuel = PAL.findIndex(p=>rev>=p.min&&rev<p.max)+1;
   if (g('rr-enf')>0 && ecartPts>-2) pts.push(`Avec des enfants à charge, le REER garde un avantage additionnel : le remboursement d'impôt inclut aussi la hausse de l'ACE, de l'Allocation famille et/ou de la Prime au travail (voir le graphique d'impact ci-dessous).`);
@@ -3171,6 +3182,32 @@ function drawReerCeliVerdict(rev, tm, age, ret, val){
         <div class="rw-desc">${explication}</div>
       </div>
     </div>
+
+    <div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.5px;margin:18px 0 8px">Projeté à la retraite (${ret} ans), en dollars</div>
+    <div class="rc-hero">
+      <div class="rc-col today">
+        <div class="rc-lbl">REER</div>
+        <div class="rc-val" style="font-size:26px">${fmt(Math.round(val))}</div>
+        <div class="rc-sub">Brut, avant impôt</div>
+        <div style="height:1px;background:rgba(255,255,255,.15);margin:10px 0"></div>
+        <div class="rc-val" style="font-size:26px;color:#FFD966">${fmt(Math.round(valReerNet))}</div>
+        <div class="rc-sub">Net, une fois retiré (${fp(tmRetraite)} d'impôt)</div>
+      </div>
+      <div class="rc-vs">VS</div>
+      <div class="rc-col retraite">
+        <div class="rc-lbl">CELI</div>
+        <div class="rc-val" style="font-size:26px">${fmt(Math.round(valCeli))}</div>
+        <div class="rc-sub">Net — aucun impôt au retrait</div>
+      </div>
+    </div>
+    <div class="rc-winner ${dollarWinnerClass}">
+      <div class="rw-icon">${dollarIcon}</div>
+      <div>
+        <div class="rw-title">${dollarVerdict}</div>
+        <div class="rw-desc">Le CELI est simulé avec le même coût réel pour le client que le REER (${fmt(Math.round(cout))}/an au lieu de ${fmt(Math.round(cot))}/an, puisque le REER coûte moins cher grâce au remboursement d'impôt) — c'est ce qu'il pourrait investir chaque année sans le REER.</div>
+      </div>
+    </div>
+
     ${pts.length?'<div class="note" style="margin-top:10px">'+pts.join(' ')+'</div>':''}
     <div class="note" style="margin-top:8px">Estimation indicative basée sur le profil entré ci-dessus (revenu, âge, âge de retraite, projection REER). Ne remplace pas une analyse de retraite complète (voir l'onglet Objectif retraite pour une projection détaillée).</div>
   `;
