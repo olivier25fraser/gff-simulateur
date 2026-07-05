@@ -5,6 +5,7 @@
  * Groupe Financier Formule
  */
 import { getStore } from "@netlify/blobs";
+import { alerterEchec } from "./_shared/alerte-erreur.mjs";
 
 export const config = { schedule: "0 14 * * 1-5" };
 
@@ -37,12 +38,13 @@ function calcReturns(values) {
   };
 }
 
-export default async function handler() {
+async function mettreAJourMarches() {
   const store = getStore("gff-marches");
   const diag = []; // messages de diagnostic
 
   if (!TD_KEY) {
     await store.setJSON("market-data-debug", { erreur: "TWELVE_DATA_KEY absente", when: new Date().toISOString() });
+    await alerterEchec("marches-update (indices boursiers)", "TWELVE_DATA_KEY absente dans les variables d'environnement Netlify.");
     return new Response("Config manquante", { status: 500 });
   }
 
@@ -190,5 +192,20 @@ export default async function handler() {
     details: diag,
   });
 
+  // Alerte seulement si TOUS les indices ont échoué (échec réel, pas un simple accroc ponctuel)
+  if (ok === 0) {
+    await alerterEchec("marches-update (indices boursiers)", "Aucun des 4 indices n'a pu être récupéré.\n\nDétails:\n" + diag.join("\n"));
+  }
+
   return new Response(JSON.stringify({ success: true, ok, diag }), { status: 200 });
+}
+
+export default async function handler() {
+  try {
+    return await mettreAJourMarches();
+  } catch (e) {
+    console.error("Erreur marches-update:", e.message);
+    await alerterEchec("marches-update (indices boursiers)", e.message);
+    return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+  }
 }

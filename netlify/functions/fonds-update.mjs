@@ -5,6 +5,7 @@
  * Groupe Financier Formule
  */
 import { getStore } from "@netlify/blobs";
+import { alerterEchec } from "./_shared/alerte-erreur.mjs";
 
 export const config = { schedule: "0 13 5 * *" };
 
@@ -139,6 +140,7 @@ export default async function handler() {
 
   } catch (e) {
     console.error("Erreur fonds-update:", e.message);
+    await alerterEchec("fonds-update (rendements Assomption)", e.message);
     return new Response(JSON.stringify({ error: e.message }), { status: 500 });
   }
 }

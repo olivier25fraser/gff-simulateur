@@ -4,6 +4,7 @@
  * Groupe Financier Formule
  */
 import { getStore } from "@netlify/blobs";
+import { alerterEchec } from "./_shared/alerte-erreur.mjs";
 
 export const config = { schedule: "0 13 * * 1,3,5" };
 
@@ -97,6 +98,7 @@ Génère exactement 6 nouvelles. Priorise les événements géopolitiques, déci
 
   } catch (e) {
     console.error("Erreur news-update:", e.message);
+    await alerterEchec("news-update (actualités financières)", e.message);
     return new Response(JSON.stringify({ error: e.message }), { status: 500 });
   }
 }
