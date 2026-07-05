@@ -5166,7 +5166,7 @@ function calcObj() {
   document.getElementById('obj-scenarios-zone').innerHTML = scenHtml;
 
   // ── Graphique projection ──
-  drawObjChart(age, ageRet, ageDeces, actuel, cotisAnnuelle, rendAcc, rendRet, capitalNecessaire);
+  drawObjChart(age, ageRet, ageDeces, actuel, cotisAnnuelle, rendAcc, rendRet, capitalNecessaire, manqueParAn, inf, yrsAcc);
 
   // ── Note ──
   document.getElementById('obj-note').textContent = dejaRetraite
@@ -5174,7 +5174,7 @@ function calcObj() {
     : `Calculs basés sur des hypothèses de rendement constant et d'inflation à ${g('ob-inf')}%. Les rendements réels varient. RRQ et PSV ajustés pour l'inflation à la retraite. Le capital nécessaire est calculé selon la méthode de la valeur actuelle d'une rente certaine. Consultez un planificateur financier agréé pour une analyse personnalisée.`;
 }
 
-function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet, capitalCible) {
+function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet, capitalCible, manqueParAn, inf, yrsAccPourEval) {
   const svg = document.getElementById('obj-svg');
   const W = Math.max(500, svg.parentElement.offsetWidth || 700);
   svg.setAttribute('width', W);
@@ -5189,14 +5189,15 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
   for (let i = 0; i <= totalYrs; i++) {
     const yr = age + i;
     if (yr <= ageRet) {
-      if (i > 0) capital = (capital + cotisAnn) * (1 + rendAcc);
+      if (i > 0) capital = capital * (1 + rendAcc) + cotisAnn;
     } else {
+      // Décaissement : même retrait annuel net (manqueParAn) que celui utilisé pour
+      // calculer le capital cible ci-dessus — inflation et impôt déjà pris en compte
+      // en amont dans calcObj(). Sans ça, la courbe et la cible affichée ne concordaient pas.
       if (i > 0) {
-        const rrqPsv = (g('ob-rrq') + g('ob-psv'));
-        const retrait = Math.max(0, g('ob-besoin') - rrqPsv);
         const capitalAvant = capital;
-        capital = Math.max(0, capital * (1 + rendRet) - retrait);
-        if (capitalAvant > 0 && capital <= 0 && ageEpuisement === null) ageEpuisement = yr;
+        capital = Math.max(0, capital * (1 + rendRet) - manqueParAn);
+        if (capitalAvant > 0 && capital <= 0 && yr < ageDeces && ageEpuisement === null) ageEpuisement = yr;
       }
     }
     pts.push({ yr, cap: capital, phase: yr <= ageRet ? 'acc' : 'dec' });
