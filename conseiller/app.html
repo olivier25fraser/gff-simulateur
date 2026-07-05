@@ -152,7 +152,7 @@ body.dark .faq-item summary{color:#eee}
 .chart-wrap{overflow-x:auto}
 
 /* TOOLTIP */
-.tt{position:absolute;background:var(--navy);color:#fff;font-size:11px;font-weight:600;padding:6px 10px;border-radius:var(--r);pointer-events:none;display:none;z-index:300;white-space:nowrap}
+.tt{position:absolute;background:var(--navy);color:#fff;font-size:11px;font-weight:600;padding:0;border-radius:8px;pointer-events:none;display:none;z-index:300;white-space:nowrap;box-shadow:0 6px 20px rgba(0,0,0,.25);overflow:hidden}
 
 /* PORTEFEUILLES */
 .port-btn{padding:9px 18px;border:1.5px solid var(--gry-m);border-radius:var(--r);background:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:.3px;color:var(--gry);cursor:pointer;transition:all .15s}
@@ -2062,7 +2062,7 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
     <div class="cb" style="padding:16px 12px">
       <div id="obj-chart-kpi" style="margin-bottom:14px"></div>
       <div class="chart-wrap">
-        <svg id="obj-svg" height="260" style="min-width:500px;display:block;width:100%"></svg>
+        <svg id="obj-svg" height="300" style="min-width:500px;display:block;width:100%"></svg>
       </div>
     </div>
   </div>
@@ -5211,9 +5211,16 @@ function objChartHover(evt) {
   const tt = document.getElementById('tt');
   if (tt) {
     tt.style.display = 'block';
-    tt.innerHTML = `<div style="font-weight:800;margin-bottom:2px">${p.yr} ans${p.yr===s.ageRet?' — Retraite':''}</div><div>${fmt(Math.round(p.cap))}</div>`;
+    tt.innerHTML = `<div style="display:flex">
+      <div style="width:4px;background:${coul}"></div>
+      <div style="padding:8px 12px">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.55);margin-bottom:2px">${p.phase==='acc'?'Accumulation':'Décaissement'}${p.yr===s.ageRet?' · Retraite':''}</div>
+        <div style="font-size:12px;font-weight:700;margin-bottom:1px">${p.yr} ans</div>
+        <div style="font-size:14px;font-weight:800;color:${coul==='#0F0F0F'?'#fff':coul}">${fmt(Math.round(p.cap))}</div>
+      </div>
+    </div>`;
     tt.style.left = (evt.clientX + 14) + 'px';
-    tt.style.top = (evt.clientY - 42) + 'px';
+    tt.style.top = (evt.clientY - 52) + 'px';
   }
 }
 function objChartHoverOut() {
@@ -5229,7 +5236,7 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
   const svg = document.getElementById('obj-svg');
   const W = Math.max(500, svg.parentElement.offsetWidth || 700);
   svg.setAttribute('width', W);
-  const H=260, mL=56, mR=20, mT=20, mB=36, cW=W-mL-mR, cH=H-mT-mB;
+  const H=300, mL=58, mR=20, mT=20, mB=36, cW=W-mL-mR, cH=H-mT-mB;
 
   // Calculer les données
   const pts = [];
@@ -5305,6 +5312,17 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
   html += `<rect x="0" y="0" width="${xRet}" height="${cH}" fill="#F7F9FC"/>`;
   html += `<rect x="${xRet}" y="0" width="${cW-xRet}" height="${cH}" fill="#FFFBF0"/>`;
 
+  // Graduations verticales tous les 5 ans (10 ans si l'horizon est très long) pour un axe plus complet
+  const pasAge = totalYrs > 55 ? 10 : 5;
+  const ticksAge = [];
+  for (let a = Math.ceil(age / pasAge) * pasAge; a < ageDeces; a += pasAge) {
+    if (a > age) ticksAge.push(a);
+  }
+  ticksAge.forEach(a => {
+    const x = xs(a - age);
+    html += `<line x1="${x}" y1="0" x2="${x}" y2="${cH}" stroke="#e4e9f0" stroke-width="1" stroke-dasharray="2,3"/>`;
+  });
+
   // Zone de risque hachurée si le capital s'épuise avant la fin du plan
   if (ageEpuisement !== null) {
     const xEpuise = xs(ageEpuisement - age);
@@ -5366,10 +5384,21 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
   html += `<circle id="obj-hover-dot" cx="0" cy="0" r="5" fill="#0F0F0F" stroke="#fff" stroke-width="2" style="display:none;pointer-events:none"/>`;
   html += `<rect x="0" y="0" width="${cW}" height="${cH}" fill="transparent" style="cursor:crosshair" onmousemove="objChartHover(event)" onmouseleave="objChartHoverOut()"/>`;
 
-  // Étiquettes X
-  [age, ageRet, ageDeces].forEach(yr => {
-    const x = xs(yr - age);
-    html += `<text x="${x}" y="${cH+20}" font-size="10" fill="#888" text-anchor="middle" font-weight="600">${yr} ans</text>`;
+  // Points de données discrets le long de la courbe, à chaque graduation — look "données réelles"
+  ticksAge.forEach(a => {
+    if (a === ageRet) return; // déjà marqué par le repère principal
+    const p = pts.find(pp => pp.yr === a);
+    if (!p) return;
+    const coulPt = p.phase === 'acc' ? '#0F0F0F' : '#BF8F00';
+    html += `<circle cx="${xs(a-age)}" cy="${ys(p.cap)}" r="3" fill="#fff" stroke="${coulPt}" stroke-width="2"/>`;
+  });
+
+  // Étiquettes X : âges clés (gras) + graduations régulières (fines), sans collision
+  const labelsAge = [{a:age,strong:true}, {a:ageRet,strong:true}, {a:ageDeces,strong:true},
+    ...ticksAge.filter(a => Math.abs(a-age)>2 && Math.abs(a-ageRet)>2 && Math.abs(a-ageDeces)>2).map(a=>({a,strong:false}))];
+  labelsAge.sort((a,b)=>a.a-b.a).forEach(({a,strong}) => {
+    const x = xs(a - age);
+    html += `<text x="${x}" y="${cH+20}" font-size="${strong?10:9.5}" fill="${strong?'#555':'#aaa'}" text-anchor="middle" font-weight="${strong?700:500}">${a}</text>`;
   });
 
   html += '</g>';
