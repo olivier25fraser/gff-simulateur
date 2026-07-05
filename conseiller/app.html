@@ -448,6 +448,27 @@ body.dark .faq-item summary{color:#eee}
   background:#fff;font-size:12px;font-weight:600;color:var(--gry);cursor:pointer;transition:all .15s}
 .pvi-stab:hover{border-color:var(--ink);color:var(--ink)}
 .pvi-stab.on{background:#0F0F0F;border-color:var(--ink);color:#fff}
+
+/* ══ REER VS CELI — HERO VISUEL ══ */
+.rc-hero{display:grid;grid-template-columns:1fr auto 1fr;gap:0;border-radius:var(--r-lg);overflow:hidden;margin-bottom:16px;box-shadow:var(--shadow-lg)}
+.rc-col{padding:20px 18px;color:#fff;text-align:center}
+.rc-col.today{background:#0F0F0F}
+.rc-col.retraite{background:var(--gold)}
+.rc-vs{background:#fff;display:flex;align-items:center;justify-content:center;padding:0 14px;font-size:20px;font-weight:900;color:var(--gry-m)}
+.rc-col .rc-lbl{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;opacity:.7;margin-bottom:8px}
+.rc-col .rc-val{font-family:'DM Serif Display',serif;font-size:38px;line-height:1;margin-bottom:8px}
+.rc-col .rc-sub{font-size:11px;opacity:.75;line-height:1.5}
+.rc-winner{border-radius:var(--r-lg);padding:16px 20px;display:flex;gap:14px;align-items:flex-start}
+.rc-winner.reer-wins{background:#E2EFDA;border:1px solid #A9D18E}
+.rc-winner.celi-wins{background:var(--gold-l);border:1px solid var(--gold)}
+.rc-winner.tied{background:var(--blue-p);border:1px solid var(--blue-l)}
+.rc-winner .rw-icon{font-size:30px;flex-shrink:0;line-height:1}
+.rc-winner .rw-title{font-size:15px;font-weight:700;margin-bottom:5px}
+.rc-winner.reer-wins .rw-title{color:#375623}
+.rc-winner.celi-wins .rw-title{color:#7F6000}
+.rc-winner.tied .rw-title{color:var(--blue)}
+.rc-winner .rw-desc{font-size:12px;line-height:1.65;color:var(--gry)}
+body.dark .rc-winner .rw-desc{color:#aaa}
 @media(max-width:600px){.pvi-hero{grid-template-columns:1fr}.pvi-vs{padding:12px;font-size:16px}}
 
 /* ══ NOTES CONSEILLER ══ */
@@ -3108,19 +3129,19 @@ function drawReerCeliVerdict(rev, tm, age, ret, val){
     : `Estimé pour ce profil : RRQ ${fmt(Math.round(estim.rrqEst))} + PSV ${fmt(Math.round(estim.psvEst))} + retrait FERR min. ${fmt(Math.round(estim.ferrRetrait))} (sur ${fmt(Math.round(val))} projeté au REER à ${ret} ans).`;
 
   const ecartPts = Math.round((tm - tmRetraite) * 100);
-  let verdict, explication, bg, coul;
+  let verdict, explication, winnerClass, icon;
   if (ecartPts >= 2) {
     verdict = 'REER généralement avantagé pour ce profil';
-    bg='#E2EFDA'; coul='#375623';
-    explication = `Taux marginal actuel estimé à ${fp(tm)} contre ${fp(tmRetraite)} à la retraite — un écart de ${ecartPts} points en faveur du REER : la déduction vaut plus aujourd'hui que l'impôt payé au retrait.`;
+    winnerClass='reer-wins'; icon='🏆';
+    explication = `Un écart de ${ecartPts} points en faveur du REER : la déduction vaut plus aujourd'hui que l'impôt payé au retrait.`;
   } else if (ecartPts <= -2) {
     verdict = 'CELI généralement avantagé pour ce profil';
-    bg='#FCE4D6'; coul='#C55A11';
-    explication = `Taux marginal actuel estimé à ${fp(tm)} contre ${fp(tmRetraite)} à la retraite — le revenu de retraite projeté serait imposé à un taux plus élevé qu'aujourd'hui. Cotiser au CELI (sans déduction, retrait libre d'impôt) évite ce désavantage.`;
+    winnerClass='celi-wins'; icon='🏆';
+    explication = `Le revenu de retraite projeté serait imposé à un taux plus élevé qu'aujourd'hui. Cotiser au CELI (sans déduction, retrait libre d'impôt) évite ce désavantage.`;
   } else {
     verdict = 'Écart fiscal quasi neutre pour ce profil';
-    bg='var(--blue-p)'; coul='var(--blue)';
-    explication = `Taux marginal actuel (${fp(tm)}) et taux estimé à la retraite (${fp(tmRetraite)}) sont proches. Sur le strict plan fiscal, REER et CELI donnent un résultat net similaire pour ce client.`;
+    winnerClass='tied'; icon='⚖️';
+    explication = `Taux actuel et taux estimé à la retraite sont proches. Sur le strict plan fiscal, REER et CELI donnent un résultat net similaire pour ce client.`;
   }
 
   const pts=[];
@@ -3130,9 +3151,25 @@ function drawReerCeliVerdict(rev, tm, age, ret, val){
   if (tm >= 0.45) pts.push(`Taux marginal actuel élevé (palier ${palierActuel}) — la déduction REER vaut particulièrement cher maintenant.`);
 
   el.innerHTML = `
-    <div style="padding:14px;border-radius:var(--r);background:${bg}">
-      <div style="font-size:14px;font-weight:700;color:${coul};margin-bottom:6px">${verdict}</div>
-      <div style="font-size:12px;color:var(--ink);line-height:1.6">${explication}</div>
+    <div class="rc-hero">
+      <div class="rc-col today">
+        <div class="rc-lbl">Aujourd'hui</div>
+        <div class="rc-val">${fp(tm)}</div>
+        <div class="rc-sub">Taux marginal à la cotisation<br>(palier ${palierActuel})</div>
+      </div>
+      <div class="rc-vs">VS</div>
+      <div class="rc-col retraite">
+        <div class="rc-lbl">À la retraite</div>
+        <div class="rc-val">${fp(tmRetraite)}</div>
+        <div class="rc-sub">Taux marginal estimé au retrait<br>(revenu : ${fmt(Math.round(revRetraiteUtilise))})</div>
+      </div>
+    </div>
+    <div class="rc-winner ${winnerClass}">
+      <div class="rw-icon">${icon}</div>
+      <div>
+        <div class="rw-title">${verdict}</div>
+        <div class="rw-desc">${explication}</div>
+      </div>
     </div>
     ${pts.length?'<div class="note" style="margin-top:10px">'+pts.join(' ')+'</div>':''}
     <div class="note" style="margin-top:8px">Estimation indicative basée sur le profil entré ci-dessus (revenu, âge, âge de retraite, projection REER). Ne remplace pas une analyse de retraite complète (voir l'onglet Objectif retraite pour une projection détaillée).</div>
