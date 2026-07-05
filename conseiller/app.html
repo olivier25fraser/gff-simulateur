@@ -2060,8 +2060,9 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
   <div class="card">
     <div class="ch bl">Projection de votre capital — Accumulation et décaissement</div>
     <div class="cb" style="padding:16px 12px">
+      <div id="obj-chart-kpi" style="margin-bottom:14px"></div>
       <div class="chart-wrap">
-        <svg id="obj-svg" height="200" style="min-width:500px;display:block;width:100%"></svg>
+        <svg id="obj-svg" height="260" style="min-width:500px;display:block;width:100%"></svg>
       </div>
     </div>
   </div>
@@ -5177,98 +5178,151 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
   const svg = document.getElementById('obj-svg');
   const W = Math.max(500, svg.parentElement.offsetWidth || 700);
   svg.setAttribute('width', W);
-  const H=200, mL=52, mR=16, mT=12, mB=36, cW=W-mL-mR, cH=H-mT-mB;
+  const H=260, mL=56, mR=20, mT=20, mB=36, cW=W-mL-mR, cH=H-mT-mB;
 
   // Calculer les données
   const pts = [];
   let capital = actuel;
   const totalYrs = ageDeces - age;
+  let ageEpuisement = null;
 
   for (let i = 0; i <= totalYrs; i++) {
     const yr = age + i;
     if (yr <= ageRet) {
       if (i > 0) capital = (capital + cotisAnn) * (1 + rendAcc);
     } else {
-      // Décaissement simplifié
       if (i > 0) {
         const rrqPsv = (g('ob-rrq') + g('ob-psv'));
         const retrait = Math.max(0, g('ob-besoin') - rrqPsv);
+        const capitalAvant = capital;
         capital = Math.max(0, capital * (1 + rendRet) - retrait);
+        if (capitalAvant > 0 && capital <= 0 && ageEpuisement === null) ageEpuisement = yr;
       }
     }
     pts.push({ yr, cap: capital, phase: yr <= ageRet ? 'acc' : 'dec' });
   }
 
-  const maxCap = Math.max(...pts.map(p => p.cap), capitalCible);
+  const capitalRetraite = pts.find(p => p.yr === ageRet)?.cap ?? pts[pts.length-1].cap;
+  const capitalFinal = pts[pts.length-1].cap;
+  const maxCap = Math.max(...pts.map(p => p.cap), capitalCible) * 1.08;
   const ys = v => cH - (v / maxCap) * cH;
   const xs = i => (i / totalYrs) * cW;
+  const fmtK = v => v >= 1e6 ? (v/1e6).toFixed(2).replace(/\.?0+$/,'') + 'M $' : Math.round(v/1000) + 'k $';
 
-  let html = `<g transform="translate(${mL},${mT})">`;
+  // ── Bande de statistiques au-dessus du graphique ──
+  const kpiZone = document.getElementById('obj-chart-kpi');
+  if (kpiZone) {
+    const ecart = capitalRetraite - capitalCible;
+    kpiZone.innerHTML = `<div class="kpis">
+      <div class="kpi ${ecart>=0?'gn':'or'}"><div class="kl">Capital projeté à ${ageRet} ans</div><div class="kv">${fmt(Math.round(capitalRetraite))}</div><div class="ks">${ecart>=0?'+' : ''}${fmt(Math.round(ecart))} vs cible</div></div>
+      <div class="kpi gd"><div class="kl">Capital cible à ${ageRet} ans</div><div class="kv">${fmt(Math.round(capitalCible))}</div><div class="ks">Pour financer la retraite visée</div></div>
+      <div class="kpi ${ageEpuisement?'or':'bl'}"><div class="kl">${ageEpuisement?'Capital épuisé à':'Capital restant à '+ageDeces+' ans'}</div><div class="kv">${ageEpuisement? ageEpuisement+' ans' : fmt(Math.round(capitalFinal))}</div><div class="ks">${ageEpuisement?'Avant l\'âge visé de '+ageDeces+' ans ⚠':'Marge de sécurité en fin de plan'}</div></div>
+    </div>`;
+  }
 
-  // Grilles
+  let defs = `<defs>
+    <linearGradient id="obj-grad-acc" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0F0F0F" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#0F0F0F" stop-opacity="0.02"/>
+    </linearGradient>
+    <linearGradient id="obj-grad-dec" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#BF8F00" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#BF8F00" stop-opacity="0.02"/>
+    </linearGradient>
+    <filter id="obj-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#000" flood-opacity="0.20"/>
+    </filter>
+  </defs>`;
+
+  let html = defs + `<g transform="translate(${mL},${mT})">`;
+
+  // Grilles horizontales
   [0, .25, .5, .75, 1].forEach(v => {
     const y = ys(v * maxCap);
-    html += `<line x1="0" y1="${y}" x2="${cW}" y2="${y}" stroke="#e8edf3" stroke-width="1"/>`;
-    const lbl = maxCap * v >= 1e6
-      ? (maxCap * v / 1e6).toFixed(1) + 'M'
-      : (maxCap * v / 1000).toFixed(0) + 'k';
-    html += `<text x="-4" y="${y+4}" font-size="9" fill="#aaa" text-anchor="end">${lbl}$</text>`;
+    html += `<line x1="0" y1="${y}" x2="${cW}" y2="${y}" stroke="#eef1f5" stroke-width="1"/>`;
+    html += `<text x="-8" y="${y+3}" font-size="10" fill="#9aa0a6" text-anchor="end">${fmtK(v*maxCap)}</text>`;
   });
 
-  // Zone accumulation (fond très léger)
+  // Zone accumulation (fond très léger, distingue visuellement les 2 phases)
   const xRet = xs(ageRet - age);
-  html += `<rect x="0" y="0" width="${xRet}" height="${cH}" fill="#f0f4fa" rx="0"/>`;
+  html += `<rect x="0" y="0" width="${xRet}" height="${cH}" fill="#F7F9FC"/>`;
+  html += `<rect x="${xRet}" y="0" width="${cW-xRet}" height="${cH}" fill="#FFFBF0"/>`;
 
-  // Ligne capitale cible
+  // Zone de risque hachurée si le capital s'épuise avant la fin du plan
+  if (ageEpuisement !== null) {
+    const xEpuise = xs(ageEpuisement - age);
+    html += `<pattern id="obj-risk" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+      <rect width="7" height="7" fill="#FCE4D6" opacity="0.7"/>
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#C55A11" stroke-width="1.5" opacity="0.5"/>
+    </pattern>`;
+    html += `<rect x="${xEpuise}" y="0" width="${cW-xEpuise}" height="${cH}" fill="url(#obj-risk)"/>`;
+  }
+
+  // Ligne capital cible
   const yCible = ys(capitalCible);
-  html += `<line x1="0" y1="${yCible}" x2="${cW}" y2="${yCible}" stroke="#BF8F00" stroke-width="1.5" stroke-dasharray="6,3"/>`;
-  html += `<text x="${cW-2}" y="${yCible-4}" font-size="9" fill="#BF8F00" text-anchor="end">Objectif</text>`;
+  html += `<line x1="0" y1="${yCible}" x2="${cW}" y2="${yCible}" stroke="#BF8F00" stroke-width="1.5" stroke-dasharray="6,4"/>`;
+  html += `<rect x="${cW-84}" y="${yCible-18}" width="84" height="15" rx="7" fill="#BF8F00"/>`;
+  html += `<text x="${cW-42}" y="${yCible-7}" font-size="9.5" font-weight="700" fill="#fff" text-anchor="middle">Capital cible</text>`;
 
-  // Courbe accumulation
   const accPts = pts.filter(p => p.phase === 'acc');
   const decPts = pts.filter(p => p.phase === 'dec');
 
+  // Courbe + aire accumulation
   if (accPts.length > 1) {
-    const path = accPts.map((p, i) => {
-      const x = xs(p.yr - age);
-      const y = ys(p.cap);
-      return (i === 0 ? 'M' : 'L') + x + ',' + y;
-    }).join(' ');
-    html += `<path d="${path}" fill="none" stroke="#0F0F0F" stroke-width="2.5" stroke-linecap="round"/>`;
-    // Remplissage sous la courbe
+    const path = accPts.map((p, i) => (i===0?'M':'L') + xs(p.yr-age) + ',' + ys(p.cap)).join(' ');
     const fillPath = path + ` L${xs(accPts[accPts.length-1].yr-age)},${cH} L0,${cH} Z`;
-    html += `<path d="${fillPath}" fill="#0F0F0F" opacity="0.06"/>`;
+    html += `<path d="${fillPath}" fill="url(#obj-grad-acc)"/>`;
+    html += `<path d="${path}" fill="none" stroke="#0F0F0F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#obj-shadow)"/>`;
   }
 
-  // Courbe décaissement
+  // Courbe + aire décaissement
   if (decPts.length > 1) {
-    const path = decPts.map((p, i) => {
-      const x = xs(p.yr - age);
-      const y = ys(p.cap);
-      return (i === 0 ? 'M' : 'L') + x + ',' + y;
-    }).join(' ');
-    html += `<path d="${path}" fill="none" stroke="#BF8F00" stroke-width="2.5" stroke-linecap="round"/>`;
+    const startX = xs(decPts[0].yr-age), startY = ys(decPts[0].cap);
+    const path = `M${startX},${startY} ` + decPts.slice(1).map(p => 'L'+xs(p.yr-age)+','+ys(p.cap)).join(' ');
+    const fillPath = path + ` L${xs(decPts[decPts.length-1].yr-age)},${cH} L${startX},${cH} Z`;
+    html += `<path d="${fillPath}" fill="url(#obj-grad-dec)"/>`;
+    html += `<path d="${path}" fill="none" stroke="#BF8F00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#obj-shadow)"/>`;
+  }
+
+  // Repère : sommet à la retraite
+  html += `<circle cx="${xRet}" cy="${ys(capitalRetraite)}" r="5" fill="#0F0F0F" stroke="#fff" stroke-width="2"/>`;
+  const labelUp = ys(capitalRetraite) > 34;
+  html += `<text x="${xRet}" y="${ys(capitalRetraite) + (labelUp?-12:20)}" font-size="10.5" font-weight="800" fill="#0F0F0F" text-anchor="middle">${fmtK(capitalRetraite)}</text>`;
+
+  // Repère : point final (ou point d'épuisement)
+  if (ageEpuisement !== null) {
+    const xEp = xs(ageEpuisement - age);
+    html += `<circle cx="${xEp}" cy="${cH}" r="5" fill="#C55A11" stroke="#fff" stroke-width="2"/>`;
+    html += `<text x="${xEp}" y="${cH-10}" font-size="10.5" font-weight="800" fill="#C55A11" text-anchor="middle">Épuisé</text>`;
+  } else {
+    const xEnd = xs(totalYrs), yEnd = ys(capitalFinal);
+    html += `<circle cx="${xEnd}" cy="${yEnd}" r="5" fill="#BF8F00" stroke="#fff" stroke-width="2"/>`;
+    html += `<text x="${xEnd-4}" y="${yEnd + (yEnd>34?-12:20)}" font-size="10.5" font-weight="800" fill="#BF8F00" text-anchor="end">${fmtK(capitalFinal)}</text>`;
   }
 
   // Ligne verticale retraite
-  html += `<line x1="${xRet}" y1="0" x2="${xRet}" y2="${cH}" stroke="#BF8F00" stroke-width="1" stroke-dasharray="4,3"/>`;
-  html += `<text x="${xRet+4}" y="12" font-size="9" fill="#BF8F00" font-weight="600">Retraite</text>`;
+  html += `<line x1="${xRet}" y1="0" x2="${xRet}" y2="${cH}" stroke="#BF8F00" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>`;
 
   // Étiquettes X
   [age, ageRet, ageDeces].forEach(yr => {
     const x = xs(yr - age);
-    html += `<text x="${x}" y="${cH+16}" font-size="9" fill="#888" text-anchor="middle">${yr} ans</text>`;
+    html += `<text x="${x}" y="${cH+20}" font-size="10" fill="#888" text-anchor="middle" font-weight="600">${yr} ans</text>`;
   });
 
   html += '</g>';
 
   // Légende
-  html += `<line x1="${mL}" y1="${H-6}" x2="${mL+20}" y2="${H-6}" stroke="#0F0F0F" stroke-width="2.5"/>`;
-  html += `<text x="${mL+24}" y="${H-3}" font-size="9" fill="#555">Accumulation</text>`;
-  html += `<line x1="${mL+120}" y1="${H-6}" x2="${mL+140}" y2="${H-6}" stroke="#BF8F00" stroke-width="2.5"/>`;
-  html += `<text x="${mL+144}" y="${H-3}" font-size="9" fill="#555">Décaissement</text>`;
-  html += `<line x1="${mL+240}" y1="${H-6}" x2="${mL+260}" y2="${H-6}" stroke="#BF8F00" stroke-width="1.5" stroke-dasharray="5,3"/>`;
-  html += `<text x="${mL+264}" y="${H-3}" font-size="9" fill="#555">Capital cible</text>`;
+  const ly = H-8;
+  html += `<circle cx="${mL+6}" cy="${ly-3}" r="4" fill="#0F0F0F"/>`;
+  html += `<text x="${mL+16}" y="${ly}" font-size="10" fill="#555">Accumulation</text>`;
+  html += `<circle cx="${mL+130}" cy="${ly-3}" r="4" fill="#BF8F00"/>`;
+  html += `<text x="${mL+140}" y="${ly}" font-size="10" fill="#555">Décaissement</text>`;
+  html += `<line x1="${mL+260}" y1="${ly-3}" x2="${mL+280}" y2="${ly-3}" stroke="#BF8F00" stroke-width="1.5" stroke-dasharray="5,3"/>`;
+  html += `<text x="${mL+284}" y="${ly}" font-size="10" fill="#555">Capital cible</text>`;
+  if (ageEpuisement !== null) {
+    html += `<rect x="${mL+390}" y="${ly-10}" width="10" height="10" fill="#FCE4D6"/>`;
+    html += `<text x="${mL+404}" y="${ly}" font-size="10" fill="#C55A11" font-weight="600">Zone à risque</text>`;
+  }
 
   svg.innerHTML = html;
 }
