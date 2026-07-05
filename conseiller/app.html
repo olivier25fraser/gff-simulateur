@@ -5171,7 +5171,7 @@ function calcObj() {
   // ── Note ──
   document.getElementById('obj-note').textContent = dejaRetraite
     ? `Vous êtes déjà en phase de décaissement (âge actuel ≥ âge de retraite visé). Les calculs n'assument plus de nouvelles cotisations ni de croissance du capital avant la retraite — le capital actuel est utilisé tel quel. RRQ et PSV sont présentés en dollars d'aujourd'hui. Consultez un planificateur financier agréé pour une analyse personnalisée.`
-    : `Calculs basés sur des hypothèses de rendement constant et d'inflation à ${g('ob-inf')}%. Les rendements réels varient. RRQ et PSV ajustés pour l'inflation à la retraite. Le capital nécessaire est calculé selon la méthode de la valeur actuelle d'une rente certaine. Consultez un planificateur financier agréé pour une analyse personnalisée.`;
+    : `Le capital cible et le rendement requis sont calculés selon un rendement moyen constant de ${g('ob-rend-acc')}% (accumulation) et ${g('ob-rend-ret')}% (retraite), et une inflation à ${g('ob-inf')}%. La courbe du graphique illustre plutôt des rendements qui varient d'une année à l'autre (comme en réalité) autour de cette moyenne — un écart entre la courbe et la cible est donc normal, pas une erreur. RRQ et PSV ajustés pour l'inflation à la retraite. Le capital nécessaire est calculé selon la méthode de la valeur actuelle d'une rente certaine. Consultez un planificateur financier agréé pour une analyse personnalisée.`;
 }
 
 // Convertit une liste de points [x,y] en chemin SVG lissé (courbe Catmull-Rom → Bézier)
@@ -5232,29 +5232,43 @@ function objChartHoverOut() {
   if (tt) tt.style.display = 'none';
 }
 
+// Génère un taux de rendement annuel "réaliste" autour d'une moyenne : plus le rendement
+// visé est élevé, plus le portefeuille est typiquement dynamique/volatil, donc plus les
+// variations d'une année à l'autre sont marquées (illustratif, pas une vraie simulation Monte-Carlo).
+function tauxAnnuelVariable(rateBase, i, seed) {
+  const amplitude = Math.max(0.02, Math.min(0.22, rateBase * 2.2));
+  const vague = Math.sin(i*0.9 + seed) * 0.6 + Math.sin(i*2.3 + seed*1.7) * 0.4; // ~[-1,1], allure organique
+  return rateBase + vague * amplitude;
+}
+
 function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet, capitalCible, manqueParAn, inf, yrsAccPourEval) {
   const svg = document.getElementById('obj-svg');
   const W = Math.max(500, svg.parentElement.offsetWidth || 700);
   svg.setAttribute('width', W);
   const H=300, mL=58, mR=20, mT=20, mB=36, cW=W-mL-mR, cH=H-mT-mB;
 
-  // Calculer les données
+  // Calculer les données — rendement variable d'une année à l'autre (voir tauxAnnuelVariable),
+  // pour illustrer que les marchés ne montent jamais en ligne droite. Les montants clés affichés
+  // dans la bande de statistiques restent basés sur le rendement moyen entré (capitalCible etc.),
+  // donc un écart entre la courbe et la cible ici est normal et réaliste, pas une erreur.
   const pts = [];
   let capital = actuel;
   const totalYrs = ageDeces - age;
   let ageEpuisement = null;
+  const seedAcc = rendAcc * 37 + age;
+  const seedDec = rendRet * 53 + ageRet;
 
   for (let i = 0; i <= totalYrs; i++) {
     const yr = age + i;
     if (yr <= ageRet) {
-      if (i > 0) capital = capital * (1 + rendAcc) + cotisAnn;
+      if (i > 0) capital = capital * (1 + tauxAnnuelVariable(rendAcc, i, seedAcc)) + cotisAnn;
     } else {
       // Décaissement : même retrait annuel net (manqueParAn) que celui utilisé pour
       // calculer le capital cible ci-dessus — inflation et impôt déjà pris en compte
       // en amont dans calcObj(). Sans ça, la courbe et la cible affichée ne concordaient pas.
       if (i > 0) {
         const capitalAvant = capital;
-        capital = Math.max(0, capital * (1 + rendRet) - manqueParAn);
+        capital = Math.max(0, capital * (1 + tauxAnnuelVariable(rendRet, i, seedDec)) - manqueParAn);
         if (capitalAvant > 0 && capital <= 0 && yr < ageDeces && ageEpuisement === null) ageEpuisement = yr;
       }
     }
