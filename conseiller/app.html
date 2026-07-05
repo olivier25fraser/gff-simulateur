@@ -2058,10 +2058,10 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
 
   <!-- Projection visuelle -->
   <div class="card">
-    <div class="ch bl">Projection de votre capital — Accumulation et décaissement</div>
+    <div class="ch nv">Projection de votre capital — Accumulation et décaissement</div>
     <div class="cb" style="padding:16px 12px">
       <div id="obj-chart-kpi" style="margin-bottom:14px"></div>
-      <div class="chart-wrap">
+      <div class="chart-wrap" style="background:#0B0B0F;border-radius:var(--r-lg);padding:18px 14px 10px">
         <svg id="obj-svg" height="300" style="min-width:500px;display:block;width:100%"></svg>
       </div>
     </div>
@@ -5201,7 +5201,7 @@ function objChartHover(evt) {
   const p = s.pts[idx];
   if (!p) return;
   const x = (idx / s.totalYrs) * s.cW, y = s.cH - (p.cap / s.maxCap) * s.cH;
-  const coul = p.phase === 'acc' ? '#0F0F0F' : '#BF8F00';
+  const coul = p.phase === 'acc' ? '#2DD4BF' : '#FBBF24';
 
   const cross = document.getElementById('obj-crosshair');
   const dot = document.getElementById('obj-hover-dot');
@@ -5216,7 +5216,7 @@ function objChartHover(evt) {
       <div style="padding:8px 12px">
         <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.55);margin-bottom:2px">${p.phase==='acc'?'Accumulation':'Décaissement'}${p.yr===s.ageRet?' · Retraite':''}</div>
         <div style="font-size:12px;font-weight:700;margin-bottom:1px">${p.yr} ans</div>
-        <div style="font-size:14px;font-weight:800;color:${coul==='#0F0F0F'?'#fff':coul}">${fmt(Math.round(p.cap))}</div>
+        <div style="font-size:14px;font-weight:800;color:${coul}">${fmt(Math.round(p.cap))}</div>
       </div>
     </div>`;
     tt.style.left = (evt.clientX + 14) + 'px';
@@ -5284,33 +5284,33 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
 
   let defs = `<defs>
     <linearGradient id="obj-grad-acc" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#0F0F0F" stop-opacity="0.32"/>
-      <stop offset="55%" stop-color="#0F0F0F" stop-opacity="0.08"/>
-      <stop offset="100%" stop-color="#0F0F0F" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#2DD4BF" stop-opacity="0.55"/>
+      <stop offset="55%" stop-color="#2DD4BF" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#2DD4BF" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="obj-grad-dec" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#BF8F00" stop-opacity="0.34"/>
-      <stop offset="55%" stop-color="#BF8F00" stop-opacity="0.09"/>
-      <stop offset="100%" stop-color="#BF8F00" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#FBBF24" stop-opacity="0.55"/>
+      <stop offset="55%" stop-color="#FBBF24" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#FBBF24" stop-opacity="0"/>
     </linearGradient>
     <filter id="obj-shadow" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="0" dy="2" stdDeviation="2.2" flood-color="#000" flood-opacity="0.22"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="2.6" flood-color="#000" flood-opacity="0.5"/>
     </filter>
   </defs>`;
 
   let html = defs + `<g transform="translate(${mL},${mT})">`;
 
-  // Grilles horizontales
+  // Grilles horizontales (fines, discrètes sur fond noir)
   [0, .25, .5, .75, 1].forEach(v => {
     const y = ys(v * maxCap);
-    html += `<line x1="0" y1="${y}" x2="${cW}" y2="${y}" stroke="#eef1f5" stroke-width="1"/>`;
-    html += `<text x="-8" y="${y+3}" font-size="10" fill="#9aa0a6" text-anchor="end">${fmtK(v*maxCap)}</text>`;
+    html += `<line x1="0" y1="${y}" x2="${cW}" y2="${y}" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1"/>`;
+    html += `<text x="-8" y="${y+3}" font-size="10" fill="#9aa3af" text-anchor="end">${fmtK(v*maxCap)}</text>`;
   });
 
-  // Zone accumulation (fond très léger, distingue visuellement les 2 phases)
+  // Zone accumulation / décaissement (à peine distinguées sur le fond noir)
   const xRet = xs(ageRet - age);
-  html += `<rect x="0" y="0" width="${xRet}" height="${cH}" fill="#F7F9FC"/>`;
-  html += `<rect x="${xRet}" y="0" width="${cW-xRet}" height="${cH}" fill="#FFFBF0"/>`;
+  html += `<rect x="0" y="0" width="${xRet}" height="${cH}" fill="#2DD4BF" fill-opacity="0.03"/>`;
+  html += `<rect x="${xRet}" y="0" width="${cW-xRet}" height="${cH}" fill="#FBBF24" fill-opacity="0.03"/>`;
 
   // Graduations verticales tous les 5 ans (10 ans si l'horizon est très long) pour un axe plus complet
   const pasAge = totalYrs > 55 ? 10 : 5;
@@ -5320,68 +5320,68 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
   }
   ticksAge.forEach(a => {
     const x = xs(a - age);
-    html += `<line x1="${x}" y1="0" x2="${x}" y2="${cH}" stroke="#e4e9f0" stroke-width="1" stroke-dasharray="2,3"/>`;
+    html += `<line x1="${x}" y1="0" x2="${x}" y2="${cH}" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1" stroke-dasharray="2,3"/>`;
   });
 
   // Zone de risque hachurée si le capital s'épuise avant la fin du plan
   if (ageEpuisement !== null) {
     const xEpuise = xs(ageEpuisement - age);
     html += `<pattern id="obj-risk" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
-      <rect width="7" height="7" fill="#FCE4D6" opacity="0.7"/>
-      <line x1="0" y1="0" x2="0" y2="7" stroke="#C55A11" stroke-width="1.5" opacity="0.5"/>
+      <rect width="7" height="7" fill="#7F1D1D" opacity="0.35"/>
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#F87171" stroke-width="1.5" opacity="0.6"/>
     </pattern>`;
     html += `<rect x="${xEpuise}" y="0" width="${cW-xEpuise}" height="${cH}" fill="url(#obj-risk)"/>`;
   }
 
   // Ligne capital cible
   const yCible = ys(capitalCible);
-  html += `<line x1="0" y1="${yCible}" x2="${cW}" y2="${yCible}" stroke="#BF8F00" stroke-width="1.5" stroke-dasharray="6,4"/>`;
-  html += `<rect x="${cW-84}" y="${yCible-18}" width="84" height="15" rx="7" fill="#BF8F00"/>`;
-  html += `<text x="${cW-42}" y="${yCible-7}" font-size="9.5" font-weight="700" fill="#fff" text-anchor="middle">Capital cible</text>`;
+  html += `<line x1="0" y1="${yCible}" x2="${cW}" y2="${yCible}" stroke="#fff" stroke-opacity="0.8" stroke-width="1.5" stroke-dasharray="6,4"/>`;
+  html += `<rect x="${cW-84}" y="${yCible-18}" width="84" height="15" rx="7" fill="#fff"/>`;
+  html += `<text x="${cW-42}" y="${yCible-7}" font-size="9.5" font-weight="700" fill="#0B0B0F" text-anchor="middle">Capital cible</text>`;
 
   const accPts = pts.filter(p => p.phase === 'acc');
   const decPts = pts.filter(p => p.phase === 'dec');
 
-  // Courbe + aire accumulation (lissée)
+  // Courbe + aire accumulation (lissée) — teal vibrant
   if (accPts.length > 1) {
     const xy = accPts.map(p => [xs(p.yr-age), ys(p.cap)]);
     const path = smoothPath(xy);
     const fillPath = path + ` L${xy[xy.length-1][0]},${cH} L0,${cH} Z`;
     html += `<path d="${fillPath}" fill="url(#obj-grad-acc)"/>`;
-    html += `<path d="${path}" fill="none" stroke="#0F0F0F" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" filter="url(#obj-shadow)"/>`;
+    html += `<path d="${path}" fill="none" stroke="#2DD4BF" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" filter="url(#obj-shadow)"/>`;
   }
 
-  // Courbe + aire décaissement (lissée)
+  // Courbe + aire décaissement (lissée) — or vibrant
   if (decPts.length > 1) {
     const xy = decPts.map(p => [xs(p.yr-age), ys(p.cap)]);
     const path = smoothPath(xy);
     const fillPath = path + ` L${xy[xy.length-1][0]},${cH} L${xy[0][0]},${cH} Z`;
     html += `<path d="${fillPath}" fill="url(#obj-grad-dec)"/>`;
-    html += `<path d="${path}" fill="none" stroke="#BF8F00" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" filter="url(#obj-shadow)"/>`;
+    html += `<path d="${path}" fill="none" stroke="#FBBF24" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" filter="url(#obj-shadow)"/>`;
   }
 
   // Repère : sommet à la retraite
-  html += `<circle cx="${xRet}" cy="${ys(capitalRetraite)}" r="5" fill="#0F0F0F" stroke="#fff" stroke-width="2"/>`;
+  html += `<circle cx="${xRet}" cy="${ys(capitalRetraite)}" r="5.5" fill="#fff" stroke="#2DD4BF" stroke-width="2.5"/>`;
   const labelUp = ys(capitalRetraite) > 34;
-  html += `<text x="${xRet}" y="${ys(capitalRetraite) + (labelUp?-12:20)}" font-size="10.5" font-weight="800" fill="#0F0F0F" text-anchor="middle">${fmtK(capitalRetraite)}</text>`;
+  html += `<text x="${xRet}" y="${ys(capitalRetraite) + (labelUp?-13:22)}" font-size="10.5" font-weight="800" fill="#fff" text-anchor="middle">${fmtK(capitalRetraite)}</text>`;
 
   // Repère : point final (ou point d'épuisement)
   if (ageEpuisement !== null) {
     const xEp = xs(ageEpuisement - age);
-    html += `<circle cx="${xEp}" cy="${cH}" r="5" fill="#C55A11" stroke="#fff" stroke-width="2"/>`;
-    html += `<text x="${xEp}" y="${cH-10}" font-size="10.5" font-weight="800" fill="#C55A11" text-anchor="middle">Épuisé</text>`;
+    html += `<circle cx="${xEp}" cy="${cH}" r="5.5" fill="#fff" stroke="#F87171" stroke-width="2.5"/>`;
+    html += `<text x="${xEp}" y="${cH-12}" font-size="10.5" font-weight="800" fill="#F87171" text-anchor="middle">Épuisé</text>`;
   } else {
     const xEnd = xs(totalYrs), yEnd = ys(capitalFinal);
-    html += `<circle cx="${xEnd}" cy="${yEnd}" r="5" fill="#BF8F00" stroke="#fff" stroke-width="2"/>`;
-    html += `<text x="${xEnd-4}" y="${yEnd + (yEnd>34?-12:20)}" font-size="10.5" font-weight="800" fill="#BF8F00" text-anchor="end">${fmtK(capitalFinal)}</text>`;
+    html += `<circle cx="${xEnd}" cy="${yEnd}" r="5.5" fill="#fff" stroke="#FBBF24" stroke-width="2.5"/>`;
+    html += `<text x="${xEnd-4}" y="${yEnd + (yEnd>34?-13:22)}" font-size="10.5" font-weight="800" fill="#FBBF24" text-anchor="end">${fmtK(capitalFinal)}</text>`;
   }
 
   // Ligne verticale retraite
-  html += `<line x1="${xRet}" y1="0" x2="${xRet}" y2="${cH}" stroke="#BF8F00" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>`;
+  html += `<line x1="${xRet}" y1="0" x2="${xRet}" y2="${cH}" stroke="#fff" stroke-opacity="0.35" stroke-width="1" stroke-dasharray="4,3"/>`;
 
   // ── Survol interactif : ligne de repère + point mobile (style graphique boursier) ──
-  html += `<line id="obj-crosshair" x1="0" y1="0" x2="0" y2="${cH}" stroke="#999" stroke-width="1" stroke-dasharray="3,3" style="display:none;pointer-events:none"/>`;
-  html += `<circle id="obj-hover-dot" cx="0" cy="0" r="5" fill="#0F0F0F" stroke="#fff" stroke-width="2" style="display:none;pointer-events:none"/>`;
+  html += `<line id="obj-crosshair" x1="0" y1="0" x2="0" y2="${cH}" stroke="#fff" stroke-opacity="0.5" stroke-width="1" stroke-dasharray="3,3" style="display:none;pointer-events:none"/>`;
+  html += `<circle id="obj-hover-dot" cx="0" cy="0" r="5.5" fill="#fff" stroke="#2DD4BF" stroke-width="2.5" style="display:none;pointer-events:none"/>`;
   html += `<rect x="0" y="0" width="${cW}" height="${cH}" fill="transparent" style="cursor:crosshair" onmousemove="objChartHover(event)" onmouseleave="objChartHoverOut()"/>`;
 
   // Points de données discrets le long de la courbe, à chaque graduation — look "données réelles"
@@ -5389,7 +5389,7 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
     if (a === ageRet) return; // déjà marqué par le repère principal
     const p = pts.find(pp => pp.yr === a);
     if (!p) return;
-    const coulPt = p.phase === 'acc' ? '#0F0F0F' : '#BF8F00';
+    const coulPt = p.phase === 'acc' ? '#2DD4BF' : '#FBBF24';
     html += `<circle cx="${xs(a-age)}" cy="${ys(p.cap)}" r="3" fill="#fff" stroke="${coulPt}" stroke-width="2"/>`;
   });
 
@@ -5398,22 +5398,22 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
     ...ticksAge.filter(a => Math.abs(a-age)>2 && Math.abs(a-ageRet)>2 && Math.abs(a-ageDeces)>2).map(a=>({a,strong:false}))];
   labelsAge.sort((a,b)=>a.a-b.a).forEach(({a,strong}) => {
     const x = xs(a - age);
-    html += `<text x="${x}" y="${cH+20}" font-size="${strong?10:9.5}" fill="${strong?'#555':'#aaa'}" text-anchor="middle" font-weight="${strong?700:500}">${a}</text>`;
+    html += `<text x="${x}" y="${cH+20}" font-size="${strong?10:9.5}" fill="${strong?'#e5e7eb':'#6b7280'}" text-anchor="middle" font-weight="${strong?700:500}">${a}</text>`;
   });
 
   html += '</g>';
 
   // Légende
   const ly = H-8;
-  html += `<circle cx="${mL+6}" cy="${ly-3}" r="4" fill="#0F0F0F"/>`;
-  html += `<text x="${mL+16}" y="${ly}" font-size="10" fill="#555">Accumulation</text>`;
-  html += `<circle cx="${mL+130}" cy="${ly-3}" r="4" fill="#BF8F00"/>`;
-  html += `<text x="${mL+140}" y="${ly}" font-size="10" fill="#555">Décaissement</text>`;
-  html += `<line x1="${mL+260}" y1="${ly-3}" x2="${mL+280}" y2="${ly-3}" stroke="#BF8F00" stroke-width="1.5" stroke-dasharray="5,3"/>`;
-  html += `<text x="${mL+284}" y="${ly}" font-size="10" fill="#555">Capital cible</text>`;
+  html += `<circle cx="${mL+6}" cy="${ly-3}" r="4" fill="#2DD4BF"/>`;
+  html += `<text x="${mL+16}" y="${ly}" font-size="10" fill="#c7cbd1">Accumulation</text>`;
+  html += `<circle cx="${mL+130}" cy="${ly-3}" r="4" fill="#FBBF24"/>`;
+  html += `<text x="${mL+140}" y="${ly}" font-size="10" fill="#c7cbd1">Décaissement</text>`;
+  html += `<line x1="${mL+260}" y1="${ly-3}" x2="${mL+280}" y2="${ly-3}" stroke="#fff" stroke-opacity="0.7" stroke-width="1.5" stroke-dasharray="5,3"/>`;
+  html += `<text x="${mL+284}" y="${ly}" font-size="10" fill="#c7cbd1">Capital cible</text>`;
   if (ageEpuisement !== null) {
-    html += `<rect x="${mL+390}" y="${ly-10}" width="10" height="10" fill="#FCE4D6"/>`;
-    html += `<text x="${mL+404}" y="${ly}" font-size="10" fill="#C55A11" font-weight="600">Zone à risque</text>`;
+    html += `<rect x="${mL+390}" y="${ly-10}" width="10" height="10" fill="#7F1D1D"/>`;
+    html += `<text x="${mL+404}" y="${ly}" font-size="10" fill="#F87171" font-weight="600">Zone à risque</text>`;
   }
 
   svg.innerHTML = html;
