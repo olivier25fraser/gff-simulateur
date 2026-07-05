@@ -5174,6 +5174,57 @@ function calcObj() {
     : `Calculs basés sur des hypothèses de rendement constant et d'inflation à ${g('ob-inf')}%. Les rendements réels varient. RRQ et PSV ajustés pour l'inflation à la retraite. Le capital nécessaire est calculé selon la méthode de la valeur actuelle d'une rente certaine. Consultez un planificateur financier agréé pour une analyse personnalisée.`;
 }
 
+// Convertit une liste de points [x,y] en chemin SVG lissé (courbe Catmull-Rom → Bézier)
+// — donne cet effet "graphique boursier" au lieu de segments droits anguleux.
+function smoothPath(p) {
+  if (p.length < 2) return '';
+  if (p.length === 2) return `M${p[0][0]},${p[0][1]} L${p[1][0]},${p[1][1]}`;
+  let d = `M${p[0][0]},${p[0][1]}`;
+  for (let i = 0; i < p.length - 1; i++) {
+    const p0 = p[i === 0 ? 0 : i - 1], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] || p2;
+    const c1x = p1[0] + (p2[0] - p0[0]) / 6, c1y = p1[1] + (p2[1] - p0[1]) / 6;
+    const c2x = p2[0] - (p3[0] - p1[0]) / 6, c2y = p2[1] - (p3[1] - p1[1]) / 6;
+    d += ` C${c1x},${c1y} ${c2x},${c2y} ${p2[0]},${p2[1]}`;
+  }
+  return d;
+}
+
+// État partagé pour le survol interactif du graphique (ligne de repère + infobulle, comme un graphique boursier)
+let objChartState = null;
+function objChartHover(evt) {
+  if (!objChartState) return;
+  const s = objChartState;
+  const svg = document.getElementById('obj-svg');
+  const rect = svg.getBoundingClientRect();
+  const mx = evt.clientX - rect.left - s.mL;
+  const idx = Math.max(0, Math.min(s.pts.length - 1, Math.round((mx / s.cW) * s.totalYrs)));
+  const p = s.pts[idx];
+  if (!p) return;
+  const x = (idx / s.totalYrs) * s.cW, y = s.cH - (p.cap / s.maxCap) * s.cH;
+  const coul = p.phase === 'acc' ? '#0F0F0F' : '#BF8F00';
+
+  const cross = document.getElementById('obj-crosshair');
+  const dot = document.getElementById('obj-hover-dot');
+  if (cross) { cross.setAttribute('x1', x); cross.setAttribute('x2', x); cross.style.display = 'block'; }
+  if (dot) { dot.setAttribute('cx', x); dot.setAttribute('cy', y); dot.setAttribute('fill', coul); dot.style.display = 'block'; }
+
+  const tt = document.getElementById('tt');
+  if (tt) {
+    tt.style.display = 'block';
+    tt.innerHTML = `<div style="font-weight:800;margin-bottom:2px">${p.yr} ans${p.yr===s.ageRet?' — Retraite':''}</div><div>${fmt(Math.round(p.cap))}</div>`;
+    tt.style.left = (evt.clientX + 14) + 'px';
+    tt.style.top = (evt.clientY - 42) + 'px';
+  }
+}
+function objChartHoverOut() {
+  const cross = document.getElementById('obj-crosshair');
+  const dot = document.getElementById('obj-hover-dot');
+  const tt = document.getElementById('tt');
+  if (cross) cross.style.display = 'none';
+  if (dot) dot.style.display = 'none';
+  if (tt) tt.style.display = 'none';
+}
+
 function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet, capitalCible, manqueParAn, inf, yrsAccPourEval) {
   const svg = document.getElementById('obj-svg');
   const W = Math.max(500, svg.parentElement.offsetWidth || 700);
@@ -5210,6 +5261,9 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
   const xs = i => (i / totalYrs) * cW;
   const fmtK = v => v >= 1e6 ? (v/1e6).toFixed(2).replace(/\.?0+$/,'') + 'M $' : Math.round(v/1000) + 'k $';
 
+  // Mémoriser l'état pour le survol interactif (ligne de repère + infobulle)
+  objChartState = { pts, totalYrs, maxCap, mL, mT, cW, cH, ageRet };
+
   // ── Bande de statistiques au-dessus du graphique ──
   const kpiZone = document.getElementById('obj-chart-kpi');
   if (kpiZone) {
@@ -5223,15 +5277,17 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
 
   let defs = `<defs>
     <linearGradient id="obj-grad-acc" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#0F0F0F" stop-opacity="0.28"/>
-      <stop offset="100%" stop-color="#0F0F0F" stop-opacity="0.02"/>
+      <stop offset="0%" stop-color="#0F0F0F" stop-opacity="0.32"/>
+      <stop offset="55%" stop-color="#0F0F0F" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#0F0F0F" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="obj-grad-dec" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#BF8F00" stop-opacity="0.30"/>
-      <stop offset="100%" stop-color="#BF8F00" stop-opacity="0.02"/>
+      <stop offset="0%" stop-color="#BF8F00" stop-opacity="0.34"/>
+      <stop offset="55%" stop-color="#BF8F00" stop-opacity="0.09"/>
+      <stop offset="100%" stop-color="#BF8F00" stop-opacity="0"/>
     </linearGradient>
     <filter id="obj-shadow" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#000" flood-opacity="0.20"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="2.2" flood-color="#000" flood-opacity="0.22"/>
     </filter>
   </defs>`;
 
@@ -5268,21 +5324,22 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
   const accPts = pts.filter(p => p.phase === 'acc');
   const decPts = pts.filter(p => p.phase === 'dec');
 
-  // Courbe + aire accumulation
+  // Courbe + aire accumulation (lissée)
   if (accPts.length > 1) {
-    const path = accPts.map((p, i) => (i===0?'M':'L') + xs(p.yr-age) + ',' + ys(p.cap)).join(' ');
-    const fillPath = path + ` L${xs(accPts[accPts.length-1].yr-age)},${cH} L0,${cH} Z`;
+    const xy = accPts.map(p => [xs(p.yr-age), ys(p.cap)]);
+    const path = smoothPath(xy);
+    const fillPath = path + ` L${xy[xy.length-1][0]},${cH} L0,${cH} Z`;
     html += `<path d="${fillPath}" fill="url(#obj-grad-acc)"/>`;
-    html += `<path d="${path}" fill="none" stroke="#0F0F0F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#obj-shadow)"/>`;
+    html += `<path d="${path}" fill="none" stroke="#0F0F0F" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" filter="url(#obj-shadow)"/>`;
   }
 
-  // Courbe + aire décaissement
+  // Courbe + aire décaissement (lissée)
   if (decPts.length > 1) {
-    const startX = xs(decPts[0].yr-age), startY = ys(decPts[0].cap);
-    const path = `M${startX},${startY} ` + decPts.slice(1).map(p => 'L'+xs(p.yr-age)+','+ys(p.cap)).join(' ');
-    const fillPath = path + ` L${xs(decPts[decPts.length-1].yr-age)},${cH} L${startX},${cH} Z`;
+    const xy = decPts.map(p => [xs(p.yr-age), ys(p.cap)]);
+    const path = smoothPath(xy);
+    const fillPath = path + ` L${xy[xy.length-1][0]},${cH} L${xy[0][0]},${cH} Z`;
     html += `<path d="${fillPath}" fill="url(#obj-grad-dec)"/>`;
-    html += `<path d="${path}" fill="none" stroke="#BF8F00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#obj-shadow)"/>`;
+    html += `<path d="${path}" fill="none" stroke="#BF8F00" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" filter="url(#obj-shadow)"/>`;
   }
 
   // Repère : sommet à la retraite
@@ -5303,6 +5360,11 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
 
   // Ligne verticale retraite
   html += `<line x1="${xRet}" y1="0" x2="${xRet}" y2="${cH}" stroke="#BF8F00" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>`;
+
+  // ── Survol interactif : ligne de repère + point mobile (style graphique boursier) ──
+  html += `<line id="obj-crosshair" x1="0" y1="0" x2="0" y2="${cH}" stroke="#999" stroke-width="1" stroke-dasharray="3,3" style="display:none;pointer-events:none"/>`;
+  html += `<circle id="obj-hover-dot" cx="0" cy="0" r="5" fill="#0F0F0F" stroke="#fff" stroke-width="2" style="display:none;pointer-events:none"/>`;
+  html += `<rect x="0" y="0" width="${cW}" height="${cH}" fill="transparent" style="cursor:crosshair" onmousemove="objChartHover(event)" onmouseleave="objChartHoverOut()"/>`;
 
   // Étiquettes X
   [age, ageRet, ageDeces].forEach(yr => {
