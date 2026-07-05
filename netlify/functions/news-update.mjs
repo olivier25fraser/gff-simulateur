@@ -1,11 +1,11 @@
 /**
- * Mise à jour des nouvelles financières — lun-sam à 8h EST (13h UTC)
- * Appelle l'API Anthropic avec web_search pour obtenir les vraies nouvelles du jour
+ * Mise à jour des nouvelles financières — lun/mer/ven à 8h EST (13h UTC)
+ * Appelle l'API Anthropic avec web_search (plafonnée à 3 recherches) pour obtenir les vraies nouvelles du jour
  * Groupe Financier Formule
  */
 import { getStore } from "@netlify/blobs";
 
-export const config = { schedule: "0 13 * * 1-6" };
+export const config = { schedule: "0 13 * * 1,3,5" };
 
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
 
@@ -30,8 +30,8 @@ export default async function handler() {
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
-        max_tokens: 2000,
-        tools: [{ type: "web_search_20250305", name: "web_search" }],
+        max_tokens: 1500,
+        tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 3 }],
         system: `Tu es un analyste financier québécois expert. Aujourd'hui c'est ${today}.
 
 Cherche les nouvelles d'actualité importantes (politique, géopolitique, économie, banques centrales, matières premières, entreprises) qui ont un impact direct sur les marchés boursiers mondiaux aujourd'hui ou cette semaine.

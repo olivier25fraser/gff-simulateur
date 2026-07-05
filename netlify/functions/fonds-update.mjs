@@ -37,7 +37,7 @@ async function extraireAvecClaude(pdfBase64) {
       "anthropic-version": "2023-06-01"
     },
     body: JSON.stringify({
-      model: "claude-sonnet-4-6",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 3000,
       messages: [{
         role: "user",
@@ -87,11 +87,13 @@ export default async function handler() {
   const store = getStore("gff-marches");
 
   try {
-    // Essayer d'abord l'URL directe (GUID stable), puis chercher sur la page si échec
+    // Essayer d'abord l'URL directe (GUID stable), puis chercher sur la page si échec.
+    // Plafonné à 3 tentatives max : chaque tentative envoie un PDF complet à Claude,
+    // ce qui coûte des tokens — pas question d'essayer tous les PDF trouvés sur la page.
     let liens = [PDF_CPE_DIRECT];
     try {
       const liensPage = await trouverLiensPdf();
-      liens = [PDF_CPE_DIRECT, ...liensPage.filter(l => l !== PDF_CPE_DIRECT)];
+      liens = [PDF_CPE_DIRECT, ...liensPage.filter(l => l !== PDF_CPE_DIRECT)].slice(0, 3);
     } catch (e) {
       // Page inaccessible (auth requise) — on garde l'URL directe
       console.log("Page CPE inaccessible, utilisation de l'URL directe");
