@@ -3351,19 +3351,34 @@ function findSeuilEpuisement(fine){
   return seuil;
 }
 
+// Paliers personnalisés partagés : plus détaillés au tout début (0-1k-3k-5k), puis tranches de 5000$.
+// Utilisés PARTOUT (bannière KPI, bannière comparaison, graphique) pour que la « tranche la plus
+// payante » affichée soit toujours la même valeur, peu importe où elle apparaît à l'écran.
+function getImpactBreakpoints(rev){
+  const breakpoints=[0,1000,3000,5000];
+  for(let c=10000;c<=Math.min(85000,rev)+5000;c+=5000) breakpoints.push(c);
+  return breakpoints;
+}
+function getBestTranche(rev, enf, rev2, age, enfAges){
+  const pts = calcImpactPtsBreaks(rev, enf, rev2, getImpactBreakpoints(rev), age, enfAges);
+  if(!pts.length) return null;
+  const best = pts.reduce((a,b)=>b.eff>a.eff?b:a, pts[0]);
+  return {pts, best};
+}
+
 function drawImpactKPI(rev, enf, rev2, age, enfAges){
   const zone = $('imp-kpi-zone');
   if(!zone) return;
-  const pts = calcImpactPts(rev, enf, rev2, 5000, undefined, age, enfAges);
-  if(!pts.length){ zone.innerHTML=''; return; }
-  const best = pts.reduce((a,b)=>b.eff>a.eff?b:a, pts[0]);
+  const bt = getBestTranche(rev, enf, rev2, age, enfAges);
+  if(!bt){ zone.innerHTML=''; return; }
+  const best = bt.best;
   const fine = calcImpactPts(rev, enf, rev2, 250, undefined, age, enfAges);
   const seuil = findSeuilEpuisement(fine);
   zone.innerHTML = `
     <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px">
       <div style="flex:1;min-width:220px;background:linear-gradient(135deg,#0F0F0F,#2E2E2E);border-radius:var(--r-lg);padding:18px 20px;color:#fff">
         <div style="font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--gold-br);font-weight:700;margin-bottom:6px">★ Tranche la plus payante</div>
-        <div style="font-size:26px;font-weight:800;line-height:1.15">${fmt(best.c-4999)} – ${fmt(best.c)}</div>
+        <div style="font-size:26px;font-weight:800;line-height:1.15">${fmt(best.c-best.w+1)} – ${fmt(best.c)}</div>
         <div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:5px">${fp(best.eff)} de retour combiné par dollar cotisé dans cette tranche</div>
       </div>
       <div style="flex:1;min-width:220px;background:var(--gold-p);border-radius:var(--r-lg);padding:18px 20px">
@@ -3391,11 +3406,13 @@ function drawOpportunityBanner(rev, enf, rev2, age, enfAges){
   };
   const totalOf = o => o.imp+o.ace+o.act+o.pat+o.af+o.sol+o.psv;
 
-  // Même tranche « la plus payante » que celle affichée dans le KPI du haut (grille de 5000$),
-  // pour que les deux chiffres présentés au client soient toujours cohérents entre eux.
-  const coarse = calcImpactPts(rev, enf, rev2, 5000, undefined, age, enfAges);
-  const best = coarse.reduce((a,b)=>b.eff>a.eff?b:a, coarse[0]);
-  const bestLo = Math.max(0, best.c-5000), bestHi = best.c;
+  // Même tranche « la plus payante » que celle affichée dans le KPI du haut ET dans le graphique
+  // (★), calculée une seule fois par getBestTranche(), pour que les trois affichages soient
+  // toujours cohérents entre eux.
+  const bt = getBestTranche(rev, enf, rev2, age, enfAges);
+  if(!bt){ zone.innerHTML=''; return; }
+  const best = bt.best;
+  const bestLo = best.c-best.w, bestHi = best.c;
   const bestSlice = sumRange(bestLo, bestHi);
   const bestTotal = totalOf(bestSlice);
   const bestEff = bestTotal/(bestHi-bestLo);
@@ -3577,11 +3594,12 @@ function drawChart(rev,tm,enf,rev2,age,enfAges){
   svg.setAttribute('width',W);
   const H=220,mL=46,mR=16,mT=18,mB=30,cW=W-mL-mR,cH=H-mT-mB;
 
-  // Paliers personnalisés : plus détaillés au tout début (0-1k-3k-5k), puis tranches de 5000$
-  const breakpoints=[0,1000,3000,5000];
-  for(let c=10000;c<=Math.min(85000,rev)+5000;c+=5000) breakpoints.push(c);
-  const pts=calcImpactPtsBreaks(rev,enf,rev2,breakpoints,age,enfAges);
-  if(!pts.length){svg.innerHTML='<text x="20" y="30" font-size="12" fill="#999">Aucune donnée</text>';return;}
+  // Paliers personnalisés : plus détaillés au tout début (0-1k-3k-5k), puis tranches de 5000$.
+  // Calcul partagé avec les bannières KPI (getBestTranche) pour que l'étoile (★) corresponde
+  // TOUJOURS à la même tranche affichée en haut de page — plus jamais deux calculs séparés.
+  const bt = getBestTranche(rev, enf, rev2, age, enfAges);
+  if(!bt){svg.innerHTML='<text x="20" y="30" font-size="12" fill="#999">Aucune donnée</text>';return;}
+  const pts = bt.pts, best = bt.best;
 
   const segs=[['1E293B','475569','imp','Impôt (fédéral + Québec)'],['0D9488','2DD4BF','ace','Allocation canadienne pour enfants (ACE)'],['0284C7','38BDF8','af','Allocation famille (Québec)'],['7C3AED','A78BFA','act','Allocation canadienne pour travailleurs (ACT)'],['DB2777','F472B6','pat','Prime au travail (Québec)'],['D97706','FBBF24','sol','Crédit de solidarité (Québec)'],['64748B','94A3B8','psv','Récupération pension féd. (PSV)']];
 
@@ -3603,7 +3621,6 @@ function drawChart(rev,tm,enf,rev2,age,enfAges){
   const ys=v=>(v/Math.max(maxE*1.2,.55))*cH;
   const bW=Math.max(8,Math.min(30,cW/pts.length*.75));
   const xS=cW/pts.length;
-  const best=pts.reduce((a,b)=>a.eff>b.eff?a:b,pts[0]);
 
   // Dégradés + ombre douce pour chaque segment
   let defs=`<defs>`;
