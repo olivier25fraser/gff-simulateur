@@ -68,11 +68,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,15,15,.95
   border-radius:var(--r);font-weight:600;font-size:15px;text-decoration:none;
   border:1px solid rgba(255,255,255,.15);transition:all .2s}
 .btn-secondary:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3)}
-.hero-stats{display:flex;gap:40px;margin-top:56px;padding-top:40px;
-  border-top:1px solid rgba(255,255,255,.1);flex-wrap:wrap;align-items:flex-start}
-.hero-stat{display:flex;flex-direction:column;justify-content:flex-start}
-.hero-stat .hs-val{font-family:'DM Serif Display',serif;font-size:32px;color:var(--gold);font-weight:400;line-height:1.1}
-.hero-stat .hs-lbl{font-size:13px;color:rgba(255,255,255,.5);margin-top:4px;line-height:1.4}
 
 /* ── SERVICES ── */
 .section{padding:96px 5%}
@@ -176,7 +171,6 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
   .nav-links{display:none}
   .contact-grid{grid-template-columns:1fr}
   .etape::after{display:none}
-  .hero-stats{gap:24px}
   .processus-grid{grid-template-columns:1fr}
 }
 
@@ -217,17 +211,6 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
         Consultation gratuite →
       </a>
       <a href="#services" class="btn-secondary">Nos services</a>
-    </div>
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="hs-val">100 %</div>
-        <div class="hs-lbl">Conseils personnalisés</div>
-      </div>
-
-      <div class="hero-stat">
-        <div class="hs-val">Service local</div>
-        <div class="hs-lbl">dans la province de Québec</div>
-      </div>
     </div>
   </div>
   <canvas id="heroWave" class="wave-canvas-bottom"></canvas>
