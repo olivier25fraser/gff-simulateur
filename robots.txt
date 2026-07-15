@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /conseiller/
+
+Sitemap: https://gfformule.ca/sitemap.xml
