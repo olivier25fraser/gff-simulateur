@@ -28,12 +28,14 @@ body{font-family:'DM Sans',sans-serif;color:var(--noir);background:var(--gold-p)
   display:inline-flex;align-items:center;gap:6px;transition:color .2s}
 .topbar a.back:hover{color:#fff}
 
-.wrap{max-width:1160px;margin:0 auto;padding:48px 24px 80px}
-
-.page-head{margin-bottom:36px}
-.page-head h1{font-family:'DM Serif Display',serif;font-size:clamp(30px,4vw,42px);
+.page-hero{background:var(--noir);position:relative;overflow:hidden;padding:56px 24px 72px}
+.page-hero-inner{max-width:1160px;margin:0 auto;position:relative;z-index:2}
+.page-hero h1{font-family:'DM Serif Display',serif;color:#fff;font-size:clamp(30px,4vw,42px);
   font-weight:400;margin-bottom:10px}
-.page-head p{color:var(--gry);font-size:15.5px;max-width:560px}
+.page-hero p{color:rgba(255,255,255,.65);font-size:15.5px;max-width:560px}
+.wave-canvas-bottom{position:absolute;bottom:0;left:0;width:100%;height:140px;display:block;pointer-events:none;z-index:1}
+
+.wrap{max-width:1160px;margin:0 auto;padding:40px 24px 80px}
 
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
 
@@ -58,6 +60,7 @@ footer.page-footer{text-align:center;padding:28px 24px 40px;color:var(--gry);fon
 footer.page-footer a{color:var(--gold);text-decoration:none;font-weight:600}
 
 @media(max-width:480px){
+  .page-hero{padding:40px 16px 60px}
   .wrap{padding:32px 16px 60px}
   .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
   .card{padding:16px 12px 14px}
@@ -67,16 +70,19 @@ footer.page-footer a{color:var(--gold);text-decoration:none;font-weight:600}
 <body>
 
 <div class="topbar">
-  <a href="/"><img src="/assets/logo_gff.png" alt="Groupe Financier Formule"></a>
+  <a href="/"><img src="/assets/logo_gff_white.png" alt="Groupe Financier Formule"></a>
   <a href="/" class="back">← Retour au site</a>
 </div>
 
-<div class="wrap">
-  <div class="page-head">
+<section class="page-hero">
+  <div class="page-hero-inner">
     <h1>Espace client</h1>
     <p>Cliquez sur votre compagnie d'assurance pour accéder directement à votre espace client en ligne.</p>
   </div>
+  <canvas id="pageHeroWave" class="wave-canvas-bottom"></canvas>
+</section>
 
+<div class="wrap">
   <div class="grid">
 
     <a class="card" href="https://www.assomption.ca/fr/profile-pages/sign-in" target="_blank" rel="noopener">
@@ -181,6 +187,53 @@ footer.page-footer a{color:var(--gold);text-decoration:none;font-weight:600}
 <footer class="page-footer">
   Un problème d'accès à votre compte? Contactez votre conseiller GFF ou le service à la clientèle de votre assureur.
 </footer>
+
+<script>
+(function(){
+  function rng(s){return function(){s=(s*16807)%2147483647;return(s-1)/2147483646;};}
+  function gen(seed,n){var r=rng(seed),v=[0.35];for(var i=1;i<n;i++){var d=(r()-0.47)*0.1+0.003;v.push(Math.max(0.05,Math.min(0.85,v[i-1]+d)));}return v;}
+  var L=[gen(42,120),gen(99,120),gen(17,120)];
+  var C=['rgba(191,143,0,1)','rgba(212,160,23,0.85)','rgba(232,192,96,0.7)'];
+  function draw(el,shift,alpha,pct,top){
+    if(!el)return;
+    var W=el.parentElement?el.parentElement.offsetWidth:window.innerWidth;
+    var H=el.offsetHeight||140;
+    if(el.width!==W)el.width=W;
+    el.height=H;
+    var ctx=el.getContext('2d');
+    ctx.clearRect(0,0,W,H);
+    [2,1,0].forEach(function(li){
+      var line=L[li],n=line.length;
+      ctx.beginPath();
+      for(var i=0;i<=W;i++){
+        var fi=((i/W)*(n-1)+shift+li*15)%n,i0=Math.floor(fi)%n,i1=(i0+1)%n,fr=fi-Math.floor(fi);
+        var v=line[i0]*(1-fr)+line[i1]*fr,y=top?v*H*pct:H-v*H*pct;
+        i===0?ctx.moveTo(i,y):ctx.lineTo(i,y);
+      }
+      top?(ctx.lineTo(W,0),ctx.lineTo(0,0)):(ctx.lineTo(W,H),ctx.lineTo(0,H));
+      ctx.closePath();ctx.globalAlpha=alpha;ctx.fillStyle=C[li];ctx.fill();
+    });
+    ctx.globalAlpha=alpha*0.5;ctx.strokeStyle='#0F0F0F';ctx.lineWidth=1.5;
+    ctx.beginPath();
+    var line=L[0],n=line.length;
+    for(var i=0;i<=W;i++){
+      var fi=((i/W)*(n-1)+shift)%n,i0=Math.floor(fi)%n,i1=(i0+1)%n,fr=fi-Math.floor(fi);
+      var v=line[i0]*(1-fr)+line[i1]*fr,y=top?v*H*pct:H-v*H*pct;
+      i===0?ctx.moveTo(i,y):ctx.lineTo(i,y);
+    }
+    ctx.stroke();ctx.globalAlpha=1;
+  }
+  var cP=document.getElementById('pageHeroWave');
+  var sP=0;
+  function loop(){
+    draw(cP,sP,0.13,0.70,false);
+    sP+=0.08;
+    requestAnimationFrame(loop);
+  }
+  window.addEventListener('load',loop);
+  window.addEventListener('resize',function(){if(cP)cP.width=0;});
+})();
+</script>
 
 </body>
 </html>
