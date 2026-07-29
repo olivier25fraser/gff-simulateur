@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Accédez directement à votre espace client en ligne chez votre compagnie d'assurance — Groupe Financier Formule.">
+<meta name="robots" content="noindex">
+<title>Espace client | Groupe Financier Formule</title>
+<link rel="canonical" href="https://gfformule.ca/espace-client/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --noir:#0F0F0F;--gold:#BF8F00;--gold-l:#D4A017;--gold-p:#FFF8E1;
+  --gry:#6B6B6B;--gry-l:#F5F5F5;--blanc:#FFFFFF;
+  --r:8px;--r-lg:16px;
+  --shadow:0 4px 24px rgba(0,0,0,.08);
+  --shadow-lg:0 8px 48px rgba(0,0,0,.12);
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;color:var(--noir);background:var(--gold-p);line-height:1.6}
+
+.topbar{background:var(--noir);padding:0 5%;height:64px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar img{height:32px;width:auto;display:block}
+.topbar a.back{color:rgba(255,255,255,.7);text-decoration:none;font-size:13.5px;font-weight:500;
+  display:inline-flex;align-items:center;gap:6px;transition:color .2s}
+.topbar a.back:hover{color:#fff}
+
+.wrap{max-width:1160px;margin:0 auto;padding:48px 24px 80px}
+
+.page-head{margin-bottom:36px}
+.page-head h1{font-family:'DM Serif Display',serif;font-size:clamp(30px,4vw,42px);
+  font-weight:400;margin-bottom:10px}
+.page-head p{color:var(--gry);font-size:15.5px;max-width:560px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+
+.card{background:#fff;border:1px solid rgba(191,143,0,.22);border-radius:var(--r-lg);
+  padding:22px 18px 18px;display:flex;flex-direction:column;align-items:center;
+  text-align:center;box-shadow:var(--shadow);transition:transform .18s ease,box-shadow .18s ease;
+  text-decoration:none;color:inherit}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+
+.card .logo-box{height:56px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;width:100%}
+.card .logo-box img{max-height:56px;max-width:100%;object-fit:contain}
+
+.card .sub{font-size:12.5px;color:var(--gry);margin-bottom:16px;min-height:32px;
+  display:flex;align-items:center;justify-content:center}
+
+.card .cta{display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:#fff;
+  padding:9px 18px;border-radius:99px;font-size:12.5px;font-weight:700;letter-spacing:.3px;
+  transition:background .2s;width:100%;justify-content:center}
+.card:hover .cta{background:var(--gold-l)}
+
+footer.page-footer{text-align:center;padding:28px 24px 40px;color:var(--gry);font-size:13px}
+footer.page-footer a{color:var(--gold);text-decoration:none;font-weight:600}
+
+@media(max-width:480px){
+  .wrap{padding:32px 16px 60px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  .card{padding:16px 12px 14px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/"><img src="/assets/logo_gff.png" alt="Groupe Financier Formule"></a>
+  <a href="/" class="back">← Retour au site</a>
+</div>
+
+<div class="wrap">
+  <div class="page-head">
+    <h1>Espace client</h1>
+    <p>Cliquez sur votre compagnie d'assurance pour accéder directement à votre espace client en ligne.</p>
+  </div>
+
+  <div class="grid">
+
+    <a class="card" href="https://www.assomption.ca/fr/profile-pages/sign-in" target="_blank" rel="noopener">
+      <div class="logo-box"><img src="/assets/logos-assureurs/assomption.png" alt="Assomption Vie"></div>
+      <div class="sub">Assurance vie individuelle</div>
+      <span class="cta">SE CONNECTER →</span>
+    </a>
+
+    <a class="card" href="https://www.beneva.ca/fr/espace-client" target="_blank" rel="noopener">
+      <div class="logo-box"><img src="/assets/logos-assureurs/beneva.png" alt="Beneva"></div>
+      <div class="sub">Assurance vie et épargne</div>
+      <span class="cta">SE CONNECTER →</span>
+    </a>
+
+    <a class="card" href="https://www.canadalife.com/fr/acceder.html" target="_blank" rel="noopener">
+      <div class="logo-box"><img src="/assets/logos-assureurs/canada-vie.png" alt="Canada Vie"></div>
+      <div class="sub">Assurance et placements</div>
+      <span class="cta">SE CONNECTER →</span>
+    </a>
+
+    <a class="card" href="https://client.equitable.ca/client/fr/Account/LogOn" target="_blank" rel="noopener">
+      <div class="logo-box"><img src="/assets/logos-assureurs/equitable.png" alt="Équitable"></div>
+      <div class="sub">Assurance et épargne</div>
+      <span class="cta">SE CONNECTER →</span>
+    </a>
+
+    <a class="card" href="https://my.foresters.com/fr-ca/login" target="_blank" rel="noopener">
+      <div class="logo-box"><img src="/assets/logos-assureurs/foresters.png" alt="Financière Foresters"></div>
+      <div class="sub">Assurance vie</div>
+      <span class="cta">SE CONNECTER →</span>
+    </a>
+
+    <a class="card" href="https://ia.ca/myaccount" target="_blank" rel="noopener">
+      <div class="logo-box"><img src="/assets/logos-assureurs/ia.png" alt="iA Groupe financier"></div>
+      <div class="sub">Assurance et épargne-retraite</div>
+      <span class="cta">SE CONNECTER →</span>
+    </a>
+
+    <a class="card" href="https://www.manulife.com/ca/fr/about-us/sign-in" target="_blank" rel="noopener">
+      <div class="logo-box"><img src="/assets/logos-assureurs/manuvie.png" alt="Manuvie"></div>
+      <div class="sub">Assurance et placements</div>
+      <span class="cta">SE CONNECTER →</span>
+    </a>
+
+    <a class="card" href="https://www.rbcassurances.com/assurancevie/index-clients-actuels.html" target="_blank" rel="noopener">
+      <div class="logo-box"><img src="/assets/logos-assureurs/rbc.png" alt="RBC Assurances"></div>
+      <div class="sub">Assurance vie</div>
+      <span class="cta">SE CONNECTER →</span>
+    </a>
+
+    <a class="card" href="https://www.sunlife.ca/content/sunlife/external/signin/fr/mysunlife/home.html/1000" target="_blank" rel="noopener">
+      <div class="logo-box"><img src="/assets/logos-assureurs/sunlife.png" alt="Financière Sun Life"></div>
+      <div class="sub">Assurance et placements</div>
+      <span class="cta">SE CONNECTER →</span>
+    </a>
+
+    <a class="card" href="https://www.empire.ca/fr/register" target="_blank" rel="noopener">
+      <div class="logo-box"><img src="/assets/logos-assureurs/empire-vie.png" alt="Empire Vie"></div>
+      <div class="sub">MonEmpire — assurance et placements</div>
+      <span class="cta">SE CONNECTER →</span>
+    </a>
+
+    <a class="card" href="https://myivari.ca/account/register/fr" target="_blank" rel="noopener">
+      <div class="logo-box"><img src="/assets/logos-assureurs/ivari.png" alt="ivari"></div>
+      <div class="sub">Mon ivari — assurance vie</div>
+      <span class="cta">SE CONNECTER →</span>
+    </a>
+
+    <a class="card" href="https://qc.croixbleue.ca/assurance-voyage/espace-client" target="_blank" rel="noopener">
+      <div class="logo-box"><img src="/assets/logos-assureurs/croix-bleue.png" alt="Croix Bleue du Québec"></div>
+      <div class="sub">Assurance voyage et santé</div>
+      <span class="cta">SE CONNECTER →</span>
+    </a>
+
+    <a class="card" href="https://www.uvassurance.ca/" target="_blank" rel="noopener">
+      <div class="logo-box"><img src="/assets/logos-assureurs/uv.png" alt="UV Assurance"></div>
+      <div class="sub">Assurance individuelle</div>
+      <span class="cta">SE CONNECTER →</span>
+    </a>
+
+    <a class="card" href="https://www.humania.ca/" target="_blank" rel="noopener">
+      <div class="logo-box"><img src="/assets/logos-assureurs/humania.png" alt="Humania Assurance"></div>
+      <div class="sub">Assurance vie et invalidité</div>
+      <span class="cta">SE CONNECTER →</span>
+    </a>
+
+    <a class="card" href="https://www.bmo.com/assurance/" target="_blank" rel="noopener">
+      <div class="logo-box"><img src="/assets/logos-assureurs/bmo.png" alt="BMO Assurance"></div>
+      <div class="sub">Assurance vie</div>
+      <span class="cta">SE CONNECTER →</span>
+    </a>
+
+    <a class="card" href="https://www.cpp.ca/fr/communiquez-avec-nous/" target="_blank" rel="noopener">
+      <div class="logo-box"><img src="/assets/logos-assureurs/ppc.png" alt="Canada Protection Plan"></div>
+      <div class="sub">Assurance vie sans exigence médicale</div>
+      <span class="cta">SE CONNECTER →</span>
+    </a>
+
+  </div>
+</div>
+
+<footer class="page-footer">
+  Un problème d'accès à votre compte? Contactez votre conseiller GFF ou le service à la clientèle de votre assureur.
+</footer>
+
+</body>
+</html>
