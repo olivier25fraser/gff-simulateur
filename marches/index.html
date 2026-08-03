@@ -133,6 +133,26 @@ nav{background:var(--noir);height:72px;display:flex;align-items:center;justify-c
   background-size:200% 100%;animation:shimmer 1.5s infinite}
 .news-date{text-align:right;font-size:11px;color:#bbb;margin-top:16px}
 
+.prevision-section{padding:50px 5% 40px;background:#fff}
+.prevision-card{max-width:1100px;margin:32px auto 0;background:linear-gradient(135deg,#FFFDF7,#FFF8E7);
+  border:1px solid rgba(191,143,0,.28);border-radius:16px;padding:32px 36px;box-shadow:0 4px 24px rgba(191,143,0,.06)}
+.prevision-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.prevision-periode{font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1px}
+.prevision-titre{font-size:19px;font-weight:800;color:var(--noir);margin:4px 0 12px;line-height:1.35}
+.prevision-resume{font-size:14px;color:#444;line-height:1.7;margin-bottom:22px;max-width:820px}
+.tendances-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:20px}
+.tendance-card{background:#fff;border:1px solid #EEE;border-radius:10px;padding:14px 16px}
+.tendance-marche{font-size:11.5px;font-weight:800;color:#555;text-transform:uppercase;letter-spacing:.3px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
+.tendance-dir{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:99px;font-size:10px;font-weight:800;text-transform:uppercase}
+.tendance-dir.hausse{background:#E8F5E9;color:#2E7D32}
+.tendance-dir.baisse{background:#FFEBEE;color:#C62828}
+.tendance-dir.stable{background:#F5F5F5;color:#666}
+.tendance-dir.volatil{background:#FFF8E1;color:#8B6700}
+.tendance-commentaire{font-size:12.5px;color:#666;line-height:1.55}
+.prevision-source{font-size:11.5px;color:#999;padding-top:16px;border-top:1px solid rgba(191,143,0,.2);line-height:1.6}
+.prevision-source a{color:var(--gold);font-weight:700;text-decoration:none}
+.prevision-source a:hover{text-decoration:underline}
+
 </style>
 </head>
 <body>
@@ -357,6 +377,27 @@ nav{background:var(--noir);height:72px;display:flex;align-items:center;justify-c
       <div class="news-shimmer"></div>
     </div>
     <div class="news-date" id="news-ts"></div>
+  </div>
+</div>
+
+<!-- PERSPECTIVES BOURSIÈRES -->
+<div class="prevision-section">
+  <div style="max-width:1100px;margin:0 auto">
+    <div style="margin-bottom:8px;font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px">PERSPECTIVES BOURSIÈRES</div>
+    <h2 style="font-size:30px;font-weight:900;color:var(--noir);margin-bottom:8px;line-height:1.2">Ce qui s'en vient<br><em style="font-weight:400;color:#666">les prochaines semaines</em></h2>
+    <p style="font-size:15px;color:#666;max-width:520px;line-height:1.6">Une synthèse hebdomadaire des perspectives économiques et boursières, toujours basée sur la même source reconnue.</p>
+  </div>
+
+  <div class="prevision-card" id="prevision-card">
+    <div class="prevision-top">
+      <div>
+        <div class="prevision-periode" id="prevision-periode">Chargement…</div>
+        <div class="prevision-titre" id="prevision-titre">Perspectives boursières</div>
+      </div>
+    </div>
+    <div class="prevision-resume" id="prevision-resume">Chargement des dernières perspectives…</div>
+    <div class="tendances-grid" id="tendances-grid"></div>
+    <div class="prevision-source" id="prevision-source"></div>
   </div>
 </div>
 
@@ -764,9 +805,7 @@ var _newsDefaut = [
   {badge:"attention",categorie:"Banques centrales",titre:"Banque du Canada \u2014 Taux \u00e0 2,25 %",corps:"La Banque du Canada maintient son taux directeur \u00e0 2,25 % depuis juin 2026. Les march\u00e9s surveillent les tensions g\u00e9opolitiques et l\u2019inflation avant la prochaine d\u00e9cision en juillet.",impact:"TSX"},
   {badge:"hausse",categorie:"\u00c9tats-Unis",titre:"Technologie am\u00e9ricaine \u2014 B\u00e9n\u00e9fices solides",corps:"Les grandes entreprises technologiques du S&P 500 publient des r\u00e9sultats sup\u00e9rieurs aux attentes pour le T1 2026. Nvidia, Microsoft et Apple propulsent l\u2019indice vers le haut gr\u00e2ce \u00e0 la demande en intelligence artificielle.",impact:"S&P 500"},
   {badge:"baisse",categorie:"\u00c9nergie",titre:"P\u00e9trole en recul \u2014 Demande mondiale en baisse",corps:"Le p\u00e9trole brut recule face aux inqui\u00e9tudes sur la demande mondiale et \u00e0 l\u2019augmentation de la production OPEP+. Les titres \u00e9nerg\u00e9tiques au TSX subissent la pression.",impact:"TSX"},
-  {badge:"neutre",categorie:"Canada",titre:"Inflation canadienne \u2014 Donn\u00e9es actualis\u00e9es",corps:"L\u2019inflation au Canada est publi\u00e9e mensuellement par Statistique Canada. La Banque du Canada cible 2 %. Un recul de l\u2019inflation favorise la baisse des taux d\u2019int\u00e9r\u00eat.",impact:"Obligataires"},
-  {badge:"hausse",categorie:"Or",titre:"L\u2019or atteint de nouveaux sommets",corps:"Le prix de l\u2019or d\u00e9passe 3 100 $ US l\u2019once, port\u00e9 par la demande de valeurs refuges face aux incertitudes g\u00e9opolitiques. Un signal que les investisseurs cherchent \u00e0 prot\u00e9ger leur capital.",impact:"Or"},
-  {badge:"attention",categorie:"G\u00e9opolitique",titre:"Tensions commerciales \u2014 Volatilit\u00e9 accrue",corps:"Les n\u00e9gociations commerciales internationales cr\u00e9ent de l\u2019incertitude sur les march\u00e9s mondiaux. Les secteurs manufacturier et technologique demeurent les plus sensibles aux annonces tarifaires.",impact:"Toutes places"}
+  {badge:"neutre",categorie:"Canada",titre:"Inflation canadienne \u2014 Donn\u00e9es actualis\u00e9es",corps:"L\u2019inflation au Canada est publi\u00e9e mensuellement par Statistique Canada. La Banque du Canada cible 2 %. Un recul de l\u2019inflation favorise la baisse des taux d\u2019int\u00e9r\u00eat.",impact:"Obligataires"}
 ];
 
 function renderNews(articles) {
@@ -807,14 +846,76 @@ function loadNews() {
     .catch(function() {});
 }
 
+// ── Perspectives boursières (hebdomadaire) ──
+var _previsionDefaut = {
+  periode: "Cette semaine",
+  titre: "Perspectives boursières \u2014 mise \u00e0 jour hebdomadaire",
+  resume: "Chaque lundi, cette section r\u00e9sume les perspectives \u00e9conomiques et boursi\u00e8res des prochaines semaines, toujours \u00e0 partir de la m\u00eame source reconnue.",
+  tendances: [
+    { marche: "Actions (S&P 500 / TSX)", direction: "stable", commentaire: "Mise \u00e0 jour en cours de chargement." },
+    { marche: "Obligations / taux d'int\u00e9r\u00eat", direction: "stable", commentaire: "Mise \u00e0 jour en cours de chargement." },
+    { marche: "Dollar canadien", direction: "stable", commentaire: "Mise \u00e0 jour en cours de chargement." },
+    { marche: "Mati\u00e8res premi\u00e8res", direction: "stable", commentaire: "Mise \u00e0 jour en cours de chargement." }
+  ],
+  source: "Desjardins, \u00c9tudes \u00e9conomiques",
+  source_url: "https://www.desjardins.com/fr/epargne-placements/etudes-economiques/actualites-marches-financiers.html",
+  fallback: true
+};
+
+function renderPrevision(data) {
+  if (!data) return;
+  var icons = { hausse:'▲', baisse:'▼', stable:'●', volatil:'⚠' };
+
+  var periodeEl = document.getElementById('prevision-periode');
+  if (periodeEl) periodeEl.textContent = data.periode || 'Cette semaine';
+
+  var titreEl = document.getElementById('prevision-titre');
+  if (titreEl) titreEl.textContent = data.titre || 'Perspectives boursières';
+
+  var resumeEl = document.getElementById('prevision-resume');
+  if (resumeEl) resumeEl.textContent = data.resume || '';
+
+  var grid = document.getElementById('tendances-grid');
+  if (grid && data.tendances && data.tendances.length) {
+    grid.innerHTML = data.tendances.map(function(t) {
+      return '<div class="tendance-card">'
+        + '<div class="tendance-marche">' + t.marche
+        + '<span class="tendance-dir ' + (t.direction||'stable') + '">' + (icons[t.direction]||'●') + ' ' + (t.direction||'stable') + '</span>'
+        + '</div>'
+        + '<div class="tendance-commentaire">' + (t.commentaire||'') + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  var sourceEl = document.getElementById('prevision-source');
+  if (sourceEl) {
+    var maj = '';
+    if (data.timestamp && !data.fallback) {
+      var d = new Date(data.timestamp);
+      maj = 'Mis à jour le ' + d.toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'}) + '. ';
+    }
+    sourceEl.innerHTML = maj + 'Synthèse hebdomadaire basée sur les publications de <a href="' + (data.source_url||'#') + '" target="_blank" rel="noopener">' + (data.source||'Desjardins, Études économiques') + '</a>. Ceci est un résumé à titre informatif seulement, pas un conseil de placement personnalisé — parlez-en à votre conseiller.';
+  }
+}
+
+function loadPrevision() {
+  renderPrevision(_previsionDefaut);
+  fetch('/api/prevision')
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(data) { if (data) renderPrevision(data); })
+    .catch(function() {});
+}
+
 window.addEventListener('DOMContentLoaded', function() {
   try { initMarket(); } catch(e) { console.error('initMarket:', e); }
   try { loadNews(); } catch(e) { console.error('loadNews:', e); }
+  try { loadPrevision(); } catch(e) { console.error('loadPrevision:', e); }
 });
 // Sécurité: si le DOM est déjà chargé, exécuter immédiatement
 if (document.readyState === 'interactive' || document.readyState === 'complete') {
   try { initMarket(); } catch(e) { console.error('initMarket:', e); }
   try { loadNews(); } catch(e) { console.error('loadNews:', e); }
+  try { loadPrevision(); } catch(e) { console.error('loadPrevision:', e); }
 }
 </script>
 </body>

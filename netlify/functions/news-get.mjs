@@ -57,20 +57,6 @@ function fallback() {
         titre: "Inflation canadienne — 2,3 % en mai 2026",
         corps: "L'inflation au Canada reste proche de la cible de 2 % de la Banque du Canada. L'alimentation et le logement demeurent les principaux facteurs de pression, mais le ralentissement général rassure les marchés obligataires.",
         impact: "Obligataires"
-      },
-      {
-        badge: "hausse",
-        categorie: "Or",
-        titre: "L'or atteint de nouveaux sommets",
-        corps: "Le prix de l'or dépasse 3 100 $ US l'once, porté par la demande de valeurs refuges face aux incertitudes géopolitiques. Un signal que les investisseurs cherchent à protéger leur capital.",
-        impact: "Or"
-      },
-      {
-        badge: "attention",
-        categorie: "Géopolitique",
-        titre: "Tensions commerciales — Volatilité accrue",
-        corps: "Les négociations commerciales internationales créent de l'incertitude sur les marchés mondiaux. Les secteurs manufacturier et technologique demeurent les plus sensibles aux annonces tarifaires.",
-        impact: "Toutes places"
       }
     ]
   };
