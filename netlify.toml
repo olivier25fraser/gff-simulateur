@@ -24,6 +24,10 @@
   cron = "0 13 * * 1,3,5"
 
 [[scheduled_functions]]
+  name = "resume-hebdo-marches"
+  cron = "0 12 * * 1"
+
+[[scheduled_functions]]
   name = "fonds-update"
   cron = "0 13 5 * *"
 
