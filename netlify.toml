@@ -24,10 +24,6 @@
   cron = "0 13 * * 1,3,5"
 
 [[scheduled_functions]]
-  name = "prevision-update"
-  cron = "0 13 * * 1"
-
-[[scheduled_functions]]
   name = "fonds-update"
   cron = "0 13 5 * *"
 

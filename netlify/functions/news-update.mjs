@@ -48,10 +48,10 @@ IMPORTANT: Ta réponse doit commencer DIRECTEMENT par le caractère [ et finir p
   }
 ]
 
-Génère exactement 4 nouvelles. Priorise les événements géopolitiques, décisions des banques centrales, données économiques importantes, et crises qui font bouger les marchés. Toujours en français québécois.`,
+Génère exactement 6 nouvelles. Priorise les événements géopolitiques, décisions des banques centrales, données économiques importantes, et crises qui font bouger les marchés. Toujours en français québécois.`,
         messages: [{
           role: "user",
-          content: `Quelles sont les 4 nouvelles les plus importantes aujourd'hui (${today}) qui impactent les marchés boursiers? Cherche sur internet.`
+          content: `Quelles sont les 6 nouvelles les plus importantes aujourd'hui (${today}) qui impactent les marchés boursiers? Cherche sur internet.`
         }]
       })
     });
