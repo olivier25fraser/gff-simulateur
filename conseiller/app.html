@@ -678,6 +678,7 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
   <button class="tab" onclick="show('decaiss',this)">Décaissement</button>
   <button class="tab" onclick="show('port',this)">Portefeuilles</button>
   <button class="tab" onclick="show('abf',this)">ABF</button>
+  <button class="tab" onclick="show('presentations',this)">Présentations</button>
 </div>
 
 <div class="body">
@@ -701,6 +702,31 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
 </div>
 
 <div class="tt" id="tt"></div>
+
+<!-- ═══════ PRÉSENTATIONS ═══════ -->
+<div id="pane-presentations" class="pane">
+  <div class="card">
+    <div class="ch nv">Présentations pour rencontres clients</div>
+    <div style="padding:18px">
+      <p style="font-size:12.5px;color:var(--gry);margin-bottom:18px;line-height:1.6">Cliquez sur une présentation pour l'ouvrir dans un nouvel onglet (idéal pour le partage d'écran en rencontre Teams).</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px">
+
+        <a href="/conseiller/presentations/assurance-invalidite.html" target="_blank" rel="noopener"
+           style="display:block;text-decoration:none;color:inherit;background:var(--gold-p);border:1px solid var(--gold-l);border-radius:var(--r-lg);padding:18px;transition:box-shadow .15s"
+           onmouseover="this.style.boxShadow='0 4px 16px rgba(191,143,0,.18)'" onmouseout="this.style.boxShadow='none'">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--gold-br);margin-bottom:8px">Assurance</div>
+          <div style="font-size:15px;font-weight:800;color:var(--ink);margin-bottom:6px">L'assurance invalidité</div>
+          <div style="font-size:12px;color:var(--gry)">Revenu, AE, collective vs personnelle</div>
+        </a>
+
+        <div style="display:flex;align-items:center;justify-content:center;background:#FAFAFA;border:1.5px dashed var(--gry-m);border-radius:var(--r-lg);padding:18px;color:var(--gry);font-size:12.5px;text-align:center">
+          D'autres présentations<br>seront ajoutées ici
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ═══════ PROFIL ═══════ -->
 
