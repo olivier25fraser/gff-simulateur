@@ -44,16 +44,28 @@ h1,h2{font-family:'DM Serif Display',serif;font-weight:400}
 .bar-40{width:25%;background:linear-gradient(90deg,var(--gold),var(--gold-l));color:#fff}
 .income-note{font-size:11.5px;color:rgba(255,255,255,.38);margin-top:14px}
 
+.viz-grid{display:flex;gap:56px;flex-wrap:wrap;margin-top:10px}
+.viz-col{flex:1;min-width:280px}
+.viz-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--gold);margin-bottom:16px}
+.cost-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.cost-label{width:56px;font-size:12px;color:rgba(255,255,255,.55);font-weight:600;flex-shrink:0}
+.cost-bar-track{flex:1;height:28px;background:rgba(255,255,255,.08);border-radius:6px;overflow:hidden}
+.cost-bar{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;
+  padding-right:10px;font-size:11.5px;font-weight:800;color:#fff}
+.cbar-20{width:27%;background:rgba(255,255,255,.85);color:#0F0F0F}
+.cbar-30{width:46%;background:linear-gradient(90deg,var(--gold),var(--gold-l))}
+.cbar-40{width:100%;background:linear-gradient(90deg,#8a4b1f,#B5551F)}
+
 /* SLIDE 2 : PYRAMIDE DES PRIORITÉS */
 .s2 h2{font-size:clamp(28px,3.6vw,38px);margin-bottom:8px;max-width:760px}
 .s2 .sub{font-size:13.5px;color:var(--gry);margin-bottom:26px}
 .pyramid-wrap{max-width:680px;margin:0 auto}
-.pyramid{display:flex;flex-direction:column;gap:3px}
-.pyr-layer{height:46px;display:flex;align-items:center;justify-content:center}
+.pyramid{display:flex;flex-direction:column;gap:0}
+.pyr-layer{height:48px;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 -2px 0 rgba(0,0,0,.18)}
 .pyr-row{display:flex;width:100%;height:100%;align-items:center;justify-content:center;margin:0 auto}
 .pyr-item{flex:1;text-align:center;font-size:10.5px;font-weight:800;color:#fff;padding:0 4px;line-height:1.2}
 .pyr-item + .pyr-item{border-left:1px solid rgba(255,255,255,.28)}
-.pyr-apex{height:40px;margin-top:3px}
+.pyr-apex{height:34px;margin-top:0}
 .pyr-legend{display:flex;justify-content:center;gap:26px;margin-top:22px;flex-wrap:wrap}
 .pyr-leg-item{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;color:#444}
 .pyr-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0}
@@ -92,12 +104,22 @@ h1,h2{font-family:'DM Serif Display',serif;font-weight:400}
     <div class="eyebrow">Groupe Financier Formule</div>
     <h1>Ce que vous faites à 20 ans<br><em>change ce que vous aurez à 65 ans.</em></h1>
 
-    <div class="income-viz">
-      <div class="income-row"><div class="income-label">Épargner dès 20 ans</div><div class="income-bar-track"><div class="income-bar bar-20">~551 000 $</div></div></div>
-      <div class="income-row"><div class="income-label">Épargner dès 30 ans</div><div class="income-bar-track"><div class="income-bar bar-30">~285 000 $</div></div></div>
-      <div class="income-row"><div class="income-label">Épargner dès 40 ans</div><div class="income-bar-track"><div class="income-bar bar-40">~139 000 $</div></div></div>
+    <div class="viz-grid">
+      <div class="viz-col">
+        <div class="viz-title">Épargner selon l'âge</div>
+        <div class="income-row"><div class="income-label" style="width:60px">20 ans</div><div class="income-bar-track"><div class="income-bar bar-20">~551 000 $</div></div></div>
+        <div class="income-row"><div class="income-label" style="width:60px">30 ans</div><div class="income-bar-track"><div class="income-bar bar-30">~285 000 $</div></div></div>
+        <div class="income-row"><div class="income-label" style="width:60px">40 ans</div><div class="income-bar-track"><div class="income-bar bar-40">~139 000 $</div></div></div>
+        <div class="income-note">Illustratif. 200 $/mois investis jusqu'à 65 ans, rendement hypothétique de 6 % par année.</div>
+      </div>
+      <div class="viz-col">
+        <div class="viz-title">Coût d'une assurance vie selon l'âge</div>
+        <div class="cost-row"><div class="cost-label">20 ans</div><div class="cost-bar-track"><div class="cost-bar cbar-20">~15 $/mois</div></div></div>
+        <div class="cost-row"><div class="cost-label">30 ans</div><div class="cost-bar-track"><div class="cost-bar cbar-30">~25 $/mois</div></div></div>
+        <div class="cost-row"><div class="cost-label">40 ans</div><div class="cost-bar-track"><div class="cost-bar cbar-40">~55 $/mois</div></div></div>
+        <div class="income-note">Illustratif. Temporaire 250 000 $ / 20 ans, non-fumeur. Le prix réel dépend de votre santé et de l'assureur.</div>
+      </div>
     </div>
-    <div class="income-note">Illustratif. 200 $/mois investis jusqu'à 65 ans, rendement hypothétique de 6 % par année.</div>
   </div>
   <div class="scroll-hint" style="color:#fff"><span>Suite</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
 </section>
