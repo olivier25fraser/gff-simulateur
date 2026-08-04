@@ -34,14 +34,14 @@ h1,h2{font-family:'DM Serif Display',serif;font-weight:400}
 .s1 h1{font-size:clamp(32px,4.8vw,54px);line-height:1.16;margin-bottom:28px;max-width:840px}
 .s1 h1 em{font-style:italic;color:var(--gold)}
 .income-viz{margin-top:10px;max-width:640px}
-.income-row{display:flex;align-items:center;gap:16px;margin-bottom:12px}
-.income-label{width:190px;font-size:13px;color:rgba(255,255,255,.55);font-weight:600;flex-shrink:0}
-.income-bar-track{flex:1;height:38px;background:rgba(255,255,255,.08);border-radius:6px;overflow:hidden}
-.income-bar{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;
-  padding-right:12px;font-size:13px;font-weight:800;color:#0F0F0F}
+.income-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.income-label{width:56px;font-size:13px;color:rgba(255,255,255,.55);font-weight:600;flex-shrink:0}
+.income-bar-track{flex:1;height:34px;background:rgba(255,255,255,.08);border-radius:6px;overflow:hidden}
+.income-bar{height:100%;border-radius:6px}
+.income-val{width:92px;flex-shrink:0;font-size:12.5px;font-weight:800;color:#fff;text-align:left}
 .bar-20{width:100%;background:#fff}
-.bar-30{width:52%;background:linear-gradient(90deg,var(--gold),var(--gold-l));color:#fff}
-.bar-40{width:25%;background:linear-gradient(90deg,var(--gold),var(--gold-l));color:#fff}
+.bar-30{width:40%;background:linear-gradient(90deg,var(--gold),var(--gold-l))}
+.bar-40{width:15%;background:linear-gradient(90deg,var(--gold),var(--gold-l))}
 .income-note{font-size:11.5px;color:rgba(255,255,255,.38);margin-top:14px}
 
 .viz-grid{display:flex;gap:56px;flex-wrap:wrap;margin-top:10px}
@@ -114,10 +114,10 @@ h1,h2{font-family:'DM Serif Display',serif;font-weight:400}
     <div class="viz-grid">
       <div class="viz-col">
         <div class="viz-title">Épargner selon l'âge</div>
-        <div class="income-row"><div class="income-label" style="width:60px">20 ans</div><div class="income-bar-track"><div class="income-bar bar-20">~551 000 $</div></div></div>
-        <div class="income-row"><div class="income-label" style="width:60px">30 ans</div><div class="income-bar-track"><div class="income-bar bar-30">~285 000 $</div></div></div>
-        <div class="income-row"><div class="income-label" style="width:60px">40 ans</div><div class="income-bar-track"><div class="income-bar bar-40">~139 000 $</div></div></div>
-        <div class="income-note">Illustratif. 200 $/mois investis jusqu'à 65 ans, rendement hypothétique de 6 % par année.</div>
+        <div class="income-row"><div class="income-label">20 ans</div><div class="income-bar-track"><div class="income-bar bar-20"></div></div><div class="income-val">~1 481 000 $</div></div>
+        <div class="income-row"><div class="income-label">30 ans</div><div class="income-bar-track"><div class="income-bar bar-30"></div></div><div class="income-val">~588 000 $</div></div>
+        <div class="income-row"><div class="income-label">40 ans</div><div class="income-bar-track"><div class="income-bar bar-40"></div></div><div class="income-val">~224 000 $</div></div>
+        <div class="income-note">Illustratif. 200 $/mois investis jusqu'à 65 ans, rendement hypothétique de 9 % par année.</div>
       </div>
       <div class="viz-col">
         <div class="viz-title">Coût d'une assurance permanente selon l'âge</div>
