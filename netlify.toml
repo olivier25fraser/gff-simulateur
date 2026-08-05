@@ -12,10 +12,6 @@
   cron = "0 14 1 * *"
 
 [[scheduled_functions]]
-  name = "rappels-prospection"
-  cron = "0 13 * * 1-5"
-
-[[scheduled_functions]]
   name = "marches-update"
   cron = "0 14 * * 1-5"
 
