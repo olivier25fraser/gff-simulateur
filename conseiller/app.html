@@ -181,6 +181,11 @@ body.dark .faq-item summary{color:#eee}
 .scen-btn:hover{border-color:var(--ink);color:var(--ink)}
 .scen-btn.on{background:#0F0F0F;border-color:var(--ink);color:#fff}
 .dec-pane{display:none}.dec-pane.on{display:block}
+.retraite-phase{display:none}.retraite-phase.on{display:block}
+.phase-btn{padding:10px 20px;border:1.5px solid var(--gold);border-radius:var(--r);background:var(--gold-p);
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:.3px;color:var(--gold-br);cursor:pointer;transition:all .15s}
+.phase-btn:hover{background:var(--gold);color:#fff}
+.phase-btn.on{background:var(--gold);border-color:var(--gold);color:#fff}
 .proj-tbl{width:100%;border-collapse:collapse;font-size:11px}
 .proj-tbl th{background:#0F0F0F;color:#fff;padding:7px 10px;text-align:right;font-weight:600;font-size:10px;letter-spacing:.3px;white-space:nowrap}
 .proj-tbl th:first-child{text-align:left}
@@ -671,11 +676,10 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
   <button class="tab" onclick="show('reee',this)">REEE</button>
   <button class="tab" onclick="show('reei',this)">REEI</button>
   <button class="tab" onclick="show('achat',this)">CELIAPP / RAP</button>
-  <button class="tab" onclick="show('objectif',this)">Objectif retraite</button>
+  <button class="tab" onclick="show('retraite',this)">Planification retraite</button>
   <button class="tab" onclick="show('succession',this)">Succession</button>
   <button class="tab" onclick="show('pret',this)">Prêt vs Investir</button>
   <button class="tab" onclick="show('budget',this)">Budget</button>
-  <button class="tab" onclick="show('decaiss',this)">Décaissement</button>
   <button class="tab" onclick="show('port',this)">Portefeuilles</button>
   <button class="tab" onclick="show('abf',this)">ABF</button>
   <button class="tab" onclick="show('presentations',this)">Présentations</button>
@@ -1951,7 +1955,211 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
 </div>
 
 <!-- ═══════ DÉCAISSEMENT ═══════ -->
-<div id="pane-decaiss" class="pane">
+
+
+<!-- ═══════ OBJECTIF RETRAITE ═══════ -->
+<div id="pane-retraite" class="pane">
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+    <button class="phase-btn on" onclick="showRetraitePhase('acc',this)">Accumulation — avant la retraite</button>
+    <button class="phase-btn" onclick="showRetraitePhase('dec',this)">Décaissement — à la retraite</button>
+  </div>
+  <div style="font-size:11px;color:var(--gry);margin-bottom:18px" id="retraite-phase-hint">Combien épargner d'ici la retraite pour atteindre votre objectif.</div>
+
+  <!-- ══ PHASE ACCUMULATION ══ -->
+  <div id="retraite-acc" class="retraite-phase on">
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px">
+    <button class="scen-btn on" onclick="showObj('seul',this)">Personne seule</button>
+    <button class="scen-btn" onclick="showObj('couple',this)">Couple</button>
+  </div>
+
+  <!-- ══ PERSONNE SEULE ══ -->
+  <div id="obj-seul" class="dec-pane on">
+    <button class="print-btn" onclick="printPane('obj-seul','Planification retraite — Accumulation — Personne seule')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer / Sauvegarder en PDF</button>
+    <div class="g2">
+      <!-- Paramètres -->
+      <div>
+        <div class="card">
+          <div class="ch nv">Votre situation</div>
+          <div class="cb">
+            <div class="field"><label>Âge actuel</label>
+              <input type="number" id="ob-age" value="30" min="18" max="70" oninput="calcObjSeul()"></div>
+            <div class="field"><label>Âge de retraite visé</label>
+              <input type="number" id="ob-ret" value="65" min="45" max="75" oninput="calcObjSeul()"></div>
+            <div class="field"><label>Revenu annuel brut actuel ($)</label>
+              <input type="number" id="ob-revenu" value="75000" min="0" oninput="this.dataset.touched='1';estimRRQPSV()">
+              <div class="hint">Sert à estimer la rente RRQ (MGA 2026 : 74 600 $)</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="ch gd">Vos comptes et cotisations</div>
+          <div class="cb">
+            <div class="field"><label>REER — solde actuel ($)</label>
+              <input type="number" id="ob-reer" value="10000" min="0" oninput="calcObjSeul()"></div>
+            <div class="field"><label>REER — cotisation mensuelle ($)</label>
+              <input type="number" id="ob-reer-cot" value="200" min="0" oninput="calcObjSeul()"></div>
+            <div class="field"><label>CELI — solde actuel ($)</label>
+              <input type="number" id="ob-celi" value="5000" min="0" oninput="calcObjSeul()"></div>
+            <div class="field"><label>CELI — cotisation mensuelle ($)</label>
+              <input type="number" id="ob-celi-cot" value="100" min="0" oninput="calcObjSeul()"></div>
+            <div class="field"><label>CELIAPP — solde actuel ($)</label>
+              <input type="number" id="ob-celiapp" value="0" min="0" oninput="calcObjSeul()"></div>
+            <div class="field"><label>CELIAPP — cotisation mensuelle ($)</label>
+              <input type="number" id="ob-celiapp-cot" value="0" min="0" oninput="calcObjSeul()"></div>
+            <div class="field"><label>Non enregistré — solde actuel ($)</label>
+              <input type="number" id="ob-ne" value="0" min="0" oninput="calcObjSeul()"></div>
+            <div class="field"><label>Non enregistré — cotisation mensuelle ($)</label>
+              <input type="number" id="ob-ne-cot" value="0" min="0" oninput="calcObjSeul()"></div>
+            <div class="hint" id="ob-cot-total-lbl" style="margin-top:4px"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="ch gd">Pension d'employeur (optionnel)</div>
+          <div class="cb">
+            <div class="field"><label>Rente annuelle prévue à la retraite ($, d'aujourd'hui)</label>
+              <input type="number" id="ob-rpa" value="0" min="0" oninput="calcObjSeul()">
+              <div class="hint">Régime à prestations déterminées ou autre rente garantie</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="ch gd">Hypothèses de rendement</div>
+          <div class="cb">
+            <div class="field"><label>Rendement annuel pendant l'accumulation (%)</label>
+              <input type="number" id="ob-rend-acc" value="6" min="0" max="15" step="0.5" oninput="calcObjSeul()">
+              <div class="hint">Phase d'épargne (ex: portefeuille croissance)</div></div>
+            <div class="field"><label>Rendement annuel pendant la retraite (%)</label>
+              <input type="number" id="ob-rend-ret" value="4" min="0" max="10" step="0.5" oninput="calcObjSeul()">
+              <div class="hint">Phase de décaissement (ex: portefeuille modéré/conservateur)</div></div>
+            <div class="field"><label>Inflation estimée (%)</label>
+              <input type="number" id="ob-inf" value="2" min="0" max="6" step="0.5" oninput="calcObjSeul()">
+              <div class="hint">Pour ajuster le pouvoir d'achat du revenu désiré</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="ch gd">Besoins à la retraite</div>
+          <div class="cb">
+            <div class="field"><label>Revenu annuel désiré à la retraite (en $ d'aujourd'hui)</label>
+              <input type="number" id="ob-besoin" value="50000" min="0" oninput="calcObjSeul()">
+              <div class="hint">Revenu net après impôt que vous voulez recevoir chaque année</div></div>
+            <div class="field"><label>Durée de la retraite (jusqu'à quel âge)</label>
+              <input type="number" id="ob-duree" value="90" min="70" max="100" oninput="calcObjSeul()"></div>
+            <div class="field"><label>Legs souhaité à la fin ($, optionnel)</label>
+              <input type="number" id="ob-legs" value="0" min="0" oninput="calcObjSeul()">
+              <div class="hint">Montant que vous voulez laisser en héritage</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="ch gd">Estimation RRQ et PSV</div>
+          <div class="cb">
+            <div class="field"><label>Âge de début RRQ / PSV</label>
+              <input type="number" id="ob-age-rrq" value="65" min="60" max="72" oninput="estimRRQPSV()">
+              <div class="hint">RRQ : 60 à 72 ans (−0,6 %/mois avant 65, +0,7 %/mois après). PSV : 65 à 70 ans (+0,6 %/mois de report)</div></div>
+            <div class="field"><label>RRQ estimé ($/an, à l'âge choisi)</label>
+              <input type="number" id="ob-rrq" value="12000" min="0" oninput="calcObjSeul()">
+              <div class="hint">Estimé automatiquement — modifiable si vous avez un relevé de participation précis</div></div>
+            <div class="field"><label>PSV estimé ($/an, à l'âge choisi)</label>
+              <input type="number" id="ob-psv" value="8917" min="0" oninput="calcObjSeul()">
+              <div class="hint">Estimé automatiquement, incluant la récupération fiscale si applicable</div></div>
+            <div class="note" id="ob-rrq-psv-note" style="margin-top:4px;font-size:10px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Résultats -->
+      <div>
+        <div id="obj-result-zone"></div>
+        <div id="obj-scenarios-zone"></div>
+      </div>
+    </div>
+
+    <!-- Projection visuelle -->
+    <div class="card">
+      <div class="ch nv">Projection de votre capital — Accumulation et décaissement</div>
+      <div class="cb" style="padding:16px 12px">
+        <div id="obj-chart-kpi" style="margin-bottom:14px"></div>
+        <div class="chart-wrap" style="background:#0B0B0F;border-radius:var(--r-lg);padding:18px 14px 10px">
+          <svg id="obj-svg" height="300" style="min-width:500px;display:block;width:100%"></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="note" id="obj-note"></div>
+  </div>
+
+  <!-- ══ COUPLE ══ -->
+  <div id="obj-couple" class="dec-pane">
+    <button class="print-btn" onclick="printPane('obj-couple','Planification retraite — Accumulation — Couple')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer / Sauvegarder en PDF</button>
+
+    <div class="g2">
+      <div>
+        <div class="card">
+          <div class="ch nv">Client 1</div>
+          <div class="cb">
+            <div class="field"><label>Âge actuel</label><input type="number" id="oc1-age" value="32" min="18" max="70" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Revenu annuel brut ($)</label><input type="number" id="oc1-revenu" value="70000" min="0" oninput="estimRRQPSVc1()"></div>
+            <div class="field"><label>REER — solde ($)</label><input type="number" id="oc1-reer" value="15000" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>REER — cotisation mensuelle ($)</label><input type="number" id="oc1-reer-cot" value="150" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>CELI — solde ($)</label><input type="number" id="oc1-celi" value="8000" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>CELI — cotisation mensuelle ($)</label><input type="number" id="oc1-celi-cot" value="100" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Non enregistré — solde ($)</label><input type="number" id="oc1-ne" value="0" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Non enregistré — cotisation mensuelle ($)</label><input type="number" id="oc1-ne-cot" value="0" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Pension employeur — rente annuelle ($)</label><input type="number" id="oc1-rpa" value="0" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Âge début RRQ / PSV</label><input type="number" id="oc1-age-rrq" value="65" min="60" max="72" oninput="estimRRQPSVc1()"></div>
+            <div class="field"><label>RRQ estimé ($/an)</label><input type="number" id="oc1-rrq" value="11000" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>PSV estimée ($/an)</label><input type="number" id="oc1-psv" value="8917" min="0" oninput="calcObjCouple()"></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="ch nv">Client 2</div>
+          <div class="cb">
+            <div class="field"><label>Âge actuel</label><input type="number" id="oc2-age" value="30" min="18" max="70" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Revenu annuel brut ($)</label><input type="number" id="oc2-revenu" value="60000" min="0" oninput="estimRRQPSVc2()"></div>
+            <div class="field"><label>REER — solde ($)</label><input type="number" id="oc2-reer" value="8000" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>REER — cotisation mensuelle ($)</label><input type="number" id="oc2-reer-cot" value="100" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>CELI — solde ($)</label><input type="number" id="oc2-celi" value="5000" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>CELI — cotisation mensuelle ($)</label><input type="number" id="oc2-celi-cot" value="75" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Non enregistré — solde ($)</label><input type="number" id="oc2-ne" value="0" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Non enregistré — cotisation mensuelle ($)</label><input type="number" id="oc2-ne-cot" value="0" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Pension employeur — rente annuelle ($)</label><input type="number" id="oc2-rpa" value="0" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Âge début RRQ / PSV</label><input type="number" id="oc2-age-rrq" value="65" min="60" max="72" oninput="estimRRQPSVc2()"></div>
+            <div class="field"><label>RRQ estimé ($/an)</label><input type="number" id="oc2-rrq" value="9000" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>PSV estimée ($/an)</label><input type="number" id="oc2-psv" value="8917" min="0" oninput="calcObjCouple()"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="ch gd">Paramètres communs</div>
+          <div class="cb">
+            <div class="field"><label>Âge de retraite visé (les deux)</label><input type="number" id="oc-ret" value="65" min="45" max="75" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Revenu annuel désiré du couple (aujourd'hui, net, $)</label><input type="number" id="oc-besoin" value="70000" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Durée de la retraite (jusqu'à quel âge)</label><input type="number" id="oc-duree" value="90" min="70" max="100" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Legs souhaité à la fin ($, optionnel)</label><input type="number" id="oc-legs" value="0" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Rendement annuel — accumulation (%)</label><input type="number" id="oc-rend-acc" value="6" min="0" max="15" step="0.5" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Rendement annuel — retraite (%)</label><input type="number" id="oc-rend-ret" value="4" min="0" max="10" step="0.5" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Inflation estimée (%)</label><input type="number" id="oc-inf" value="2" min="0" max="6" step="0.5" oninput="calcObjCouple()"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="objc-result-zone"></div>
+
+    <div class="note" id="objc-note"></div>
+  </div>
+
+  </div>
+
+  <!-- ══ PHASE DÉCAISSEMENT ══ -->
+  <div id="retraite-dec" class="retraite-phase">
 
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px">
     <button class="scen-btn on" onclick="showDec('seul',this)">Personne seule</button>
@@ -1960,7 +2168,7 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
 
   <!-- ══ PERSONNE SEULE ══ -->
   <div id="dec-seul" class="dec-pane on">
-    <button class="print-btn" onclick="printPane('decaiss','Planification de décaissement — Personne seule')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer / Sauvegarder en PDF</button>
+    <button class="print-btn" onclick="printPane('dec-seul','Planification retraite — Décaissement — Personne seule')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer / Sauvegarder en PDF</button>
     <div class="kpis" id="dec-kpis-seul"></div>
     <div class="g2">
       <!-- Paramètres -->
@@ -2029,7 +2237,7 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
 
   <!-- ══ COUPLE ══ -->
   <div id="dec-couple" class="dec-pane">
-    <button class="print-btn" onclick="printPane('decaiss','Planification de décaissement — Couple')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer / Sauvegarder en PDF</button>
+    <button class="print-btn" onclick="printPane('dec-couple','Planification retraite — Décaissement — Couple')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer / Sauvegarder en PDF</button>
     <div class="g2">
       <div>
         <div class="card">
@@ -2092,85 +2300,9 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
     </div>
   </div>
 
+  </div>
+
 </div>
-
-
-<!-- ═══════ OBJECTIF RETRAITE ═══════ -->
-<div id="pane-objectif" class="pane">
-
-  <button class="print-btn" onclick="printPane('objectif','Planification objectif retraite')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer / Sauvegarder en PDF</button>
-  <div class="g2">
-    <!-- Paramètres -->
-    <div>
-      <div class="card">
-        <div class="ch nv">Votre situation</div>
-        <div class="cb">
-          <div class="field"><label>Âge actuel</label>
-            <input type="number" id="ob-age" value="30" min="18" max="70" oninput="calcObj()"></div>
-          <div class="field"><label>Âge de retraite visé</label>
-            <input type="number" id="ob-ret" value="65" min="45" max="75" oninput="calcObj()"></div>
-          <div class="field"><label>Épargne actuelle (REER + CELI + autres, $)</label>
-            <input type="number" id="ob-actuel" value="15000" min="0" oninput="calcObj()"></div>
-          <div class="field"><label>Revenu annuel désiré à la retraite (en $ d'aujourd'hui)</label>
-            <input type="number" id="ob-besoin" value="50000" min="0" oninput="calcObj()">
-            <div class="hint">Revenu net après impôt que vous voulez recevoir chaque année</div></div>
-          <div class="field"><label>Durée de la retraite (jusqu'à quel âge)</label>
-            <input type="number" id="ob-duree" value="90" min="70" max="100" oninput="calcObj()"></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ch gd">Hypothèses de rendement</div>
-        <div class="cb">
-          <div class="field"><label>Rendement annuel pendant l'accumulation (%)</label>
-            <input type="number" id="ob-rend-acc" value="6" min="0" max="15" step="0.5" oninput="calcObj()">
-            <div class="hint">Phase d'épargne (ex: portefeuille croissance)</div></div>
-          <div class="field"><label>Rendement annuel pendant la retraite (%)</label>
-            <input type="number" id="ob-rend-ret" value="4" min="0" max="10" step="0.5" oninput="calcObj()">
-            <div class="hint">Phase de décaissement (ex: portefeuille modéré/conservateur)</div></div>
-          <div class="field"><label>Inflation estimée (%)</label>
-            <input type="number" id="ob-inf" value="2" min="0" max="6" step="0.5" oninput="calcObj()">
-            <div class="hint">Pour ajuster le pouvoir d'achat du revenu désiré</div></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ch gd">Estimation RRQ et PSV</div>
-        <div class="cb">
-          <div class="field"><label>Revenu annuel brut actuel ($)</label>
-            <input type="number" id="ob-revenu" value="75000" min="0" oninput="this.dataset.touched='1';estimRRQPSV()">
-            <div class="hint">Préréempli avec le revenu de l'onglet Profil — sert à estimer la rente RRQ selon le maximum des gains admissibles (MGA 2026 : 74 600 $)</div></div>
-          <div class="field"><label>Âge de début RRQ / PSV</label>
-            <input type="number" id="ob-age-rrq" value="65" min="60" max="72" oninput="estimRRQPSV()">
-            <div class="hint">RRQ : 60 à 72 ans (−0,6 %/mois avant 65, +0,7 %/mois après). PSV : 65 à 70 ans (+0,6 %/mois de report)</div></div>
-          <div class="field"><label>RRQ estimé ($/an, à l'âge choisi)</label>
-            <input type="number" id="ob-rrq" value="12000" min="0" oninput="calcObj()">
-            <div class="hint">Estimé automatiquement — modifiable si vous avez un relevé de participation précis</div></div>
-          <div class="field"><label>PSV estimé ($/an, à l'âge choisi)</label>
-            <input type="number" id="ob-psv" value="8917" min="0" oninput="calcObj()">
-            <div class="hint">Estimé automatiquement, incluant la récupération fiscale si applicable</div></div>
-          <div class="note" id="ob-rrq-psv-note" style="margin-top:4px;font-size:10px"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Résultats -->
-    <div>
-      <div id="obj-result-zone"></div>
-      <div id="obj-scenarios-zone"></div>
-    </div>
-  </div>
-
-  <!-- Projection visuelle -->
-  <div class="card">
-    <div class="ch nv">Projection de votre capital — Accumulation et décaissement</div>
-    <div class="cb" style="padding:16px 12px">
-      <div id="obj-chart-kpi" style="margin-bottom:14px"></div>
-      <div class="chart-wrap" style="background:#0B0B0F;border-radius:var(--r-lg);padding:18px 14px 10px">
-        <svg id="obj-svg" height="300" style="min-width:500px;display:block;width:100%"></svg>
-      </div>
-    </div>
-  </div>
-
-  <div class="note" id="obj-note"></div>
 </div>
 
 
@@ -3121,7 +3253,19 @@ function drawNetWorth() {
 }
 
   drawNetWorth();
-  if(document.getElementById("pane-objectif").classList.contains("on")) calcObj();
+  var _pr = document.getElementById("pane-retraite");
+  if(_pr && _pr.classList.contains("on")){
+    var _accOn = document.getElementById('retraite-acc').classList.contains('on');
+    if(_accOn){
+      var _so=document.getElementById('obj-seul');
+      if(_so && _so.classList.contains('on')){ if(typeof calcObjSeul==='function') calcObjSeul(); }
+      else if(typeof calcObjCouple==='function') calcObjCouple();
+    } else {
+      var _sd=document.getElementById('dec-seul');
+      if(_sd && _sd.classList.contains('on')){ if(typeof calcDec==='function') calcDec(); }
+      else if(typeof calcDecCouple==='function') calcDecCouple();
+    }
+  }
 }
 
 // ══ REER ══
@@ -3969,13 +4113,20 @@ function show(id,el){
   // Déclencher le calcul du module à l'ouverture de l'onglet
   setTimeout(function(){
     try{
-      if(id==='decaiss'){ var s=document.getElementById('dec-seul'); if(s&&s.classList.contains('on')) calcDec(); else if(typeof calcDecCouple==='function') calcDecCouple(); }
+      if(id==='retraite'){
+        var accOn=document.getElementById('retraite-acc').classList.contains('on');
+        if(accOn){
+          var so=document.getElementById('obj-seul');
+          if(so && so.classList.contains('on')){ if(typeof estimRRQPSV==='function') estimRRQPSV(); }
+          else if(typeof calcObjCouple==='function') calcObjCouple();
+        } else {
+          var s=document.getElementById('dec-seul');
+          if(s&&s.classList.contains('on')) calcDec(); else if(typeof calcDecCouple==='function') calcDecCouple();
+        }
+      }
       if(id==='reee') calcReee();
       if(id==='reei') calcReei();
       if(id==='celi') calcCeli();
-      if(id==='objectif'){
-        if(typeof estimRRQPSV==='function') estimRRQPSV(); else calcObj();
-      }
       if(id==='achat') calcAchat();
       if(id==='pret') calcPret();
       if(id==='budget') calcBudget();
@@ -3990,8 +4141,8 @@ function show(id,el){
 // DÉCAISSEMENT
 // ══════════════════════════════════════════
 function showDec(id, el) {
-  document.querySelectorAll('.dec-pane').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('.scen-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('#retraite-dec .dec-pane').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('#retraite-dec .scen-btn').forEach(b => b.classList.remove('on'));
   document.getElementById('dec-' + id).classList.add('on');
   el.classList.add('on');
   if (id === 'seul') calcDec(); else calcDecCouple();
@@ -5075,13 +5226,11 @@ const PSV_MAX_65_74_AN  = FISCAL.psv_annuel;  // Pension maximale 65-74 ans = 8 
 const PSV_MAJ_MOIS      = 0.006;      // Majoration pour report (0,6 %/mois, jusqu'à 70 ans)
 const PSV_SEUIL_RECUP   = FISCAL.psv_seuil_recup;      // Seuil de récupération fiscale en vigueur (juil. 2026-juin 2027, basé sur revenu 2025)
 
-function estimRRQPSV() {
-  const revenu = g('ob-revenu');
-  let ageDebut = g('ob-age-rrq') || 65;
-  ageDebut = Math.max(60, Math.min(72, ageDebut));
+// ── Coeur du calcul RRQ/PSV, réutilisé pour personne seule et chaque conjoint ──
+function estimRRQPSVCore(p) {
+  let ageDebut = Math.max(60, Math.min(72, p.ageDebut || 65));
 
-  // ── RRQ estimé selon le revenu (proportion du MGA) et l'âge de début ──
-  const ratioRevenu = Math.min(1, revenu / RRQ_MGA_2026);
+  const ratioRevenu = Math.min(1, p.revenu / RRQ_MGA_2026);
   const rrqBase65 = ratioRevenu * RRQ_MAX_65_AN;
   let rrqAjuste;
   if (ageDebut < 65) {
@@ -5093,20 +5242,14 @@ function estimRRQPSV() {
   }
   rrqAjuste = Math.max(0, Math.round(rrqAjuste));
 
-  // ── PSV estimé (admissible 65-70 ans pour le début, majoration si reporté) ──
   const ageDebutPsv = Math.max(65, Math.min(70, ageDebut));
   let psvBrut = PSV_MAX_65_74_AN;
   if (ageDebutPsv > 65) {
     psvBrut = PSV_MAX_65_74_AN * (1 + PSV_MAJ_MOIS * (ageDebutPsv - 65) * 12);
   }
 
-  // Récupération fiscale de la PSV selon le revenu désiré à la retraite (inflaté)
-  const ageActuel = g('ob-age');
-  const ageRet = g('ob-ret');
-  const inf = g('ob-inf') / 100;
-  const yrsAvant = Math.max(0, ageRet - ageActuel);
-  const besoinNet = g('ob-besoin');
-  const besoinInflate = besoinNet * Math.pow(1 + inf, yrsAvant);
+  const yrsAvant = Math.max(0, p.ageRet - p.ageActuel);
+  const besoinInflate = p.besoinNet * Math.pow(1 + p.inf, yrsAvant);
   const besoinBrutEstime = besoinInflate / (1 - marg(besoinInflate) * 0.6);
 
   let recuperation = 0;
@@ -5115,124 +5258,181 @@ function estimRRQPSV() {
   }
   const psvNet = Math.max(0, Math.round(psvBrut - recuperation));
 
-  $('ob-rrq').value = rrqAjuste;
-  $('ob-psv').value = psvNet;
+  const note = `RRQ estimé pour un revenu de ${fmt(p.revenu)}/an, rente demandée à ${ageDebut} ans (référence : rente maximale 2026 = 18 091,80 $/an à 65 ans, MGA = 74 600 $). PSV estimée pour un début à ${ageDebutPsv} ans` +
+    (recuperation > 0 ? `, réduite de ${fmt(Math.round(recuperation))}/an par la récupération fiscale (revenu net > 93 454 $).` : `, sans récupération fiscale prévue selon le revenu de retraite estimé.`) +
+    ` Estimation indicative — consultez Mon dossier (Retraite Québec) pour un relevé exact.`;
 
-  const noteEl = document.getElementById('ob-rrq-psv-note');
-  if (noteEl) {
-    noteEl.textContent = `RRQ estimé pour un revenu de ${fmt(revenu)}/an, rente demandée à ${ageDebut} ans (référence : rente maximale 2026 = 18 091,80 $/an à 65 ans, MGA = 74 600 $). PSV estimée pour un début à ${ageDebutPsv} ans` +
-      (recuperation > 0 ? `, réduite de ${fmt(Math.round(recuperation))}/an par la récupération fiscale (revenu net > 93 454 $).` : `, sans récupération fiscale prévue selon le revenu de retraite estimé.`) +
-      ` Estimation indicative — consultez Mon dossier (Retraite Québec) pour un relevé exact.`;
-  }
-
-  calcObj();
+  return { rrq: rrqAjuste, psv: psvNet, note };
 }
 
-function calcObj() {
-  const age     = g('ob-age');
-  const ageRet  = g('ob-ret');
-  const actuel  = g('ob-actuel');
-  const besoin  = g('ob-besoin');   // revenu net désiré / an
-  const ageDeces= g('ob-duree');
-  const rendAcc = g('ob-rend-acc') / 100;
-  const rendRet = g('ob-rend-ret') / 100;
-  const inf     = g('ob-inf') / 100;
-  const rrq     = g('ob-rrq');
-  const psv     = g('ob-psv');
+function estimRRQPSV() {
+  const r = estimRRQPSVCore({
+    revenu: g('ob-revenu'), ageDebut: g('ob-age-rrq'),
+    ageActuel: g('ob-age'), ageRet: g('ob-ret'),
+    inf: g('ob-inf') / 100, besoinNet: g('ob-besoin')
+  });
+  $('ob-rrq').value = r.rrq;
+  $('ob-psv').value = r.psv;
+  const noteEl = document.getElementById('ob-rrq-psv-note');
+  if (noteEl) noteEl.textContent = r.note;
+  calcObjSeul();
+}
 
-  // Si l'âge actuel a atteint ou dépassé l'âge de retraite visé, le client
-  // est déjà en phase de décaissement — il n'y a plus d'accumulation à projeter.
+function estimRRQPSVc1() {
+  const r = estimRRQPSVCore({
+    revenu: g('oc1-revenu'), ageDebut: g('oc1-age-rrq'),
+    ageActuel: g('oc1-age'), ageRet: g('oc-ret'),
+    inf: g('oc-inf') / 100, besoinNet: g('oc-besoin') / 2
+  });
+  $('oc1-rrq').value = r.rrq;
+  $('oc1-psv').value = r.psv;
+  calcObjCouple();
+}
+
+function estimRRQPSVc2() {
+  const r = estimRRQPSVCore({
+    revenu: g('oc2-revenu'), ageDebut: g('oc2-age-rrq'),
+    ageActuel: g('oc2-age'), ageRet: g('oc-ret'),
+    inf: g('oc-inf') / 100, besoinNet: g('oc-besoin') / 2
+  });
+  $('oc2-rrq').value = r.rrq;
+  $('oc2-psv').value = r.psv;
+  calcObjCouple();
+}
+
+function showObj(id, el) {
+  document.querySelectorAll('#retraite-acc .dec-pane').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('#retraite-acc .scen-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('obj-' + id).classList.add('on');
+  el.classList.add('on');
+  if (id === 'seul') calcObjSeul(); else calcObjCouple();
+}
+
+function showRetraitePhase(phase, el) {
+  document.querySelectorAll('#pane-retraite .phase-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('#pane-retraite .retraite-phase').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('retraite-' + phase).classList.add('on');
+  const hint = document.getElementById('retraite-phase-hint');
+  if (hint) hint.textContent = phase === 'acc'
+    ? "Combien épargner d'ici la retraite pour atteindre votre objectif."
+    : "Une fois à la retraite : comment décaisser vos comptes, année par année.";
+  if (phase === 'acc') {
+    const so = document.getElementById('obj-seul');
+    if (so && so.classList.contains('on')) calcObjSeul(); else calcObjCouple();
+  } else {
+    const sd = document.getElementById('dec-seul');
+    if (sd && sd.classList.contains('on')) calcDec(); else calcDecCouple();
+  }
+}
+
+// Valeur future d'un compte : solde actuel capitalisé + cotisations mensuelles capitalisées
+function fvCompte(bal, cotMens, r, n) {
+  const cotAnnuelle = cotMens * 12;
+  const fvLump = bal * Math.pow(1 + r, n);
+  const fvCot = r > 0 ? cotAnnuelle * ((Math.pow(1 + r, n) - 1) / r) : cotAnnuelle * n;
+  return fvLump + fvCot;
+}
+
+function calcObjSeul() {
+  const age      = g('ob-age');
+  const ageRet   = g('ob-ret');
+  const besoin   = g('ob-besoin');
+  const ageDeces = g('ob-duree');
+  const rendAcc  = g('ob-rend-acc') / 100;
+  const rendRet  = g('ob-rend-ret') / 100;
+  const inf      = g('ob-inf') / 100;
+  const rrq      = g('ob-rrq');
+  const psv      = g('ob-psv');
+  const rpa      = g('ob-rpa');
+  const legs     = g('ob-legs');
+
+  const reerBal = g('ob-reer'),     reerCot = g('ob-reer-cot');
+  const celiBal = g('ob-celi'),     celiCot = g('ob-celi-cot');
+  const capBal  = g('ob-celiapp'),  capCot  = g('ob-celiapp-cot');
+  const neBal   = g('ob-ne'),       neCot   = g('ob-ne-cot');
+
+  const cotMensTotal = reerCot + celiCot + capCot + neCot;
+  const cotZone = document.getElementById('ob-cot-total-lbl');
+  if (cotZone) cotZone.textContent = `Vous cotisez actuellement ${fmt(cotMensTotal)}/mois (${fmt(cotMensTotal * 12)}/an) à ces comptes combinés.`;
+
   const dejaRetraite = age >= ageRet;
-  const ageEval = dejaRetraite ? age : ageRet;     // âge auquel le capital est évalué
-  const yrsAcc  = Math.max(0, ageRet - age);       // années d'accumulation restantes
-  const yrsRet  = Math.max(1, ageDeces - ageEval); // années de retraite restantes
+  const ageEval = dejaRetraite ? age : ageRet;
+  const yrsAcc  = Math.max(0, ageRet - age);
+  const yrsRet  = Math.max(1, ageDeces - ageEval);
 
-  // Revenu désiré ajusté pour l'inflation jusqu'à l'âge d'évaluation
+  // Capital projeté à la retraite, par compte, selon les cotisations ACTUELLES
+  let reerFV, celiFV, capFV, neFV;
+  if (dejaRetraite) {
+    reerFV = reerBal; celiFV = celiBal; capFV = capBal; neFV = neBal;
+  } else {
+    reerFV = fvCompte(reerBal, reerCot, rendAcc, yrsAcc);
+    celiFV = fvCompte(celiBal, celiCot, rendAcc, yrsAcc);
+    capFV  = fvCompte(capBal,  capCot,  rendAcc, yrsAcc);
+    neFV   = fvCompte(neBal,   neCot,   rendAcc, yrsAcc);
+  }
+  const capitalActuelFutur = reerFV + celiFV + capFV + neFV;
+  const actuelAujourdhui = reerBal + celiBal + capBal + neBal;
+  const cotisAnnuelleActuelle = cotMensTotal * 12;
+
   const besoinInflation = besoin * Math.pow(1 + inf, yrsAcc);
-
-  // Revenus gouvernementaux (en $ futurs à l'âge d'évaluation)
-  const gouvFuturs = (rrq + psv) * Math.pow(1 + inf, yrsAcc);
-
-  // Besoin net à combler par l'épargne (après gouv)
-  // On grossit le besoin pour cibler le net après impôt
+  const gouvFuturs = (rrq + psv + rpa) * Math.pow(1 + inf, yrsAcc);
   const besoinBrut = besoinInflation / (1 - marg(besoinInflation) * 0.6);
   const manqueParAn = Math.max(0, besoinBrut - gouvFuturs);
 
-  // Capital nécessaire à l'âge d'évaluation pour financer "manqueParAn" pendant yrsRet ans
-  // Formule valeur actuelle d'une rente: PV = PMT * (1 - (1+r)^-n) / r
   let capitalNecessaire;
   if (rendRet > 0) {
     capitalNecessaire = manqueParAn * (1 - Math.pow(1 + rendRet, -yrsRet)) / rendRet;
+    capitalNecessaire += legs / Math.pow(1 + rendRet, yrsRet);
   } else {
-    capitalNecessaire = manqueParAn * yrsRet;
+    capitalNecessaire = manqueParAn * yrsRet + legs;
   }
 
-  // Capital déjà accumulé, projeté à l'âge d'évaluation
-  // (si déjà retraité, yrsAcc = 0 → aucune croissance projetée, on utilise le capital actuel tel quel)
-  const capitalActuelFutur = actuel * Math.pow(1 + rendAcc, yrsAcc);
-
-  // Capital manquant à financer
   const capitalManquant = Math.max(0, capitalNecessaire - capitalActuelFutur);
 
-  // Cotisation annuelle nécessaire (versement fin d'année) — seulement pertinent en accumulation
-  // FV = C * ((1+r)^n - 1) / r → C = FV * r / ((1+r)^n - 1)
-  let cotisAnnuelle = 0;
-  if (!dejaRetraite && yrsAcc > 0) {
-    if (rendAcc > 0) {
-      cotisAnnuelle = capitalManquant * rendAcc / (Math.pow(1 + rendAcc, yrsAcc) - 1);
-    } else {
-      cotisAnnuelle = capitalManquant / yrsAcc;
-    }
+  // Cotisation ADDITIONNELLE nécessaire (en plus de ce qui est déjà cotisé)
+  let cotisAnnuelleAdd = 0;
+  if (!dejaRetraite && yrsAcc > 0 && capitalManquant > 0) {
+    cotisAnnuelleAdd = rendAcc > 0 ? capitalManquant * rendAcc / (Math.pow(1 + rendAcc, yrsAcc) - 1) : capitalManquant / yrsAcc;
   }
 
-  // Fréquences
-  const cotisMens = cotisAnnuelle / 12;
-  const cotisBiSem = cotisAnnuelle / 26;
-  const cotisHebdo = cotisAnnuelle / 52;
-
-  // Taux d'épargne recommandé (% du revenu actuel)
-  const revActuel = g('ob-revenu') || 75000;
-  const tauxEpargne = (cotisAnnuelle / revActuel) * 100;
-
-  // ── Affichage résultats principaux ──
   const pctAtteint = Math.min(100, (capitalActuelFutur / capitalNecessaire) * 100);
+  const revActuel = g('ob-revenu') || 75000;
+  const tauxEpargneActuel = (cotisAnnuelleActuelle / revActuel) * 100;
 
   document.getElementById('obj-result-zone').innerHTML = `
     <div class="obj-result-big">
       <div class="obj-r">
         <div class="ol">${dejaRetraite ? `Capital requis maintenant (${age} ans)` : `Capital visé à ${ageRet} ans`}</div>
         <div class="ov">${fmt(Math.round(capitalNecessaire))}</div>
-        <div class="os">Pour ${yrsRet} ans ${dejaRetraite ? 'de retraite restants' : 'de retraite'}</div>
+        <div class="os">Pour ${yrsRet} ans ${dejaRetraite ? 'de retraite restants' : 'de retraite'}${legs > 0 ? ' + legs' : ''}</div>
       </div>
       <div class="obj-r sec">
-        <div class="ol">${dejaRetraite ? 'Capital actuel' : 'Capital actuel projeté'}</div>
+        <div class="ol">${dejaRetraite ? 'Capital actuel' : 'Capital projeté (cotisations actuelles)'}</div>
         <div class="ov">${fmt(Math.round(capitalActuelFutur))}</div>
-        <div class="os">${dejaRetraite ? "Valeur d'aujourd'hui" : 'Sans nouvelles cotisations'}</div>
+        <div class="os">${dejaRetraite ? "Valeur d'aujourd'hui" : fmt(cotMensTotal) + '/mois déjà cotisés'}</div>
       </div>
       <div class="obj-r sec">
         <div class="ol">Manque à combler</div>
         <div class="ov" style="color:${capitalManquant>0?'#ff6b6b':'#4ade80'}">${capitalManquant>0?fmt(Math.round(capitalManquant)):'Objectif atteint!'}</div>
-        <div class="os">${capitalManquant>0 ? (dejaRetraite ? 'Capital additionnel requis dès maintenant' : 'Par nouvelles cotisations') : 'Votre capital suffit'}</div>
+        <div class="os">${capitalManquant>0 ? (dejaRetraite ? 'Capital additionnel requis dès maintenant' : 'Par cotisations additionnelles') : 'Votre trajectoire actuelle suffit'}</div>
       </div>
     </div>
     <div style="margin-bottom:18px">
       <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--gry);margin-bottom:4px">
-        <span>${dejaRetraite ? 'Capital actuel' : 'Capital déjà accumulé (projeté)'}</span>
+        <span>${dejaRetraite ? 'Capital actuel' : 'Capital projeté selon vos cotisations actuelles'}</span>
         <span style="font-weight:700">${Math.round(pctAtteint)}% de l'objectif</span>
       </div>
-      <div class="progress-wrap">
-        <div class="progress-fill" style="width:${pctAtteint}%"></div>
-      </div>
+      <div class="progress-wrap"><div class="progress-fill" style="width:${pctAtteint}%"></div></div>
     </div>
     <div class="hypothesis-grid">
-      <div class="hyp"><div class="hl">${dejaRetraite ? 'Statut' : "Années d'épargne"}</div><div class="hv">${dejaRetraite ? 'En décaissement' : yrsAcc + ' ans'}</div></div>
-      <div class="hyp"><div class="hl">Revenu gouvernemental</div><div class="hv">${fmt(rrq+psv)}/an</div></div>
+      <div class="hyp"><div class="hl">REER / CELI / CELIAPP / NE</div><div class="hv">${fmt(Math.round(reerFV))} / ${fmt(Math.round(celiFV))} / ${fmt(Math.round(capFV))} / ${fmt(Math.round(neFV))}</div></div>
+      <div class="hyp"><div class="hl">Revenu gouv. + pension</div><div class="hv">${fmt(rrq+psv+rpa)}/an</div></div>
       <div class="hyp"><div class="hl">Besoin annuel${dejaRetraite ? '' : ' inflationné'}</div><div class="hv">${fmt(Math.round(besoinInflation))}</div></div>
-      <div class="hyp"><div class="hl">Rendement ${dejaRetraite ? 'décaissement' : 'accumulation'}</div><div class="hv">${dejaRetraite ? g('ob-rend-ret') : g('ob-rend-acc')} %</div></div>
+      <div class="hyp"><div class="hl">Taux d'épargne actuel</div><div class="hv">${tauxEpargneActuel.toFixed(1)}% du revenu</div></div>
     </div>
   `;
 
-  // ── Scénarios de cotisation (accumulation) ou analyse de suffisance (décaissement) ──
   let scenHtml = '';
   if (dejaRetraite) {
     const suffisant = capitalManquant <= 0;
@@ -5256,34 +5456,132 @@ function calcObj() {
       { label: 'Scénario optimiste',    rend: rendAcc + 0.01,                  color: '#375623' },
     ];
     scenarios.forEach(sc => {
-      let capFV = actuel * Math.pow(1 + sc.rend, yrsAcc);
-      let capNeeded = capitalNecessaire;
-      let capGap = Math.max(0, capNeeded - capFV);
+      let capFV2 = fvCompte(reerBal, reerCot, sc.rend, yrsAcc) + fvCompte(celiBal, celiCot, sc.rend, yrsAcc) + fvCompte(capBal, capCot, sc.rend, yrsAcc) + fvCompte(neBal, neCot, sc.rend, yrsAcc);
+      let capGap = Math.max(0, capitalNecessaire - capFV2);
       let ann = sc.rend > 0 ? capGap * sc.rend / (Math.pow(1 + sc.rend, yrsAcc) - 1) : capGap / yrsAcc;
       const suffisant = capGap <= 0;
       scenHtml += `
         <div class="scenario-card" style="border-left-color:${sc.color};margin-bottom:12px">
           <h3><span class="dot" style="background:${sc.color}"></span>${sc.label} — ${(sc.rend*100).toFixed(1)}% / an</h3>
-          ${suffisant ? `<div style="color:#375623;font-weight:700;font-size:14px">✓ Votre capital actuel suffit déjà!</div>` : `
+          ${suffisant ? `<div style="color:#375623;font-weight:700;font-size:14px">✓ Vos cotisations actuelles suffisent déjà!</div>` : `
+          <div style="font-size:10.5px;color:var(--gry);margin-bottom:6px">Cotisation additionnelle requise (en plus des ${fmt(cotMensTotal)}/mois déjà cotisés) :</div>
           <div class="freq-row"><span class="fl">Par semaine</span><span class="fv" style="color:${sc.color}">${fmt(ann/52)}</span></div>
           <div class="freq-row"><span class="fl">Aux deux semaines</span><span class="fv" style="color:${sc.color}">${fmt(ann/26)}</span></div>
           <div class="freq-row"><span class="fl">Par mois</span><span class="fv" style="color:${sc.color}">${fmt(ann/12)}</span></div>
-          <div class="freq-row"><span class="fl">Par année</span><span class="fv" style="color:${sc.color}">${fmt(Math.round(ann))}</span></div>
-          <div style="margin-top:10px;font-size:10px;color:var(--gry)">
-            Capital projeté à ${ageRet} ans : <strong>${fmt(Math.round(capFV + (sc.rend>0?ann*((Math.pow(1+sc.rend,yrsAcc)-1)/sc.rend):ann*yrsAcc)))}</strong>
-          </div>`}
+          <div class="freq-row"><span class="fl">Par année</span><span class="fv" style="color:${sc.color}">${fmt(Math.round(ann))}</span></div>`}
         </div>`;
     });
   }
   document.getElementById('obj-scenarios-zone').innerHTML = scenHtml;
 
-  // ── Graphique projection ──
-  drawObjChart(age, ageRet, ageDeces, actuel, cotisAnnuelle, rendAcc, rendRet, capitalNecessaire, manqueParAn, inf, yrsAcc);
+  drawObjChart(age, ageRet, ageDeces, actuelAujourdhui, cotisAnnuelleActuelle, rendAcc, rendRet, capitalNecessaire, manqueParAn, inf, yrsAcc);
 
-  // ── Note ──
   document.getElementById('obj-note').textContent = dejaRetraite
-    ? `Vous êtes déjà en phase de décaissement (âge actuel ≥ âge de retraite visé). Les calculs n'assument plus de nouvelles cotisations ni de croissance du capital avant la retraite — le capital actuel est utilisé tel quel. RRQ et PSV sont présentés en dollars d'aujourd'hui. Consultez un planificateur financier agréé pour une analyse personnalisée.`
-    : `Le capital cible et le rendement requis sont calculés selon un rendement moyen constant de ${g('ob-rend-acc')}% (accumulation) et ${g('ob-rend-ret')}% (retraite), et une inflation à ${g('ob-inf')}%. La courbe du graphique illustre plutôt des rendements qui varient d'une année à l'autre (comme en réalité) autour de cette moyenne — un écart entre la courbe et la cible est donc normal, pas une erreur. RRQ et PSV ajustés pour l'inflation à la retraite. Le capital nécessaire est calculé selon la méthode de la valeur actuelle d'une rente certaine. Consultez un planificateur financier agréé pour une analyse personnalisée.`;
+    ? `Vous êtes déjà en phase de décaissement (âge actuel ≥ âge de retraite visé). Les calculs n'assument plus de nouvelles cotisations ni de croissance du capital avant la retraite — le capital actuel est utilisé tel quel. RRQ, PSV et pension sont présentés en dollars d'aujourd'hui. Consultez un planificateur financier agréé pour une analyse personnalisée.`
+    : `Le capital cible est calculé à partir de vos comptes REER, CELI, CELIAPP et non enregistré, chacun capitalisé séparément selon ses propres cotisations. La cotisation additionnelle suggérée s'ajoute à ce que vous cotisez déjà. RRQ, PSV et pension d'employeur ajustés pour l'inflation à la retraite. Le capital nécessaire est calculé selon la méthode de la valeur actuelle d'une rente certaine, incluant un legs si spécifié. Consultez un planificateur financier agréé pour une analyse personnalisée.`;
+}
+
+function calcObjCouple() {
+  const ageRet   = g('oc-ret');
+  const besoin   = g('oc-besoin');
+  const ageDeces = g('oc-duree');
+  const legs     = g('oc-legs');
+  const rendAcc  = g('oc-rend-acc') / 100;
+  const rendRet  = g('oc-rend-ret') / 100;
+  const inf      = g('oc-inf') / 100;
+
+  const persons = [1, 2].map(n => ({
+    age: g(`oc${n}-age`),
+    reerBal: g(`oc${n}-reer`), reerCot: g(`oc${n}-reer-cot`),
+    celiBal: g(`oc${n}-celi`), celiCot: g(`oc${n}-celi-cot`),
+    neBal:   g(`oc${n}-ne`),   neCot:   g(`oc${n}-ne-cot`),
+    rpa: g(`oc${n}-rpa`), rrq: g(`oc${n}-rrq`), psv: g(`oc${n}-psv`)
+  }));
+
+  let capitalActuelFutur = 0, actuelAujourdhui = 0, cotisAnnuelleActuelle = 0, gouvActuel = 0;
+  persons.forEach(p => {
+    const yrsAcc = Math.max(0, ageRet - p.age);
+    const dejaRet = p.age >= ageRet;
+    if (dejaRet) {
+      capitalActuelFutur += p.reerBal + p.celiBal + p.neBal;
+    } else {
+      capitalActuelFutur += fvCompte(p.reerBal, p.reerCot, rendAcc, yrsAcc)
+                          + fvCompte(p.celiBal, p.celiCot, rendAcc, yrsAcc)
+                          + fvCompte(p.neBal,   p.neCot,   rendAcc, yrsAcc);
+    }
+    actuelAujourdhui += p.reerBal + p.celiBal + p.neBal;
+    cotisAnnuelleActuelle += (p.reerCot + p.celiCot + p.neCot) * 12;
+    gouvActuel += p.rrq + p.psv + p.rpa;
+  });
+
+  const ageMin = Math.min(persons[0].age, persons[1].age);
+  const dejaRetraite = ageMin >= ageRet;
+  const yrsAccRef = Math.max(0, ageRet - ageMin);
+  const yrsRet = Math.max(1, ageDeces - ageRet);
+
+  const besoinInflation = besoin * Math.pow(1 + inf, yrsAccRef);
+  const gouvFuturs = gouvActuel * Math.pow(1 + inf, yrsAccRef);
+  const besoinBrut = besoinInflation / (1 - marg(besoinInflation) * 0.6);
+  const manqueParAn = Math.max(0, besoinBrut - gouvFuturs);
+
+  let capitalNecessaire;
+  if (rendRet > 0) {
+    capitalNecessaire = manqueParAn * (1 - Math.pow(1 + rendRet, -yrsRet)) / rendRet;
+    capitalNecessaire += legs / Math.pow(1 + rendRet, yrsRet);
+  } else {
+    capitalNecessaire = manqueParAn * yrsRet + legs;
+  }
+
+  const capitalManquant = Math.max(0, capitalNecessaire - capitalActuelFutur);
+  let cotisAnnuelleAdd = 0;
+  if (!dejaRetraite && yrsAccRef > 0 && capitalManquant > 0) {
+    cotisAnnuelleAdd = rendAcc > 0 ? capitalManquant * rendAcc / (Math.pow(1 + rendAcc, yrsAccRef) - 1) : capitalManquant / yrsAccRef;
+  }
+  const pctAtteint = Math.min(100, (capitalActuelFutur / capitalNecessaire) * 100);
+
+  document.getElementById('objc-result-zone').innerHTML = `
+    <div class="card">
+      <div class="ch nv">Synthèse — Objectif du couple</div>
+      <div class="cb">
+        <div class="obj-result-big">
+          <div class="obj-r">
+            <div class="ol">${dejaRetraite ? `Capital requis maintenant` : `Capital visé à ${ageRet} ans`}</div>
+            <div class="ov">${fmt(Math.round(capitalNecessaire))}</div>
+            <div class="os">Pour ${yrsRet} ans de retraite${legs > 0 ? ' + legs' : ''}</div>
+          </div>
+          <div class="obj-r sec">
+            <div class="ol">${dejaRetraite ? 'Capital actuel combiné' : 'Capital projeté (cotisations actuelles)'}</div>
+            <div class="ov">${fmt(Math.round(capitalActuelFutur))}</div>
+            <div class="os">${dejaRetraite ? "Valeur d'aujourd'hui" : fmt(cotisAnnuelleActuelle/12) + '/mois déjà cotisés (2 personnes)'}</div>
+          </div>
+          <div class="obj-r sec">
+            <div class="ol">Manque à combler</div>
+            <div class="ov" style="color:${capitalManquant>0?'#ff6b6b':'#4ade80'}">${capitalManquant>0?fmt(Math.round(capitalManquant)):'Objectif atteint!'}</div>
+            <div class="os">${capitalManquant>0 ? 'Réparti entre les deux, à discuter' : 'Votre trajectoire actuelle suffit'}</div>
+          </div>
+        </div>
+        <div style="margin-bottom:6px">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--gry);margin-bottom:4px">
+            <span>Capital projeté combiné</span><span style="font-weight:700">${Math.round(pctAtteint)}% de l'objectif</span>
+          </div>
+          <div class="progress-wrap"><div class="progress-fill" style="width:${pctAtteint}%"></div></div>
+        </div>
+      </div>
+    </div>
+    ${capitalManquant > 0 && !dejaRetraite ? `
+    <div class="card">
+      <div class="ch gd">Cotisation additionnelle suggérée (répartie sur les deux)</div>
+      <div class="cb">
+        <div class="freq-row"><span class="fl">Par mois (total couple)</span><span class="fv" style="color:#BF8F00">${fmt(cotisAnnuelleAdd/12)}</span></div>
+        <div class="freq-row"><span class="fl">Par année (total couple)</span><span class="fv" style="color:#BF8F00">${fmt(Math.round(cotisAnnuelleAdd))}</span></div>
+        <div style="margin-top:8px;font-size:10.5px;color:var(--gry)">S'ajoute aux cotisations déjà en cours pour chaque personne. La répartition entre les deux conjoints dépend de leurs droits de cotisation respectifs (REER, CELI) et de leur situation fiscale.</div>
+      </div>
+    </div>` : ''}
+  `;
+
+  document.getElementById('objc-note').textContent = dejaRetraite
+    ? `Au moins un des deux conjoints a déjà atteint l'âge de retraite visé — les calculs utilisent le capital actuel sans projection additionnelle. Consultez l'onglet Décaissement pour le détail année par année.`
+    : `Les deux conjoints sont projetés jusqu'à un âge de retraite commun de ${ageRet} ans. Chaque compte (REER, CELI, non enregistré) est capitalisé séparément selon ses propres cotisations. Le revenu désiré, l'inflation et les rendements sont partagés pour le ménage. Consultez un planificateur financier agréé pour une analyse personnalisée, notamment sur le fractionnement de revenu et la répartition optimale des cotisations entre conjoints.`;
 }
 
 // Convertit une liste de points [x,y] en chemin SVG lissé (courbe Catmull-Rom → Bézier)
@@ -5377,7 +5675,7 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
     } else {
       // Décaissement : même retrait annuel net (manqueParAn) que celui utilisé pour
       // calculer le capital cible ci-dessus — inflation et impôt déjà pris en compte
-      // en amont dans calcObj(). Sans ça, la courbe et la cible affichée ne concordaient pas.
+      // en amont dans calcObjSeul(). Sans ça, la courbe et la cible affichée ne concordaient pas.
       if (i > 0) {
         const capitalAvant = capital;
         capital = Math.max(0, capital * (1 + tauxAnnuelVariable(rendRet, i, seedDec)) - manqueParAn);
@@ -5779,7 +6077,7 @@ function calcDecCouple() {
 
 
 function printPane(paneId, title) {
-  const pane = document.getElementById('pane-' + paneId);
+  const pane = document.getElementById('pane-' + paneId) || document.getElementById(paneId);
   if (!pane) return;
   const d = new Date();
   const dateStr = d.toLocaleDateString('fr-CA',{year:'numeric',month:'long',day:'numeric'});
@@ -5944,7 +6242,7 @@ verifierAlerteMaj();
 try{if(localStorage.getItem('gff_dark')==='1'){document.body.classList.add('dark');const b=document.getElementById('dark-btn');if(b)b.innerHTML='<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg> Mode clair';}}catch(e){}
 updateEnfantsAges();
 calcSucc();
-calcObj();
+calcObjSeul();
 calcActifNet();
 calcAchat();
 calcBudget();
