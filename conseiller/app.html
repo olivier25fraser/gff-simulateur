@@ -1963,6 +1963,7 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px">
     <button class="phase-btn on" onclick="showRetraitePhase('acc',this)">Accumulation — avant la retraite</button>
     <button class="phase-btn" onclick="showRetraitePhase('dec',this)">Décaissement — à la retraite</button>
+    <button class="phase-btn" onclick="showRetraitePhase('immo',this)">Vente immobilière</button>
   </div>
   <div style="font-size:11px;color:var(--gry);margin-bottom:18px" id="retraite-phase-hint">Combien épargner d'ici la retraite pour atteindre votre objectif.</div>
 
@@ -2329,6 +2330,88 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
   </div>
 
   </div>
+
+<!-- ══ PHASE VENTE IMMOBILIÈRE ══ -->
+  <div id="retraite-immo" class="retraite-phase">
+
+  <button class="print-btn" onclick="printPane('retraite-immo','Planification retraite — Vente immobilière')">
+    <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">
+      <polyline points="6 9 6 2 18 2 18 9"/>
+      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+      <rect x="6" y="14" width="12" height="8"/>
+    </svg>
+    Imprimer / Sauvegarder en PDF
+  </button>
+
+  <div class="g2">
+    <!-- Paramètres -->
+    <div>
+      <div class="card">
+        <div class="ch nv">Type de bien</div>
+        <div class="cb">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+            <button type="button" class="scen-btn on" id="im-type-princ" onclick="setImmoType('princ')">Résidence principale</button>
+            <button type="button" class="scen-btn" id="im-type-locatif" onclick="setImmoType('locatif')">Immeuble locatif / résidence secondaire</button>
+          </div>
+          <div class="field"><label>% du gain imposable</label>
+            <input type="number" id="im-taux-inclusion" value="0" min="0" max="100" step="5" oninput="calcImmo()">
+            <div class="hint" id="im-inclusion-hint">Résidence principale : exemption totale (0 %). Immeuble locatif, résidence secondaire ou chalet : 50 % du gain est imposable.</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ch gd">Détails de la vente</div>
+        <div class="cb">
+          <div class="field"><label>Vente prévue dans (années)</label>
+            <input type="number" id="im-annees" value="5" min="0" max="40" oninput="calcImmo()"></div>
+          <div class="field"><label>Prix d'achat original / PBR ($)</label>
+            <input type="number" id="im-pbr" value="300000" min="0" oninput="calcImmo()">
+            <div class="hint">Prix de base rajusté : coût d'achat initial</div></div>
+          <div class="field"><label>Améliorations capitalisées ($, optionnel)</label>
+            <input type="number" id="im-ameliorations" value="0" min="0" oninput="calcImmo()">
+            <div class="hint">Rénovations majeures qui augmentent le PBR (pas l'entretien courant)</div></div>
+          <div class="field"><label>Valeur actuelle du bien ($)</label>
+            <input type="number" id="im-valeur-actuelle" value="450000" min="0" oninput="estimVenteImmo()"></div>
+          <div class="field"><label>Appréciation annuelle prévue (%)</label>
+            <input type="number" id="im-appreciation" value="3" min="-10" max="15" step="0.5" oninput="estimVenteImmo()"></div>
+          <div class="field"><label>Prix de vente prévu ($)</label>
+            <input type="number" id="im-prix-vente" value="521800" min="0" oninput="calcImmo()">
+            <div class="hint">Estimé automatiquement selon l'appréciation — modifiable</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ch gd">Frais et ajustements</div>
+        <div class="cb">
+          <div class="field"><label>Solde hypothécaire prévu à la vente ($)</label>
+            <input type="number" id="im-hypo" value="150000" min="0" oninput="calcImmo()"></div>
+          <div class="field"><label>Frais de vente estimés (%)</label>
+            <input type="number" id="im-frais-pct" value="8" min="0" max="20" step="0.5" oninput="calcImmo()">
+            <div class="hint">Commission courtier, notaire, certificat de localisation, divers</div></div>
+          <div class="field"><label>Récupération d'amortissement ($, optionnel)</label>
+            <input type="number" id="im-recuperation" value="0" min="0" oninput="calcImmo()">
+            <div class="hint">Immeuble locatif seulement — amortissement déduit dans le passé, imposable à 100 % au moment de la vente</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ch gd">Fiscalité</div>
+        <div class="cb">
+          <div class="field"><label>Taux d'imposition marginal prévu à la vente (%)</label>
+            <input type="number" id="im-taux-impot" value="40" min="0" max="60" step="0.5" oninput="calcImmo()">
+            <div class="hint">Taux marginal combiné (fédéral + Québec) applicable au revenu supplémentaire généré par la vente</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Résultats -->
+    <div>
+      <div id="immo-result-zone"></div>
+    </div>
+  </div>
+
+  <div class="note" id="immo-note">Exemple hypothétique à des fins d'illustration seulement. L'exemption pour résidence principale suppose que le bien a été désigné résidence principale pour toute la période de détention — dans les cas plus complexes (changement d'usage, usage mixte), le calcul réel diffère. Consultez un fiscaliste ou un comptable pour une analyse personnalisée.</div>
+</div>
 
 </div>
 </div>
@@ -3284,14 +3367,17 @@ function drawNetWorth() {
   var _pr = document.getElementById("pane-retraite");
   if(_pr && _pr.classList.contains("on")){
     var _accOn = document.getElementById('retraite-acc').classList.contains('on');
+    var _decOn = document.getElementById('retraite-dec').classList.contains('on');
     if(_accOn){
       var _so=document.getElementById('obj-seul');
       if(_so && _so.classList.contains('on')){ if(typeof calcObjSeul==='function') calcObjSeul(); }
       else if(typeof calcObjCouple==='function') calcObjCouple();
-    } else {
+    } else if(_decOn) {
       var _sd=document.getElementById('dec-seul');
       if(_sd && _sd.classList.contains('on')){ if(typeof calcDec==='function') calcDec(); }
       else if(typeof calcDecCouple==='function') calcDecCouple();
+    } else {
+      if(typeof calcImmo==='function') calcImmo();
     }
   }
 }
@@ -4143,13 +4229,16 @@ function show(id,el){
     try{
       if(id==='retraite'){
         var accOn=document.getElementById('retraite-acc').classList.contains('on');
+        var decOn=document.getElementById('retraite-dec').classList.contains('on');
         if(accOn){
           var so=document.getElementById('obj-seul');
           if(so && so.classList.contains('on')){ if(typeof estimRRQPSV==='function') estimRRQPSV(); }
           else if(typeof calcObjCouple==='function') calcObjCouple();
-        } else {
+        } else if(decOn) {
           var s=document.getElementById('dec-seul');
           if(s&&s.classList.contains('on')) calcDec(); else if(typeof calcDecCouple==='function') calcDecCouple();
+        } else {
+          if(typeof calcImmo==='function') calcImmo();
         }
       }
       if(id==='reee') calcReee();
@@ -4430,6 +4519,84 @@ function setPviView(v, el) {
   document.querySelectorAll('.pvi-stab').forEach(b => b.classList.remove('on'));
   el.classList.add('on');
   if (pviData) drawPviChart(pviData);
+}
+
+// ══════════════════════════════════════════
+// VENTE IMMOBILIÈRE
+// ══════════════════════════════════════════
+function setImmoType(type) {
+  $('im-type-princ').classList.toggle('on', type === 'princ');
+  $('im-type-locatif').classList.toggle('on', type === 'locatif');
+  const hint = document.getElementById('im-inclusion-hint');
+  if (type === 'princ') {
+    $('im-taux-inclusion').value = 0;
+    if (hint) hint.textContent = "Résidence principale : exemption totale (0 %), en supposant que le bien a été désigné résidence principale pour toute la période de détention.";
+  } else {
+    $('im-taux-inclusion').value = 50;
+    if (hint) hint.textContent = "Immeuble locatif, résidence secondaire ou chalet : 50 % du gain en capital est imposable, au taux marginal du vendeur.";
+  }
+  calcImmo();
+}
+
+function estimVenteImmo() {
+  const valeurActuelle = g('im-valeur-actuelle');
+  const appreciation = g('im-appreciation') / 100;
+  const annees = g('im-annees');
+  const prixEstime = valeurActuelle * Math.pow(1 + appreciation, annees);
+  $('im-prix-vente').value = Math.round(prixEstime);
+  calcImmo();
+}
+
+function calcImmo() {
+  const annees      = g('im-annees');
+  const pbr         = g('im-pbr');
+  const ameliorations = g('im-ameliorations');
+  const prixVente   = g('im-prix-vente');
+  const hypo        = g('im-hypo');
+  const fraisPct    = g('im-frais-pct') / 100;
+  const recuperation = g('im-recuperation');
+  const tauxInclusion = g('im-taux-inclusion') / 100;
+  const tauxImpot   = g('im-taux-impot') / 100;
+
+  const fraisVente = prixVente * fraisPct;
+  const pbrTotal = pbr + ameliorations;
+  const gainBrut = Math.max(0, prixVente - pbrTotal - fraisVente);
+  const gainImposable = gainBrut * tauxInclusion;
+  const revenuImposableTotal = gainImposable + recuperation;
+  const impotEstime = revenuImposableTotal * tauxImpot;
+  const produitNet = prixVente - hypo - fraisVente - impotEstime;
+
+  const zone = document.getElementById('immo-result-zone');
+  if (!zone) return;
+
+  zone.innerHTML = `
+    <div class="card">
+      <div class="ch nv">Synthèse de la transaction — dans ${annees} an${annees>1?'s':''}</div>
+      <div class="cb">
+        ${rr('Prix de vente prévu', fmt(Math.round(prixVente)))}
+        ${rr('Prix de base rajusté (PBR)', fmt(Math.round(pbrTotal)))}
+        ${rr('Frais de vente (' + (fraisPct*100).toFixed(1) + ' %)', '−' + fmt(Math.round(fraisVente)))}
+        ${rr('Gain en capital brut', fmt(Math.round(gainBrut)))}
+        ${rr('Portion imposable (' + Math.round(tauxInclusion*100) + ' %)', fmt(Math.round(gainImposable)))}
+        ${recuperation > 0 ? rr("Récupération d'amortissement (100 % imposable)", fmt(Math.round(recuperation))) : ''}
+        ${rr('Revenu imposable total de la vente', fmt(Math.round(revenuImposableTotal)))}
+        ${rr('Impôt estimé (' + (tauxImpot*100).toFixed(1) + ' %)', '−' + fmt(Math.round(impotEstime)), 'warn')}
+        ${rr('Solde hypothécaire à rembourser', '−' + fmt(Math.round(hypo)))}
+      </div>
+    </div>
+    <div class="card" style="margin-top:0">
+      <div class="ch gd">Produit net de la vente</div>
+      <div class="cb">
+        <div class="obj-result-big" style="grid-template-columns:1fr">
+          <div class="obj-r">
+            <div class="ol">Argent en poche, après hypothèque, frais et impôt</div>
+            <div class="ov">${fmt(Math.round(produitNet))}</div>
+            <div class="os">${tauxInclusion===0 ? "Résidence principale : aucun impôt sur le gain" : "Immeuble locatif / résidence secondaire : " + Math.round(tauxInclusion*100) + " % du gain imposable"}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 function calcPret() {
@@ -5344,13 +5511,17 @@ function showRetraitePhase(phase, el) {
   const hint = document.getElementById('retraite-phase-hint');
   if (hint) hint.textContent = phase === 'acc'
     ? "Combien épargner d'ici la retraite pour atteindre votre objectif."
-    : "Une fois à la retraite : comment décaisser vos comptes, année par année.";
+    : phase === 'dec'
+    ? "Une fois à la retraite : comment décaisser vos comptes, année par année."
+    : "L'impact fiscal de la vente d'une propriété, avant ou pendant la retraite.";
   if (phase === 'acc') {
     const so = document.getElementById('obj-seul');
     if (so && so.classList.contains('on')) calcObjSeul(); else calcObjCouple();
-  } else {
+  } else if (phase === 'dec') {
     const sd = document.getElementById('dec-seul');
     if (sd && sd.classList.contains('on')) calcDec(); else calcDecCouple();
+  } else if (phase === 'immo') {
+    calcImmo();
   }
 }
 
