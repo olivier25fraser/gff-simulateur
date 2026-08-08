@@ -1961,9 +1961,9 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
 <div id="pane-retraite" class="pane">
 
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px">
-    <button class="phase-btn on" onclick="showRetraitePhase('acc',this)">Accumulation — avant la retraite</button>
-    <button class="phase-btn" onclick="showRetraitePhase('dec',this)">Décaissement — à la retraite</button>
-    <button class="phase-btn" onclick="showRetraitePhase('immo',this)">Vente immobilière</button>
+    <button class="phase-btn on" id="retraite-phase-btn-acc" onclick="showRetraitePhase('acc',this)">Accumulation — avant la retraite</button>
+    <button class="phase-btn" id="retraite-phase-btn-dec" onclick="showRetraitePhase('dec',this)">Décaissement — à la retraite</button>
+    <button class="phase-btn" id="retraite-phase-btn-immo" onclick="showRetraitePhase('immo',this)">Vente immobilière</button>
   </div>
   <div style="font-size:11px;color:var(--gry);margin-bottom:18px" id="retraite-phase-hint">Combien épargner d'ici la retraite pour atteindre votre objectif.</div>
 
@@ -2191,7 +2191,7 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
   <div id="retraite-dec" class="retraite-phase">
 
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px">
-    <button class="scen-btn on" onclick="showDec('seul',this)">Personne seule</button>
+    <button class="scen-btn on" id="dec-seul-btn" onclick="showDec('seul',this)">Personne seule</button>
     <button class="scen-btn" onclick="showDec('couple',this)">Couple</button>
   </div>
 
@@ -5568,6 +5568,39 @@ function showObj(id, el) {
   if (id === 'seul') calcObjSeul(); else calcObjCouple();
 }
 
+function transfererVersDecaissement() {
+  const d = window._transferAccSeul;
+  if (!d) return;
+
+  $('ds-age').value = d.ageRet;
+  $('ds-deces').value = d.ageDeces;
+  $('ds-ferr').value = d.ferr;
+  $('ds-celi').value = d.celi;
+  $('ds-nonreg').value = d.nonreg;
+  $('ds-rente').value = d.rente;
+  $('ds-rend').value = d.rendRet;
+  $('ds-besoin').value = d.besoin;
+  $('ds-rrq').value = d.rrq;
+  $('ds-rrq-age').value = d.ageRrq;
+  $('ds-psv').value = d.psv;
+  $('ds-psv-age').value = d.ageRrq;
+
+  const decPhaseBtn = document.getElementById('retraite-phase-btn-dec');
+  if (decPhaseBtn) showRetraitePhase('dec', decPhaseBtn);
+  const decSeulBtn = document.getElementById('dec-seul-btn');
+  if (decSeulBtn && !decSeulBtn.classList.contains('on')) {
+    showDec('seul', decSeulBtn);
+  } else if (typeof calcDec === 'function') {
+    calcDec();
+  }
+
+  const noteEl = document.getElementById('dec-note-seul');
+  if (noteEl) {
+    const prev = noteEl.textContent;
+    noteEl.innerHTML = `<strong style="color:var(--gold-br)">✓ Montants transférés depuis l'onglet Accumulation.</strong> ` + prev;
+  }
+}
+
 function showRetraitePhase(phase, el) {
   document.querySelectorAll('#pane-retraite .phase-btn').forEach(b => b.classList.remove('on'));
   document.querySelectorAll('#pane-retraite .retraite-phase').forEach(p => p.classList.remove('on'));
@@ -5717,6 +5750,7 @@ function calcObjSeul() {
       <div class="hyp"><div class="hl">Taux d'épargne actuel</div><div class="hv">${tauxEpargneActuel.toFixed(1)}% du revenu</div></div>
       ${immoValeurRetraite > 0 ? `<div class="hyp"><div class="hl">Vente immo. dans ${immoAns} an(s), valeur à ${ageRet} ans</div><div class="hv">${fmt(Math.round(immoValeurRetraite))}</div></div>` : ''}
     </div>
+    ${!dejaRetraite ? `<button type="button" class="scen-btn" style="margin-top:16px;width:100%;text-align:center;padding:12px" onclick="transfererVersDecaissement()">↓ Utiliser ce capital projeté dans l'onglet Décaissement</button>` : ''}
   `;
 
   let scenHtml = '';
@@ -5763,6 +5797,11 @@ function calcObjSeul() {
 
   const immoNetPourGraphique = immoMontant > 0 ? immoMontant * (1 - Math.min(1, Math.max(0, immoTaux / 100))) : 0;
   drawObjChart(age, ageRet, ageDeces, actuelAujourdhui, cotisAnnuelleActuelle, rendAcc, rendRet, capitalNecessaire, manqueParAn, inf, yrsAcc, immoAns, immoNetPourGraphique);
+
+  window._transferAccSeul = {
+    ferr: Math.round(reerFV), celi: Math.round(celiFV + capFV), nonreg: Math.round(neFV + immoValeurRetraite),
+    ageRet, ageDeces, rrq, psv, ageRrq: g('ob-age-rrq'), besoin, rendRet: g('ob-rend-ret'), rente: Math.round(rpa)
+  };
 
   document.getElementById('obj-note').textContent = dejaRetraite
     ? `Vous êtes déjà en phase de décaissement (âge actuel ≥ âge de retraite visé). Les calculs n'assument plus de nouvelles cotisations ni de croissance du capital avant la retraite — le capital actuel est utilisé tel quel. RRQ, PSV et pension sont présentés en dollars d'aujourd'hui. Consultez un planificateur financier agréé pour une analyse personnalisée.`
