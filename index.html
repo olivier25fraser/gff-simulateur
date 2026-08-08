@@ -134,7 +134,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,15,15,.95
 
 /* ── CTA ── */
 /* ── PARTENAIRES ── */
-.partners-section{background:var(--noir);padding:96px 0;overflow:hidden}
+.partners-section{background:var(--noir);padding:56px 0 140px;overflow:hidden}
 .partners-title{font-family:'DM Serif Display',serif;font-weight:400;color:#fff;
   text-align:center;font-size:clamp(28px,4vw,40px);margin-bottom:64px}
 .marquee-wrap{position:relative;overflow:hidden;
@@ -388,15 +388,15 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
       </div>
     </div>
   </div>
-  <canvas id="pourquoiWave" class="wave-canvas-bottom"></canvas>
 </section>
 
 <!-- ═══ PARTENAIRES ═══ -->
-<section class="partners-section">
+<section class="partners-section" style="position:relative">
   <div class="partners-title">Nos partenaires</div>
   <div class="marquee-wrap">
     <div class="marquee-track" id="partnersTrack"></div>
   </div>
+  <canvas id="pourquoiWave" class="wave-canvas-bottom"></canvas>
 </section>
 
 <!-- ═══ PROCESSUS ═══ -->
