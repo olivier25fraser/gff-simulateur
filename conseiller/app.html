@@ -2017,6 +2017,20 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
         </div>
 
         <div class="card">
+          <div class="ch gd">Vente de bien immobilier (optionnel)</div>
+          <div class="cb">
+            <div class="field"><label>Dans combien d'années aura lieu la vente</label>
+              <input type="number" id="ob-immo-ans" value="0" min="0" max="60" oninput="calcObjSeul()">
+              <div class="hint">0 = pas de vente prévue</div></div>
+            <div class="field"><label>Montant de la vente ($)</label>
+              <input type="number" id="ob-immo-montant" value="0" min="0" oninput="calcObjSeul()"></div>
+            <div class="field"><label>Taux d'imposition sur le gain (%)</label>
+              <input type="number" id="ob-immo-taux" value="0" min="0" max="60" step="1" oninput="calcObjSeul()">
+              <div class="hint">0 % pour une résidence principale (exemption). Pour un immeuble locatif ou une résidence secondaire, estimez le taux effectif sur le gain (souvent ~25 %, soit 50 % du gain imposé au taux marginal).</div></div>
+          </div>
+        </div>
+
+        <div class="card">
           <div class="ch gd">Pension d'employeur (optionnel)</div>
           <div class="cb">
             <div class="field"><label>Rente annuelle prévue à la retraite ($, d'aujourd'hui)</label>
@@ -2146,6 +2160,20 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
             <div class="field"><label>Rendement annuel — accumulation (%)</label><input type="number" id="oc-rend-acc" value="6" min="0" max="15" step="0.5" oninput="calcObjCouple()"></div>
             <div class="field"><label>Rendement annuel — retraite (%)</label><input type="number" id="oc-rend-ret" value="4" min="0" max="10" step="0.5" oninput="calcObjCouple()"></div>
             <div class="field"><label>Inflation estimée (%)</label><input type="number" id="oc-inf" value="2" min="0" max="6" step="0.5" oninput="calcObjCouple()"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="ch gd">Vente de bien immobilier (optionnel)</div>
+          <div class="cb">
+            <div class="field"><label>Dans combien d'années aura lieu la vente</label>
+              <input type="number" id="oc-immo-ans" value="0" min="0" max="60" oninput="calcObjCouple()">
+              <div class="hint">0 = pas de vente prévue</div></div>
+            <div class="field"><label>Montant de la vente ($)</label>
+              <input type="number" id="oc-immo-montant" value="0" min="0" oninput="calcObjCouple()"></div>
+            <div class="field"><label>Taux d'imposition sur le gain (%)</label>
+              <input type="number" id="oc-immo-taux" value="0" min="0" max="60" step="1" oninput="calcObjCouple()">
+              <div class="hint">0 % pour une résidence principale (exemption). Pour un immeuble locatif ou une résidence secondaire, estimez le taux effectif sur le gain (souvent ~25 %, soit 50 % du gain imposé au taux marginal).</div></div>
           </div>
         </div>
       </div>
@@ -5334,6 +5362,21 @@ function fvCompte(bal, cotMens, r, n) {
   return fvLump + fvCot;
 }
 
+// Valeur, au moment de la retraite, du produit net d'une vente immobilière survenant
+// dans "ansVente" années. Si la vente précède la retraite, le produit net est capitalisé
+// (rendement d'accumulation) jusqu'à la retraite. Si elle survient après, il est actualisé
+// (rendement de retraite) pour ramener sa valeur au moment de la retraite.
+function valeurImmoARetraite(ansVente, montant, tauxImpot, yrsAcc, rendAcc, rendRet) {
+  if (!montant || montant <= 0) return 0;
+  const net = montant * (1 - Math.min(1, Math.max(0, tauxImpot / 100)));
+  const delta = yrsAcc - ansVente;
+  if (delta >= 0) {
+    return net * Math.pow(1 + rendAcc, delta);
+  }
+  const r = rendRet > 0 ? rendRet : 0.0001;
+  return net / Math.pow(1 + r, -delta);
+}
+
 function calcObjSeul() {
   const age      = g('ob-age');
   const ageRet   = g('ob-ret');
@@ -5375,6 +5418,12 @@ function calcObjSeul() {
   const actuelAujourdhui = reerBal + celiBal + capBal + neBal;
   const cotisAnnuelleActuelle = cotMensTotal * 12;
 
+  const immoAns    = g('ob-immo-ans');
+  const immoMontant= g('ob-immo-montant');
+  const immoTaux   = g('ob-immo-taux');
+  const immoValeurRetraite = valeurImmoARetraite(immoAns, immoMontant, immoTaux, yrsAcc, rendAcc, rendRet);
+  const capitalActuelFuturAvecImmo = capitalActuelFutur + immoValeurRetraite;
+
   const besoinInflation = besoin * Math.pow(1 + inf, yrsAcc);
   const gouvFuturs = (rrq + psv + rpa) * Math.pow(1 + inf, yrsAcc);
   const besoinBrut = besoinInflation / (1 - marg(besoinInflation) * 0.6);
@@ -5388,7 +5437,7 @@ function calcObjSeul() {
     capitalNecessaire = manqueParAn * yrsRet + legs;
   }
 
-  const capitalManquant = Math.max(0, capitalNecessaire - capitalActuelFutur);
+  const capitalManquant = Math.max(0, capitalNecessaire - capitalActuelFuturAvecImmo);
 
   // Cotisation ADDITIONNELLE nécessaire (en plus de ce qui est déjà cotisé)
   let cotisAnnuelleAdd = 0;
@@ -5396,7 +5445,7 @@ function calcObjSeul() {
     cotisAnnuelleAdd = rendAcc > 0 ? capitalManquant * rendAcc / (Math.pow(1 + rendAcc, yrsAcc) - 1) : capitalManquant / yrsAcc;
   }
 
-  const pctAtteint = Math.min(100, (capitalActuelFutur / capitalNecessaire) * 100);
+  const pctAtteint = Math.min(100, (capitalActuelFuturAvecImmo / capitalNecessaire) * 100);
   const revActuel = g('ob-revenu') || 75000;
   const tauxEpargneActuel = (cotisAnnuelleActuelle / revActuel) * 100;
 
@@ -5408,9 +5457,9 @@ function calcObjSeul() {
         <div class="os">Pour ${yrsRet} ans ${dejaRetraite ? 'de retraite restants' : 'de retraite'}${legs > 0 ? ' + legs' : ''}</div>
       </div>
       <div class="obj-r sec">
-        <div class="ol">${dejaRetraite ? 'Capital actuel' : 'Capital projeté (cotisations actuelles)'}</div>
-        <div class="ov">${fmt(Math.round(capitalActuelFutur))}</div>
-        <div class="os">${dejaRetraite ? "Valeur d'aujourd'hui" : fmt(cotMensTotal) + '/mois déjà cotisés'}</div>
+        <div class="ol">${dejaRetraite ? 'Capital actuel' : 'Capital projeté (cotisations + vente immo.)'}</div>
+        <div class="ov">${fmt(Math.round(capitalActuelFuturAvecImmo))}</div>
+        <div class="os">${dejaRetraite ? "Valeur d'aujourd'hui" : fmt(cotMensTotal) + '/mois déjà cotisés' + (immoValeurRetraite > 0 ? ' + immo.' : '')}</div>
       </div>
       <div class="obj-r sec">
         <div class="ol">Manque à combler</div>
@@ -5430,6 +5479,7 @@ function calcObjSeul() {
       <div class="hyp"><div class="hl">Revenu gouv. + pension</div><div class="hv">${fmt(rrq+psv+rpa)}/an</div></div>
       <div class="hyp"><div class="hl">Besoin annuel${dejaRetraite ? '' : ' inflationné'}</div><div class="hv">${fmt(Math.round(besoinInflation))}</div></div>
       <div class="hyp"><div class="hl">Taux d'épargne actuel</div><div class="hv">${tauxEpargneActuel.toFixed(1)}% du revenu</div></div>
+      ${immoValeurRetraite > 0 ? `<div class="hyp"><div class="hl">Vente immo. dans ${immoAns} an(s), valeur à ${ageRet} ans</div><div class="hv">${fmt(Math.round(immoValeurRetraite))}</div></div>` : ''}
     </div>
   `;
 
@@ -5457,6 +5507,7 @@ function calcObjSeul() {
     ];
     scenarios.forEach(sc => {
       let capFV2 = fvCompte(reerBal, reerCot, sc.rend, yrsAcc) + fvCompte(celiBal, celiCot, sc.rend, yrsAcc) + fvCompte(capBal, capCot, sc.rend, yrsAcc) + fvCompte(neBal, neCot, sc.rend, yrsAcc);
+      capFV2 += valeurImmoARetraite(immoAns, immoMontant, immoTaux, yrsAcc, sc.rend, rendRet);
       let capGap = Math.max(0, capitalNecessaire - capFV2);
       let ann = sc.rend > 0 ? capGap * sc.rend / (Math.pow(1 + sc.rend, yrsAcc) - 1) : capGap / yrsAcc;
       const suffisant = capGap <= 0;
@@ -5474,7 +5525,8 @@ function calcObjSeul() {
   }
   document.getElementById('obj-scenarios-zone').innerHTML = scenHtml;
 
-  drawObjChart(age, ageRet, ageDeces, actuelAujourdhui, cotisAnnuelleActuelle, rendAcc, rendRet, capitalNecessaire, manqueParAn, inf, yrsAcc);
+  const immoNetPourGraphique = immoMontant > 0 ? immoMontant * (1 - Math.min(1, Math.max(0, immoTaux / 100))) : 0;
+  drawObjChart(age, ageRet, ageDeces, actuelAujourdhui, cotisAnnuelleActuelle, rendAcc, rendRet, capitalNecessaire, manqueParAn, inf, yrsAcc, immoAns, immoNetPourGraphique);
 
   document.getElementById('obj-note').textContent = dejaRetraite
     ? `Vous êtes déjà en phase de décaissement (âge actuel ≥ âge de retraite visé). Les calculs n'assument plus de nouvelles cotisations ni de croissance du capital avant la retraite — le capital actuel est utilisé tel quel. RRQ, PSV et pension sont présentés en dollars d'aujourd'hui. Consultez un planificateur financier agréé pour une analyse personnalisée.`
@@ -5519,6 +5571,12 @@ function calcObjCouple() {
   const yrsAccRef = Math.max(0, ageRet - ageMin);
   const yrsRet = Math.max(1, ageDeces - ageRet);
 
+  const immoAns    = g('oc-immo-ans');
+  const immoMontant= g('oc-immo-montant');
+  const immoTaux   = g('oc-immo-taux');
+  const immoValeurRetraite = valeurImmoARetraite(immoAns, immoMontant, immoTaux, yrsAccRef, rendAcc, rendRet);
+  const capitalActuelFuturAvecImmo = capitalActuelFutur + immoValeurRetraite;
+
   const besoinInflation = besoin * Math.pow(1 + inf, yrsAccRef);
   const gouvFuturs = gouvActuel * Math.pow(1 + inf, yrsAccRef);
   const besoinBrut = besoinInflation / (1 - marg(besoinInflation) * 0.6);
@@ -5532,12 +5590,12 @@ function calcObjCouple() {
     capitalNecessaire = manqueParAn * yrsRet + legs;
   }
 
-  const capitalManquant = Math.max(0, capitalNecessaire - capitalActuelFutur);
+  const capitalManquant = Math.max(0, capitalNecessaire - capitalActuelFuturAvecImmo);
   let cotisAnnuelleAdd = 0;
   if (!dejaRetraite && yrsAccRef > 0 && capitalManquant > 0) {
     cotisAnnuelleAdd = rendAcc > 0 ? capitalManquant * rendAcc / (Math.pow(1 + rendAcc, yrsAccRef) - 1) : capitalManquant / yrsAccRef;
   }
-  const pctAtteint = Math.min(100, (capitalActuelFutur / capitalNecessaire) * 100);
+  const pctAtteint = Math.min(100, (capitalActuelFuturAvecImmo / capitalNecessaire) * 100);
 
   document.getElementById('objc-result-zone').innerHTML = `
     <div class="card">
@@ -5550,8 +5608,8 @@ function calcObjCouple() {
             <div class="os">Pour ${yrsRet} ans de retraite${legs > 0 ? ' + legs' : ''}</div>
           </div>
           <div class="obj-r sec">
-            <div class="ol">${dejaRetraite ? 'Capital actuel combiné' : 'Capital projeté (cotisations actuelles)'}</div>
-            <div class="ov">${fmt(Math.round(capitalActuelFutur))}</div>
+            <div class="ol">${dejaRetraite ? 'Capital actuel combiné' : 'Capital projeté (cotisations + vente immo.)'}</div>
+            <div class="ov">${fmt(Math.round(capitalActuelFuturAvecImmo))}</div>
             <div class="os">${dejaRetraite ? "Valeur d'aujourd'hui" : fmt(cotisAnnuelleActuelle/12) + '/mois déjà cotisés (2 personnes)'}</div>
           </div>
           <div class="obj-r sec">
@@ -5566,6 +5624,7 @@ function calcObjCouple() {
           </div>
           <div class="progress-wrap"><div class="progress-fill" style="width:${pctAtteint}%"></div></div>
         </div>
+        ${immoValeurRetraite > 0 ? `<div style="font-size:11px;color:var(--gry)">Inclut la vente immobilière prévue dans ${immoAns} an(s) : <strong>${fmt(Math.round(immoValeurRetraite))}</strong> (valeur à ${ageRet} ans)</div>` : ''}
       </div>
     </div>
     ${capitalManquant > 0 && !dejaRetraite ? `
@@ -5651,7 +5710,7 @@ function tauxAnnuelVariable(rateBase, i, seed) {
   return rateBase + vague * amplitude;
 }
 
-function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet, capitalCible, manqueParAn, inf, yrsAccPourEval) {
+function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet, capitalCible, manqueParAn, inf, yrsAccPourEval, immoAnsInj, immoNetInj) {
   const svg = document.getElementById('obj-svg');
   const W = Math.max(500, svg.parentElement.offsetWidth || 700);
   svg.setAttribute('width', W);
@@ -5670,6 +5729,7 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
 
   for (let i = 0; i <= totalYrs; i++) {
     const yr = age + i;
+    if (immoNetInj > 0 && i === Math.round(immoAnsInj) && i > 0) capital += immoNetInj;
     if (yr <= ageRet) {
       if (i > 0) capital = capital * (1 + tauxAnnuelVariable(rendAcc, i, seedAcc)) + cotisAnn;
     } else {
