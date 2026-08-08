@@ -149,7 +149,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,15,15,.95
   display:flex;align-items:center;gap:10px;white-space:nowrap}
 .partner-logo .sub{font-weight:500;font-size:15px;color:#555;margin-left:2px}
 .partner-logo svg{flex-shrink:0}
-@keyframes scrollLeft{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes scrollLeft{from{transform:translateX(-50%)}to{transform:translateX(0)}}
 
 .cta-section{background:linear-gradient(135deg,var(--noir) 0%,#1a1a1a 100%);
   padding:96px 5%;text-align:center;position:relative;overflow:hidden}
@@ -581,6 +581,7 @@ window.addEventListener('scroll', () => {
 <script>
 (function(){
   function rng(s){return function(){s=(s*16807)%2147483647;return(s-1)/2147483646;};}
+  function mod(a,b){return((a%b)+b)%b;}
   function gen(seed,n){var r=rng(seed),v=[0.35];for(var i=1;i<n;i++){var d=(r()-0.47)*0.1+0.003;v.push(Math.max(0.05,Math.min(0.85,v[i-1]+d)));}return v;}
   var L=[gen(42,120),gen(99,120),gen(17,120)];
   var C=['rgba(191,143,0,1)','rgba(212,160,23,0.85)','rgba(232,192,96,0.7)'];
@@ -596,7 +597,7 @@ window.addEventListener('scroll', () => {
       var line=L[li],n=line.length;
       ctx.beginPath();
       for(var i=0;i<=W;i++){
-        var fi=((i/W)*(n-1)+shift+li*15)%n,i0=Math.floor(fi)%n,i1=(i0+1)%n,fr=fi-Math.floor(fi);
+        var fi=mod((i/W)*(n-1)+shift+li*15,n),i0=Math.floor(fi)%n,i1=(i0+1)%n,fr=fi-Math.floor(fi);
         var v=line[i0]*(1-fr)+line[i1]*fr,y=top?v*H*pct:H-v*H*pct;
         i===0?ctx.moveTo(i,y):ctx.lineTo(i,y);
       }
@@ -607,7 +608,7 @@ window.addEventListener('scroll', () => {
     ctx.beginPath();
     var line=L[0],n=line.length;
     for(var i=0;i<=W;i++){
-      var fi=((i/W)*(n-1)+shift)%n,i0=Math.floor(fi)%n,i1=(i0+1)%n,fr=fi-Math.floor(fi);
+      var fi=mod((i/W)*(n-1)+shift,n),i0=Math.floor(fi)%n,i1=(i0+1)%n,fr=fi-Math.floor(fi);
       var v=line[i0]*(1-fr)+line[i1]*fr,y=top?v*H*pct:H-v*H*pct;
       i===0?ctx.moveTo(i,y):ctx.lineTo(i,y);
     }
@@ -623,7 +624,7 @@ window.addEventListener('scroll', () => {
     draw(cH,sH,0.13,0.70,false);
     draw(cP,sP,0.18,0.70,false);
     draw(cC,sC,0.15,0.70,false);
-    sN+=0.07;sH+=0.08;sP+=0.09;sC+=0.08;
+    sN-=0.07;sH-=0.08;sP-=0.09;sC-=0.08;
     requestAnimationFrame(loop);
   }
   window.addEventListener('load',loop);
