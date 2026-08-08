@@ -133,6 +133,24 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,15,15,.95
 .etape-desc{font-size:13px;color:var(--gry);line-height:1.6}
 
 /* ── CTA ── */
+/* ── PARTENAIRES ── */
+.partners-section{background:var(--noir);padding:96px 0;overflow:hidden}
+.partners-title{font-family:'DM Serif Display',serif;font-weight:400;color:#fff;
+  text-align:center;font-size:clamp(28px,4vw,40px);margin-bottom:64px}
+.marquee-wrap{position:relative;overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);}
+.marquee-track{display:flex;gap:28px;width:max-content;animation:scrollLeft 32s linear infinite}
+.marquee-wrap:hover .marquee-track{animation-play-state:paused}
+.partner-card{background:#fff;border-radius:16px;padding:0 44px;height:110px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;min-width:220px;
+  box-shadow:0 0 0 1px rgba(191,143,0,.15), 0 0 32px rgba(191,143,0,.25)}
+.partner-logo{font-family:'DM Sans',sans-serif;font-weight:800;font-size:24px;
+  display:flex;align-items:center;gap:10px;white-space:nowrap}
+.partner-logo .sub{font-weight:500;font-size:15px;color:#555;margin-left:2px}
+.partner-logo svg{flex-shrink:0}
+@keyframes scrollLeft{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
 .cta-section{background:linear-gradient(135deg,var(--noir) 0%,#1a1a1a 100%);
   padding:96px 5%;text-align:center;position:relative;overflow:hidden}
 .cta-section::before{content:'';position:absolute;top:50%;left:50%;
@@ -373,6 +391,14 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
   <canvas id="pourquoiWave" class="wave-canvas-bottom"></canvas>
 </section>
 
+<!-- ═══ PARTENAIRES ═══ -->
+<section class="partners-section">
+  <div class="partners-title">Nos partenaires</div>
+  <div class="marquee-wrap">
+    <div class="marquee-track" id="partnersTrack"></div>
+  </div>
+</section>
+
 <!-- ═══ PROCESSUS ═══ -->
 <section class="section" id="processus" style="background:var(--gry-l)">
   <div style="max-width:1200px;margin:0 auto">
@@ -602,6 +628,29 @@ window.addEventListener('scroll', () => {
   }
   window.addEventListener('load',loop);
   window.addEventListener('resize',function(){[cN,cH,cP,cC].forEach(function(c){if(c)c.width=0;});});
+})();
+</script>
+
+<script>
+(function(){
+  var partners = ['uv','sunlife','rbc','humania','assomption','ia','ppc'];
+  var names = {
+    'uv':'UV Assurance','sunlife':'Financière Sun Life','rbc':'RBC Assurances',
+    'humania':'Humania Assurance','assomption':'Assomption Vie',
+    'ia':'iA Groupe financier','ppc':'Canada Protection Plan'
+  };
+  function card(key){
+    return '<div class="partner-card"><img src="/assets/logos-partenaires/'+key+'.png" alt="'+names[key]+'" style="max-width:170px;max-height:60px;width:auto;height:auto"></div>';
+  }
+  // Beneva : logo pas encore recu, texte temporaire en attendant
+  function benevaCard(){
+    return '<div class="partner-card"><div class="partner-logo" style="color:#6A1B9A;font-family:DM Sans,sans-serif;font-weight:800;font-size:24px">beneva</div></div>';
+  }
+  var order = ['uv','sunlife','rbc','humania','beneva','assomption','ia','ppc'];
+  function renderCard(key){ return key === 'beneva' ? benevaCard() : card(key); }
+  var html = order.map(renderCard).join('') + order.map(renderCard).join('');
+  var track = document.getElementById('partnersTrack');
+  if (track) track.innerHTML = html;
 })();
 </script>
 </body>
