@@ -2343,96 +2343,13 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
     Imprimer / Sauvegarder en PDF
   </button>
 
+  <div class="hint" style="margin-bottom:16px">Ajoutez une carte par propriété à vendre — par exemple un triplex dans 6 ans, un 6 plex dans 7 ans, puis la résidence principale dans 10 ans. Chacune a ses propres chiffres et son propre traitement fiscal.</div>
+
   <div class="g2">
     <!-- Paramètres -->
     <div>
-      <div class="card">
-        <div class="ch nv">Type de bien</div>
-        <div class="cb">
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
-            <button type="button" class="scen-btn on" id="im-type-princ" onclick="setImmoType('princ')">Résidence principale</button>
-            <button type="button" class="scen-btn" id="im-type-locatif" onclick="setImmoType('locatif')">Immeuble locatif / résidence secondaire</button>
-          </div>
-          <div class="field"><label>% du gain imposable</label>
-            <input type="number" id="im-taux-inclusion" value="0" min="0" max="100" step="5" oninput="calcImmo()">
-            <div class="hint" id="im-inclusion-hint">Résidence principale : exemption totale (0 %). Immeuble locatif, résidence secondaire ou chalet : 50 % du gain est imposable.</div></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="ch gd">Détails de la vente</div>
-        <div class="cb">
-          <div class="field"><label>Vente prévue dans (années)</label>
-            <input type="number" id="im-annees" value="5" min="0" max="40" oninput="calcImmo()"></div>
-
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 14px">
-            <button type="button" class="scen-btn on" id="im-mode-prix" onclick="setImmoMode('prix')">Je connais le prix de vente</button>
-            <button type="button" class="scen-btn" id="im-mode-gain" onclick="setImmoMode('gain')">Je connais déjà le gain en capital</button>
-          </div>
-
-          <!-- Mode : calculer le gain à partir du prix de vente et du PBR -->
-          <div id="im-bloc-mode-prix">
-            <div class="field"><label>Prix d'achat original / PBR ($)</label>
-              <input type="number" id="im-pbr" value="300000" min="0" oninput="calcImmo()">
-              <div class="hint">Prix de base rajusté : coût d'achat initial</div></div>
-            <div class="field"><label>Améliorations capitalisées ($, optionnel)</label>
-              <input type="number" id="im-ameliorations" value="0" min="0" oninput="calcImmo()">
-              <div class="hint">Rénovations majeures qui augmentent le PBR (pas l'entretien courant)</div></div>
-            <div class="field"><label>Valeur actuelle du bien ($)</label>
-              <input type="number" id="im-valeur-actuelle" value="450000" min="0" oninput="estimVenteImmo()"></div>
-            <div class="field"><label>Appréciation annuelle prévue (%)</label>
-              <input type="number" id="im-appreciation" value="3" min="-10" max="15" step="0.5" oninput="estimVenteImmo()"></div>
-            <div class="field"><label>Prix de vente prévu ($)</label>
-              <input type="number" id="im-prix-vente" value="521800" min="0" oninput="calcImmo()">
-              <div class="hint">Estimé automatiquement selon l'appréciation — modifiable</div></div>
-          </div>
-
-          <!-- Mode : gain en capital déjà connu -->
-          <div id="im-bloc-mode-gain" style="display:none">
-            <div class="field"><label>Prix de vente total prévu ($)</label>
-              <input type="number" id="im-prix-vente-g" value="521800" min="0" oninput="calcImmo()">
-              <div class="hint">Sert à calculer le produit net (après hypothèque et frais)</div></div>
-            <div class="field"><label>Gain en capital déjà calculé ($)</label>
-              <input type="number" id="im-gain-direct" value="180000" min="0" oninput="calcImmo()">
-              <div class="hint">Montant net, déjà calculé par vous ou votre comptable (prix de vente moins PBR moins frais, ou tel que fourni)</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="ch gd">Frais et ajustements</div>
-        <div class="cb">
-          <div class="field"><label>Solde hypothécaire prévu à la vente ($)</label>
-            <input type="number" id="im-hypo" value="150000" min="0" oninput="calcImmo()"></div>
-          <div class="field"><label>Frais de vente estimés (%)</label>
-            <input type="number" id="im-frais-pct" value="8" min="0" max="20" step="0.5" oninput="calcImmo()">
-            <div class="hint" id="im-frais-hint">Commission courtier, notaire, certificat de localisation, divers</div></div>
-          <div class="field"><label>Récupération d'amortissement ($, optionnel)</label>
-            <input type="number" id="im-recuperation" value="0" min="0" oninput="calcImmo()">
-            <div class="hint">Immeuble locatif seulement — amortissement déduit dans le passé, imposable à 100 % au moment de la vente</div></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="ch gd">Fiscalité</div>
-        <div class="cb">
-          <div class="field"><label>Taux d'imposition marginal prévu à la vente</label>
-            <select id="im-taux-impot-select" onchange="onImmoTauxChange()">
-              <option value="25.69">0 $ – 54 345 $ (25,69 %)</option>
-              <option value="30.69">54 345 $ – 58 523 $ (30,69 %)</option>
-              <option value="36.12" selected>58 523 $ – 108 680 $ (36,12 %)</option>
-              <option value="41.12">108 680 $ – 117 045 $ (41,12 %)</option>
-              <option value="45.71">117 045 $ – 132 245 $ (45,71 %)</option>
-              <option value="47.46">132 245 $ – 181 440 $ (47,46 %)</option>
-              <option value="50.22">181 440 $ – 258 482 $ (50,22 %)</option>
-              <option value="53.31">+ de 258 482 $ (53,31 %)</option>
-              <option value="custom">Personnalisé…</option>
-            </select>
-            <div class="hint">Palier fiscal combiné (fédéral + Québec) où tombera le revenu total de l'année de la vente — paliers 2026</div></div>
-          <div class="field" id="im-taux-custom-wrap" style="display:none"><label>Taux personnalisé (%)</label>
-            <input type="number" id="im-taux-impot" value="36.12" min="0" max="60" step="0.5" oninput="calcImmo()"></div>
-        </div>
-      </div>
+      <div id="immo-properties"></div>
+      <button type="button" class="scen-btn" style="width:100%;text-align:center;padding:12px;margin-top:4px" onclick="ajouterProprieteImmo()">+ Ajouter une propriété</button>
     </div>
 
     <!-- Résultats -->
@@ -2443,6 +2360,7 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
 
   <div class="note" id="immo-note">Exemple hypothétique à des fins d'illustration seulement. L'exemption pour résidence principale suppose que le bien a été désigné résidence principale pour toute la période de détention — dans les cas plus complexes (changement d'usage, usage mixte), le calcul réel diffère. Consultez un fiscaliste ou un comptable pour une analyse personnalisée.</div>
 </div>
+
 
 </div>
 </div>
@@ -3408,7 +3326,7 @@ function drawNetWorth() {
       if(_sd && _sd.classList.contains('on')){ if(typeof calcDec==='function') calcDec(); }
       else if(typeof calcDecCouple==='function') calcDecCouple();
     } else {
-      if(typeof calcImmo==='function') calcImmo();
+      if(typeof initOrCalcImmo==='function') initOrCalcImmo();
     }
   }
 }
@@ -4269,7 +4187,7 @@ function show(id,el){
           var s=document.getElementById('dec-seul');
           if(s&&s.classList.contains('on')) calcDec(); else if(typeof calcDecCouple==='function') calcDecCouple();
         } else {
-          if(typeof calcImmo==='function') calcImmo();
+          if(typeof initOrCalcImmo==='function') initOrCalcImmo();
         }
       }
       if(id==='reee') calcReee();
@@ -4555,74 +4473,204 @@ function setPviView(v, el) {
 // ══════════════════════════════════════════
 // VENTE IMMOBILIÈRE
 // ══════════════════════════════════════════
-function setImmoType(type) {
-  $('im-type-princ').classList.toggle('on', type === 'princ');
-  $('im-type-locatif').classList.toggle('on', type === 'locatif');
-  const hint = document.getElementById('im-inclusion-hint');
+function initOrCalcImmo() {
+  const zone = document.getElementById('immo-properties');
+  if (zone && zone.children.length === 0) {
+    renderImmoProperties();
+  } else if (typeof calcImmo === 'function') {
+    calcImmo();
+  }
+}
+
+let immoProps = [1];
+let immoPropCounter = 1;
+
+function propertyCardHTML(n) {
+  return `
+  <div class="card" id="im${n}-card" data-prop="${n}">
+    <div class="ch nv" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Propriété ${n}</span>
+      <button type="button" onclick="retirerProprieteImmo(${n})" id="im${n}-retirer"
+        style="background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:11px;font-weight:700">✕ Retirer</button>
+    </div>
+    <div class="cb">
+      <div class="field"><label>Nom de la propriété (optionnel)</label>
+        <input type="text" id="im${n}-nom" placeholder="Ex : Triplex, 6 plex, résidence principale" oninput="calcImmo()"></div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+        <button type="button" class="scen-btn on" id="im${n}-type-princ" onclick="setImmoType(${n},'princ')">Résidence principale</button>
+        <button type="button" class="scen-btn" id="im${n}-type-locatif" onclick="setImmoType(${n},'locatif')">Immeuble locatif / résidence secondaire</button>
+      </div>
+      <div class="field"><label>% du gain imposable</label>
+        <input type="number" id="im${n}-taux-inclusion" value="0" min="0" max="100" step="5" oninput="calcImmo()">
+        <div class="hint" id="im${n}-inclusion-hint">Résidence principale : exemption totale (0 %). Immeuble locatif, résidence secondaire ou chalet : 50 % du gain est imposable.</div></div>
+
+      <div class="field"><label>Vente prévue dans (années)</label>
+        <input type="number" id="im${n}-annees" value="5" min="0" max="40" oninput="calcImmo()"></div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 14px">
+        <button type="button" class="scen-btn on" id="im${n}-mode-prix" onclick="setImmoMode(${n},'prix')">Je connais le prix de vente</button>
+        <button type="button" class="scen-btn" id="im${n}-mode-gain" onclick="setImmoMode(${n},'gain')">Je connais déjà le gain en capital</button>
+      </div>
+
+      <div id="im${n}-bloc-mode-prix">
+        <div class="field"><label>Prix d'achat original / PBR ($)</label>
+          <input type="number" id="im${n}-pbr" value="300000" min="0" oninput="calcImmo()">
+          <div class="hint">Prix de base rajusté : coût d'achat initial</div></div>
+        <div class="field"><label>Améliorations capitalisées ($, optionnel)</label>
+          <input type="number" id="im${n}-ameliorations" value="0" min="0" oninput="calcImmo()">
+          <div class="hint">Rénovations majeures qui augmentent le PBR (pas l'entretien courant)</div></div>
+        <div class="field"><label>Valeur actuelle du bien ($)</label>
+          <input type="number" id="im${n}-valeur-actuelle" value="450000" min="0" oninput="estimVenteImmo(${n})"></div>
+        <div class="field"><label>Appréciation annuelle prévue (%)</label>
+          <input type="number" id="im${n}-appreciation" value="3" min="-10" max="15" step="0.5" oninput="estimVenteImmo(${n})"></div>
+        <div class="field"><label>Prix de vente prévu ($)</label>
+          <input type="number" id="im${n}-prix-vente" value="521800" min="0" oninput="calcImmo()">
+          <div class="hint">Estimé automatiquement selon l'appréciation — modifiable</div></div>
+      </div>
+
+      <div id="im${n}-bloc-mode-gain" style="display:none">
+        <div class="field"><label>Prix de vente total prévu ($)</label>
+          <input type="number" id="im${n}-prix-vente-g" value="521800" min="0" oninput="calcImmo()">
+          <div class="hint">Sert à calculer le produit net (après hypothèque et frais)</div></div>
+        <div class="field"><label>Gain en capital déjà calculé ($)</label>
+          <input type="number" id="im${n}-gain-direct" value="180000" min="0" oninput="calcImmo()">
+          <div class="hint">Montant net, déjà calculé par vous ou votre comptable</div></div>
+      </div>
+
+      <div class="field"><label>Solde hypothécaire prévu à la vente ($)</label>
+        <input type="number" id="im${n}-hypo" value="150000" min="0" oninput="calcImmo()"></div>
+      <div class="field"><label>Frais de vente estimés (%)</label>
+        <input type="number" id="im${n}-frais-pct" value="8" min="0" max="20" step="0.5" oninput="calcImmo()">
+        <div class="hint" id="im${n}-frais-hint">Commission courtier, notaire, certificat de localisation, divers</div></div>
+      <div class="field"><label>Récupération d'amortissement ($, optionnel)</label>
+        <input type="number" id="im${n}-recuperation" value="0" min="0" oninput="calcImmo()">
+        <div class="hint">Immeuble locatif seulement — imposable à 100 % au moment de la vente</div></div>
+
+      <div class="field"><label>Taux d'imposition marginal prévu à la vente</label>
+        <select id="im${n}-taux-impot-select" onchange="onImmoTauxChange(${n})">
+          <option value="25.69">0 $ – 54 345 $ (25,69 %)</option>
+          <option value="30.69">54 345 $ – 58 523 $ (30,69 %)</option>
+          <option value="36.12" selected>58 523 $ – 108 680 $ (36,12 %)</option>
+          <option value="41.12">108 680 $ – 117 045 $ (41,12 %)</option>
+          <option value="45.71">117 045 $ – 132 245 $ (45,71 %)</option>
+          <option value="47.46">132 245 $ – 181 440 $ (47,46 %)</option>
+          <option value="50.22">181 440 $ – 258 482 $ (50,22 %)</option>
+          <option value="53.31">+ de 258 482 $ (53,31 %)</option>
+          <option value="custom">Personnalisé…</option>
+        </select>
+        <div class="hint">Palier fiscal combiné (fédéral + Québec) — paliers 2026</div></div>
+      <div class="field" id="im${n}-taux-custom-wrap" style="display:none"><label>Taux personnalisé (%)</label>
+        <input type="number" id="im${n}-taux-impot" value="36.12" min="0" max="60" step="0.5" oninput="calcImmo()"></div>
+    </div>
+  </div>`;
+}
+
+function renderImmoProperties() {
+  const zone = document.getElementById('immo-properties');
+  if (!zone) return;
+  zone.innerHTML = immoProps.map(n => propertyCardHTML(n)).join('');
+  majBoutonsRetirerImmo();
+  calcImmo();
+}
+
+function majBoutonsRetirerImmo() {
+  immoProps.forEach(n => {
+    const btn = document.getElementById(`im${n}-retirer`);
+    if (btn) btn.style.display = immoProps.length > 1 ? '' : 'none';
+  });
+}
+
+function ajouterProprieteImmo() {
+  immoPropCounter++;
+  immoProps.push(immoPropCounter);
+  const zone = document.getElementById('immo-properties');
+  if (zone) zone.insertAdjacentHTML('beforeend', propertyCardHTML(immoPropCounter));
+  majBoutonsRetirerImmo();
+  calcImmo();
+  setTimeout(() => {
+    const el = document.getElementById(`im${immoPropCounter}-card`);
+    if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+  }, 50);
+}
+
+function retirerProprieteImmo(n) {
+  if (immoProps.length <= 1) return;
+  immoProps = immoProps.filter(x => x !== n);
+  const card = document.getElementById(`im${n}-card`);
+  if (card) card.remove();
+  majBoutonsRetirerImmo();
+  calcImmo();
+}
+
+function setImmoType(n, type) {
+  $(`im${n}-type-princ`).classList.toggle('on', type === 'princ');
+  $(`im${n}-type-locatif`).classList.toggle('on', type === 'locatif');
+  const hint = document.getElementById(`im${n}-inclusion-hint`);
   if (type === 'princ') {
-    $('im-taux-inclusion').value = 0;
+    $(`im${n}-taux-inclusion`).value = 0;
     if (hint) hint.textContent = "Résidence principale : exemption totale (0 %), en supposant que le bien a été désigné résidence principale pour toute la période de détention.";
   } else {
-    $('im-taux-inclusion').value = 50;
+    $(`im${n}-taux-inclusion`).value = 50;
     if (hint) hint.textContent = "Immeuble locatif, résidence secondaire ou chalet : 50 % du gain en capital est imposable, au taux marginal du vendeur.";
   }
   calcImmo();
 }
 
-function setImmoMode(mode) {
-  $('im-mode-prix').classList.toggle('on', mode === 'prix');
-  $('im-mode-gain').classList.toggle('on', mode === 'gain');
-  document.getElementById('im-bloc-mode-prix').style.display = mode === 'prix' ? '' : 'none';
-  document.getElementById('im-bloc-mode-gain').style.display = mode === 'gain' ? '' : 'none';
-  const fraisHint = document.getElementById('im-frais-hint');
+function setImmoMode(n, mode) {
+  $(`im${n}-mode-prix`).classList.toggle('on', mode === 'prix');
+  $(`im${n}-mode-gain`).classList.toggle('on', mode === 'gain');
+  document.getElementById(`im${n}-bloc-mode-prix`).style.display = mode === 'prix' ? '' : 'none';
+  document.getElementById(`im${n}-bloc-mode-gain`).style.display = mode === 'gain' ? '' : 'none';
+  const fraisHint = document.getElementById(`im${n}-frais-hint`);
   if (fraisHint) fraisHint.textContent = mode === 'prix'
     ? "Commission courtier, notaire, certificat de localisation, divers"
     : "Commission courtier, notaire, certificat de localisation, divers — déjà déduits du gain si vous l'avez fourni net";
   calcImmo();
 }
 
-function onImmoTauxChange() {
-  const sel = document.getElementById('im-taux-impot-select');
-  const wrap = document.getElementById('im-taux-custom-wrap');
+function onImmoTauxChange(n) {
+  const sel = document.getElementById(`im${n}-taux-impot-select`);
+  const wrap = document.getElementById(`im${n}-taux-custom-wrap`);
   if (sel.value === 'custom') {
     wrap.style.display = '';
   } else {
     wrap.style.display = 'none';
-    $('im-taux-impot').value = sel.value;
+    $(`im${n}-taux-impot`).value = sel.value;
   }
   calcImmo();
 }
 
-function estimVenteImmo() {
-  const valeurActuelle = g('im-valeur-actuelle');
-  const appreciation = g('im-appreciation') / 100;
-  const annees = g('im-annees');
+function estimVenteImmo(n) {
+  const valeurActuelle = g(`im${n}-valeur-actuelle`);
+  const appreciation = g(`im${n}-appreciation`) / 100;
+  const annees = g(`im${n}-annees`);
   const prixEstime = valeurActuelle * Math.pow(1 + appreciation, annees);
-  $('im-prix-vente').value = Math.round(prixEstime);
+  $(`im${n}-prix-vente`).value = Math.round(prixEstime);
   calcImmo();
 }
 
-function calcImmo() {
-  const annees      = g('im-annees');
-  const hypo        = g('im-hypo');
-  const fraisPct    = g('im-frais-pct') / 100;
-  const recuperation = g('im-recuperation');
-  const tauxInclusion = g('im-taux-inclusion') / 100;
-  const sel = document.getElementById('im-taux-impot-select');
-  const tauxImpot = (sel && sel.value !== 'custom') ? (parseFloat(sel.value) / 100) : (g('im-taux-impot') / 100);
-
-  const modeGain = document.getElementById('im-mode-gain').classList.contains('on');
+function calcUneProprieteImmo(n) {
+  const annees      = g(`im${n}-annees`);
+  const hypo        = g(`im${n}-hypo`);
+  const fraisPct    = g(`im${n}-frais-pct`) / 100;
+  const recuperation = g(`im${n}-recuperation`);
+  const tauxInclusion = g(`im${n}-taux-inclusion`) / 100;
+  const sel = document.getElementById(`im${n}-taux-impot-select`);
+  const tauxImpot = (sel && sel.value !== 'custom') ? (parseFloat(sel.value) / 100) : (g(`im${n}-taux-impot`) / 100);
+  const modeGain = document.getElementById(`im${n}-mode-gain`).classList.contains('on');
+  const nom = (document.getElementById(`im${n}-nom`)?.value || '').trim() || `Propriété ${n}`;
 
   let prixVente, gainBrut, pbrTotal, fraisVente;
   if (modeGain) {
-    prixVente = g('im-prix-vente-g');
+    prixVente = g(`im${n}-prix-vente-g`);
     fraisVente = prixVente * fraisPct;
-    gainBrut = Math.max(0, g('im-gain-direct'));
+    gainBrut = Math.max(0, g(`im${n}-gain-direct`));
     pbrTotal = null;
   } else {
-    prixVente = g('im-prix-vente');
+    prixVente = g(`im${n}-prix-vente`);
     fraisVente = prixVente * fraisPct;
-    pbrTotal = g('im-pbr') + g('im-ameliorations');
+    pbrTotal = g(`im${n}-pbr`) + g(`im${n}-ameliorations`);
     gainBrut = Math.max(0, prixVente - pbrTotal - fraisVente);
   }
 
@@ -4631,37 +4679,77 @@ function calcImmo() {
   const impotEstime = revenuImposableTotal * tauxImpot;
   const produitNet = prixVente - hypo - fraisVente - impotEstime;
 
+  return { n, nom, annees, prixVente, pbrTotal, fraisVente, gainBrut, modeGain,
+    tauxInclusion, gainImposable, recuperation, revenuImposableTotal, tauxImpot,
+    impotEstime, hypo, produitNet };
+}
+
+function calcImmo() {
   const zone = document.getElementById('immo-result-zone');
   if (!zone) return;
 
-  zone.innerHTML = `
+  const resultats = immoProps.map(n => calcUneProprieteImmo(n));
+  const triParAnnee = [...resultats].sort((a, b) => a.annees - b.annees);
+  const totalNet = resultats.reduce((s, r) => s + r.produitNet, 0);
+
+  let html = '';
+
+  if (resultats.length > 1) {
+    html += `
     <div class="card">
-      <div class="ch nv">Synthèse de la transaction — dans ${annees} an${annees>1?'s':''}</div>
+      <div class="ch nv">Chronologie combinée — ${resultats.length} propriétés</div>
       <div class="cb">
-        ${rr('Prix de vente prévu', fmt(Math.round(prixVente)))}
-        ${pbrTotal !== null ? rr('Prix de base rajusté (PBR)', fmt(Math.round(pbrTotal))) : ''}
-        ${rr('Frais de vente (' + (fraisPct*100).toFixed(1) + ' %)', '−' + fmt(Math.round(fraisVente)))}
-        ${rr('Gain en capital' + (modeGain ? ' (fourni)' : ' brut'), fmt(Math.round(gainBrut)))}
-        ${rr('Portion imposable (' + Math.round(tauxInclusion*100) + ' %)', fmt(Math.round(gainImposable)))}
-        ${recuperation > 0 ? rr("Récupération d'amortissement (100 % imposable)", fmt(Math.round(recuperation))) : ''}
-        ${rr('Revenu imposable total de la vente', fmt(Math.round(revenuImposableTotal)))}
-        ${rr('Impôt estimé (' + (tauxImpot*100).toFixed(1) + ' %)', '−' + fmt(Math.round(impotEstime)), 'warn')}
-        ${rr('Solde hypothécaire à rembourser', '−' + fmt(Math.round(hypo)))}
+        ${triParAnnee.map(r => rr(
+          `${r.nom} — dans ${r.annees} an${r.annees>1?'s':''}`,
+          fmt(Math.round(r.produitNet))
+        )).join('')}
       </div>
     </div>
     <div class="card" style="margin-top:0">
-      <div class="ch gd">Produit net de la vente</div>
+      <div class="ch gd">Total combiné (toutes propriétés)</div>
+      <div class="cb">
+        <div class="obj-result-big" style="grid-template-columns:1fr">
+          <div class="obj-r">
+            <div class="ol">Somme du produit net des ${resultats.length} ventes</div>
+            <div class="ov">${fmt(Math.round(totalNet))}</div>
+            <div class="os">Les ventes ont lieu à des années différentes — ce total ne tient pas compte de la croissance entre les dates de vente</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  resultats.forEach(r => {
+    html += `
+    <div class="card">
+      <div class="ch nv">${r.nom} — dans ${r.annees} an${r.annees>1?'s':''}</div>
+      <div class="cb">
+        ${rr('Prix de vente prévu', fmt(Math.round(r.prixVente)))}
+        ${r.pbrTotal !== null ? rr('Prix de base rajusté (PBR)', fmt(Math.round(r.pbrTotal))) : ''}
+        ${rr('Frais de vente', '−' + fmt(Math.round(r.fraisVente)))}
+        ${rr('Gain en capital' + (r.modeGain ? ' (fourni)' : ' brut'), fmt(Math.round(r.gainBrut)))}
+        ${rr('Portion imposable (' + Math.round(r.tauxInclusion*100) + ' %)', fmt(Math.round(r.gainImposable)))}
+        ${r.recuperation > 0 ? rr("Récupération d'amortissement", fmt(Math.round(r.recuperation))) : ''}
+        ${rr('Revenu imposable total', fmt(Math.round(r.revenuImposableTotal)))}
+        ${rr('Impôt estimé (' + (r.tauxImpot*100).toFixed(1) + ' %)', '−' + fmt(Math.round(r.impotEstime)), 'warn')}
+        ${rr('Solde hypothécaire à rembourser', '−' + fmt(Math.round(r.hypo)))}
+      </div>
+    </div>
+    <div class="card" style="margin-top:0">
+      <div class="ch gd">Produit net — ${r.nom}</div>
       <div class="cb">
         <div class="obj-result-big" style="grid-template-columns:1fr">
           <div class="obj-r">
             <div class="ol">Argent en poche, après hypothèque, frais et impôt</div>
-            <div class="ov">${fmt(Math.round(produitNet))}</div>
-            <div class="os">${tauxInclusion===0 ? "Résidence principale : aucun impôt sur le gain" : "Immeuble locatif / résidence secondaire : " + Math.round(tauxInclusion*100) + " % du gain imposable"}</div>
+            <div class="ov">${fmt(Math.round(r.produitNet))}</div>
+            <div class="os">${r.tauxInclusion===0 ? "Résidence principale : aucun impôt sur le gain" : Math.round(r.tauxInclusion*100) + " % du gain imposable"}</div>
           </div>
         </div>
       </div>
-    </div>
-  `;
+    </div>`;
+  });
+
+  zone.innerHTML = html;
 }
 
 function calcPret() {
@@ -5619,7 +5707,7 @@ function showRetraitePhase(phase, el) {
     const sd = document.getElementById('dec-seul');
     if (sd && sd.classList.contains('on')) calcDec(); else calcDecCouple();
   } else if (phase === 'immo') {
-    calcImmo();
+    initOrCalcImmo();
   }
 }
 
