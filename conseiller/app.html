@@ -5787,7 +5787,7 @@ function calcObjSeul() {
 
   const besoinInflation = besoin * Math.pow(1 + inf, yrsAcc);
   const gouvFuturs = (rrq + psv + rpa) * Math.pow(1 + inf, yrsAcc);
-  const besoinBrut = besoinInflation / (1 - marg(besoinInflation) * 0.6);
+  const besoinBrut = besoinInflation / (1 - marg(besoinInflation + gouvFuturs) * 0.7);
   const manqueParAn = Math.max(0, besoinBrut - gouvFuturs);
 
   let capitalNecessaire;
@@ -5952,7 +5952,7 @@ function calcObjCouple() {
 
   const besoinInflation = besoin * Math.pow(1 + inf, yrsAccRef);
   const gouvFuturs = gouvActuel * Math.pow(1 + inf, yrsAccRef);
-  const besoinBrut = besoinInflation / (1 - marg(besoinInflation) * 0.6);
+  const besoinBrut = besoinInflation / (1 - marg(besoinInflation + gouvFuturs) * 0.7);
   const manqueParAn = Math.max(0, besoinBrut - gouvFuturs);
 
   let capitalNecessaire;
@@ -6581,7 +6581,7 @@ function calcDecCouple() {
     let ret1 = Math.min(f1, min1), ret2 = Math.min(f2, min2);
     f1 = Math.max(0, f1 - ret1); f2 = Math.max(0, f2 - ret2);
 
-    const besoinBrut = besoin / (1 - marg((besoin + govTotal) / 2) * 0.7);
+    const besoinBrut = besoin / (1 - marg(besoin + govTotal) * 0.7);
     let manque = Math.max(0, besoinBrut - govTotal - ret1 - ret2);
 
     // 2. Non enregistré du couple
