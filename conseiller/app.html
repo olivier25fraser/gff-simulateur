@@ -5891,7 +5891,9 @@ function calcObjSeul() {
   document.getElementById('obj-scenarios-zone').innerHTML = scenHtml;
 
   const immoInjections = immoResultats.filter(r => r.produitNet > 0).map(r => ({ annee: r.annees, montant: r.produitNet }));
-  drawObjChart(age, ageRet, ageDeces, actuelAujourdhui, cotisAnnuelleActuelle, rendAcc, rendRet, capitalNecessaire, manqueParAn, inf, yrsAcc, immoInjections);
+  const ageRrqObj = g('ob-age-rrq');
+  drawObjChart(age, ageRet, ageDeces, actuelAujourdhui, cotisAnnuelleActuelle, rendAcc, rendRet, capitalNecessaire, manqueParAn, inf, yrsAcc, immoInjections,
+    { ferr: reerFV, celi: celiFV + capFV, nr: neFV + immoValeurRetraite, rente: rpa, rrqAn: rrq, rrqAge: ageRrqObj, psvAn: psv, psvAge: ageRrqObj, besoin, ratioCeli: 0.70 });
 
   window._transferAccSeul = {
     ferr: Math.round(reerFV), celi: Math.round(celiFV + capFV), nonreg: Math.round(neFV + immoValeurRetraite),
@@ -6071,33 +6073,45 @@ function objChartHoverOut() {
   if (tt) tt.style.display = 'none';
 }
 
-function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet, capitalCible, manqueParAn, inf, yrsAccPourEval, immoInjections) {
+function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet, capitalCible, manqueParAn, inf, yrsAccPourEval, immoInjections, decParams) {
   immoInjections = immoInjections || [];
   const svg = document.getElementById('obj-svg');
   const W = Math.max(500, svg.parentElement.offsetWidth || 700);
   svg.setAttribute('width', W);
   const H=300, mL=58, mR=20, mT=20, mB=36, cW=W-mL-mR, cH=H-mT-mB;
 
-  // Calculer les données selon le rendement moyen constant choisi (accumulation et décaissement),
-  // le même que celui utilisé pour le capital cible ci-dessus — pour que la courbe et les chiffres
-  // affichés concordent toujours entre eux.
+  // Calculer les données selon le rendement moyen constant choisi. La phase de décaissement
+  // utilise EXACTEMENT le même moteur (simulerDecaissement) que l'onglet Décaissement —
+  // mêmes règles FERR minimum, même ratio CELI/FERR — pour que les deux concordent toujours.
   const pts = [];
   let capital = actuel;
   const totalYrs = ageDeces - age;
   let ageEpuisement = null;
+  const yrsAccLocal = Math.max(0, ageRet - age);
+
+  let decResults = [];
+  if (decParams) {
+    const decImmoInjections = immoInjections
+      .filter(inj => inj.annee > yrsAccLocal)
+      .map(inj => ({ ageVente: age + Math.round(inj.annee), montant: inj.montant }));
+    decResults = simulerDecaissement({
+      ferr: decParams.ferr, celi: decParams.celi, nr: decParams.nr, rente: decParams.rente,
+      rrqAn: decParams.rrqAn, rrqAge: decParams.rrqAge, psvAn: decParams.psvAn, psvAge: decParams.psvAge,
+      srgAn: 0, rend: rendRet, besoin: decParams.besoin, ratioCeli: decParams.ratioCeli,
+      ageRet, ageDeces, immoInjections: decImmoInjections
+    });
+  }
 
   for (let i = 0; i <= totalYrs; i++) {
     const yr = age + i;
-    immoInjections.forEach(inj => { if (i === Math.round(inj.annee) && i > 0) capital += inj.montant; });
     if (yr <= ageRet) {
+      immoInjections.forEach(inj => { if (i === Math.round(inj.annee) && i > 0 && inj.annee <= yrsAccLocal) capital += inj.montant; });
       if (i > 0) capital = capital * (1 + rendAcc) + cotisAnn;
     } else {
-      // Décaissement : même retrait annuel net (manqueParAn) que celui utilisé pour
-      // calculer le capital cible ci-dessus — inflation et impôt déjà pris en compte
-      // en amont dans calcObjSeul(). Sans ça, la courbe et la cible affichée ne concordaient pas.
-      if (i > 0) {
+      const dr = decResults[yr - ageRet - 1];
+      if (dr) {
         const capitalAvant = capital;
-        capital = Math.max(0, capital * (1 + rendRet) - manqueParAn);
+        capital = dr.capitalTotal;
         if (capitalAvant > 0 && capital <= 0 && yr < ageDeces && ageEpuisement === null) ageEpuisement = yr;
       }
     }
@@ -6269,6 +6283,81 @@ function syncDsAgeNow() {
   }
 }
 
+// Moteur de simulation de décaissement partagé — utilisé à la fois par l'onglet Décaissement
+// (tableau détaillé) et par le graphique de l'onglet Accumulation, pour garantir que les deux
+// racontent TOUJOURS la même histoire (même règles FERR minimum, même ratio CELI/FERR, etc.)
+function simulerDecaissement(p) {
+  const annees = Math.max(1, p.ageDeces - p.ageRet);
+  let ferr = p.ferr, celi = p.celi, nr = p.nr;
+  const ratioCeli = Math.min(1, Math.max(0, p.ratioCeli));
+  const immoInjections = p.immoInjections || [];
+  const results = [];
+
+  for (let i = 0; i < annees; i++) {
+    const age = p.ageRet + i;
+    const rrq = age >= p.rrqAge ? p.rrqAn : 0;
+    const psv = age >= p.psvAge ? p.psvAn : 0;
+    const srg = p.srgAn || 0;
+    const rente = p.rente || 0;
+    const gouvTotal = rrq + psv + srg + rente;
+
+    ferr = Math.max(0, ferr * (1 + p.rend));
+    celi = Math.max(0, celi * (1 + p.rend));
+    nr   = Math.max(0, nr   * (1 + p.rend));
+
+    let venteImmoAn = 0;
+    immoInjections.forEach(inj => { if (inj.ageVente === age) venteImmoAn += inj.montant; });
+    if (venteImmoAn > 0) nr += venteImmoAn;
+
+    const besoinBrut = p.besoin / (1 - marg(p.besoin + gouvTotal) * 0.7);
+    const manque = Math.max(0, besoinBrut - gouvTotal);
+
+    // Ordre : 1. FERR minimum obligatoire, 2. Non enregistré, 3. Reste réparti CELI/FERR selon le ratio
+    const ferrMinAn = ferr * ferrMin(age);
+    let retraitFerr = Math.min(ferr, ferrMinAn);
+    ferr = Math.max(0, ferr - retraitFerr);
+
+    let reste = Math.max(0, manque - retraitFerr);
+    let retraitNr = 0;
+    if (reste > 0 && nr > 0) {
+      retraitNr = Math.min(nr, reste);
+      nr = Math.max(0, nr - retraitNr);
+      reste -= retraitNr;
+    }
+
+    let retraitCeli = 0;
+    if (reste > 0) {
+      const venantCeli = reste * ratioCeli;
+      const venantFerrSupp = reste - venantCeli;
+
+      const celiRetire = Math.min(celi, venantCeli);
+      celi = Math.max(0, celi - celiRetire);
+      retraitCeli += celiRetire;
+      const manqueDeCeli = venantCeli - celiRetire;
+
+      const ferrSuppVoulu = venantFerrSupp + manqueDeCeli;
+      const ferrSuppRetire = Math.min(ferr, ferrSuppVoulu);
+      ferr = Math.max(0, ferr - ferrSuppRetire);
+      retraitFerr += ferrSuppRetire;
+      const manqueDeFerr = ferrSuppVoulu - ferrSuppRetire;
+
+      if (manqueDeFerr > 0 && celi > 0) {
+        const celiExtra = Math.min(celi, manqueDeFerr);
+        celi = Math.max(0, celi - celiExtra);
+        retraitCeli += celiExtra;
+      }
+    }
+
+    const revBrut = gouvTotal + retraitFerr + retraitNr;
+    const impot = Math.round(impotAnnuel(revBrut));
+    const revNet = Math.round(revBrut - impot + retraitCeli);
+
+    results.push({ age, an: 2026 + i, rrq, psv, srg, rente, retraitFerr, retraitCeli, retraitNr,
+      ferr, celi, nr, capitalTotal: ferr + celi + nr, revBrut, impot, revNet, venteImmoAn });
+  }
+  return results;
+}
+
 function calcDec() {
   const ageRet = g('ds-age'), ageDeces = g('ds-deces');
   const ageNow = g('ds-age-now') || ageRet;
@@ -6295,7 +6384,6 @@ function calcDec() {
   document.getElementById('dec-age-fin-lbl').textContent = ageDeces;
 
   // Ventes immobilières définies dans l'onglet Accumulation qui ont lieu PENDANT la retraite
-  // (âge de vente = âge actuel accumulation + années avant vente)
   const ageActuelAcc = g('ob-age') || ageNow;
   let immoInjections = [];
   if (typeof obImmoProps !== 'undefined' && obImmoProps.length > 0 && typeof calcUneObProprieteImmo === 'function') {
@@ -6309,95 +6397,35 @@ function calcDec() {
       immoInjections.map(inj => `${inj.nom} à ${inj.ageVente} ans (${fmt(Math.round(inj.montant))}, ajouté au non enregistré)`).join(', ') + '.';
   }
 
-  let ferr = ferrSol, celi = celiSol, nr = nonreg;
-  let rows = '', totalImpot = 0, totalNet = 0, totalFerr = 0;
-  let anneesOk = 0, premierEpuise = '';
+  const results = simulerDecaissement({
+    ferr: ferrSol, celi: celiSol, nr: nonreg, rente,
+    rrqAn, rrqAge, psvAn, psvAge, srgAn, rend, besoin, ratioCeli,
+    ageRet, ageDeces, immoInjections
+  });
 
-  for (let i = 0; i < annees; i++) {
-    const age = ageRet + i;
-    const an = 2026 + i;
-    const rrq = age >= rrqAge ? rrqAn : 0;
-    const psv = age >= psvAge ? psvAn : 0;
-    const srg = srgAn;
-    const gouvTotal = rrq + psv + srg + rente;
+  let rows = '', totalImpot = 0, totalNet = 0, totalFerr = 0, anneesOk = 0, premierEpuise = '';
+  results.forEach(r => {
+    totalImpot += r.impot;
+    totalNet += r.revNet;
+    totalFerr += r.retraitFerr;
+    if (r.revNet >= besoin * 0.9) anneesOk++;
+    if (r.ferr <= 0 && !premierEpuise) premierEpuise = 'FERR épuisé à ' + r.age + ' ans';
 
-    // Croissance des soldes
-    ferr = Math.max(0, ferr * (1 + rend));
-    celi = Math.max(0, celi * (1 + rend));
-    nr   = Math.max(0, nr   * (1 + rend));
-
-    // Injection d'une vente immobilière prévue cette année-là
-    let venteImmoAn = 0;
-    immoInjections.forEach(inj => { if (inj.ageVente === age) venteImmoAn += inj.montant; });
-    if (venteImmoAn > 0) nr += venteImmoAn;
-
-    // Montant manquant après gouvernement
-    // On cible besoin net après impôt → on estime le brut nécessaire
-    const besoinBrut = besoin / (1 - marg(besoin + gouvTotal) * 0.7);
-    const manque = Math.max(0, besoinBrut - gouvTotal);
-
-    // Ordre de décaissement : 1. FERR minimum obligatoire, 2. Non-enregistré,
-    // 3. Le reste réparti entre CELI et FERR additionnel selon le ratio choisi (par défaut, favorise le CELI)
-    const ferrMinAn = ferr * ferrMin(age);
-    let retraitFerr = 0, retraitCeli = 0, retraitNr = 0;
-
-    retraitFerr = Math.min(ferr, ferrMinAn);
-    ferr = Math.max(0, ferr - retraitFerr);
-
-    let reste = Math.max(0, manque - retraitFerr);
-    if (reste > 0 && nr > 0) {
-      retraitNr = Math.min(nr, reste);
-      nr = Math.max(0, nr - retraitNr);
-      reste -= retraitNr;
-    }
-
-    if (reste > 0) {
-      const venantCeli = reste * ratioCeli;
-      const venantFerrSupp = reste - venantCeli;
-
-      const celiRetire = Math.min(celi, venantCeli);
-      celi = Math.max(0, celi - celiRetire);
-      retraitCeli += celiRetire;
-      const manqueDeCeli = venantCeli - celiRetire;
-
-      const ferrSuppVoulu = venantFerrSupp + manqueDeCeli;
-      const ferrSuppRetire = Math.min(ferr, ferrSuppVoulu);
-      ferr = Math.max(0, ferr - ferrSuppRetire);
-      retraitFerr += ferrSuppRetire;
-      const manqueDeFerr = ferrSuppVoulu - ferrSuppRetire;
-
-      if (manqueDeFerr > 0 && celi > 0) {
-        const celiExtra = Math.min(celi, manqueDeFerr);
-        celi = Math.max(0, celi - celiExtra);
-        retraitCeli += celiExtra;
-      }
-    }
-
-    const revBrut = gouvTotal + retraitFerr + retraitNr;
-    const impot = Math.round(impotAnnuel(revBrut));
-    const revNet = Math.round(revBrut - impot + retraitCeli);
-    totalImpot += impot;
-    totalNet += revNet;
-    totalFerr += retraitFerr;
-
-    if (revNet >= besoin * 0.9) anneesOk++;
-    if (ferr <= 0 && !premierEpuise) premierEpuise = 'FERR épuisé à ' + age + ' ans';
-
-    const cls = venteImmoAn > 0 ? 'age-psv' : (age >= psvAge && i < 3 ? 'age-psv' : '');
+    const cls = r.venteImmoAn > 0 ? 'age-psv' : (r.age >= psvAge && (r.age - ageRet) < 3 ? 'age-psv' : '');
     rows += `<tr class="${cls}">
-      <td>${an} / ${age} ans${venteImmoAn > 0 ? ' <span style="color:var(--gold-br)" title="Vente immobilière">🏠 +' + fmt(Math.round(venteImmoAn)) + '</span>' : ''}</td>
-      <td>${rrq > 0 ? fmt(rrq) : '—'}</td>
-      <td>${psv > 0 ? fmt(psv) : '—'}</td>
-      <td>${rente > 0 ? fmt(rente) : '—'}</td>
-      <td>${fmt(Math.round(retraitFerr))}</td>
-      <td>${retraitCeli > 0 ? fmt(Math.round(retraitCeli)) : '—'}</td>
-      <td>${ferr > 0 ? fmt(Math.round(ferr)) : '<span style="color:var(--org);font-weight:700">Épuisé</span>'}</td>
-      <td>${celi > 0 ? fmt(Math.round(celi)) : '—'}</td>
-      <td>${fmt(revBrut)}</td>
-      <td style="color:var(--org)">${fmt(impot)}</td>
-      <td style="font-weight:700;color:${revNet>=besoin*0.9?'var(--grn)':'var(--org)'}">${fmt(revNet)}</td>
+      <td>${r.an} / ${r.age} ans${r.venteImmoAn > 0 ? ' <span style="color:var(--gold-br)" title="Vente immobilière">🏠 +' + fmt(Math.round(r.venteImmoAn)) + '</span>' : ''}</td>
+      <td>${r.rrq > 0 ? fmt(r.rrq) : '—'}</td>
+      <td>${r.psv > 0 ? fmt(r.psv) : '—'}</td>
+      <td>${r.rente > 0 ? fmt(r.rente) : '—'}</td>
+      <td>${fmt(Math.round(r.retraitFerr))}</td>
+      <td>${r.retraitCeli > 0 ? fmt(Math.round(r.retraitCeli)) : '—'}</td>
+      <td>${r.ferr > 0 ? fmt(Math.round(r.ferr)) : '<span style="color:var(--org);font-weight:700">Épuisé</span>'}</td>
+      <td>${r.celi > 0 ? fmt(Math.round(r.celi)) : '—'}</td>
+      <td>${fmt(r.revBrut)}</td>
+      <td style="color:var(--org)">${fmt(r.impot)}</td>
+      <td style="font-weight:700;color:${r.revNet>=besoin*0.9?'var(--grn)':'var(--org)'}">${fmt(r.revNet)}</td>
     </tr>`;
-  }
+  });
 
   document.getElementById('dec-tbody-seul').innerHTML = rows +
     `<tr class="total-row"><td>TOTAUX</td><td colspan="6"></td><td></td><td></td><td>${fmt(totalFerr)}</td><td>${fmt(totalImpot)}</td><td>${fmt(totalNet)}</td></tr>`;
