@@ -6070,15 +6070,6 @@ function objChartHoverOut() {
   if (tt) tt.style.display = 'none';
 }
 
-// Génère un taux de rendement annuel "réaliste" autour d'une moyenne : plus le rendement
-// visé est élevé, plus le portefeuille est typiquement dynamique/volatil, donc plus les
-// variations d'une année à l'autre sont marquées (illustratif, pas une vraie simulation Monte-Carlo).
-function tauxAnnuelVariable(rateBase, i, seed) {
-  const amplitude = Math.max(0.012, Math.min(0.09, rateBase * 0.9));
-  const vague = Math.sin(i*0.9 + seed) * 0.6 + Math.sin(i*2.3 + seed*1.7) * 0.4; // ~[-1,1], allure organique
-  return rateBase + vague * amplitude;
-}
-
 function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet, capitalCible, manqueParAn, inf, yrsAccPourEval, immoInjections) {
   immoInjections = immoInjections || [];
   const svg = document.getElementById('obj-svg');
@@ -6086,29 +6077,26 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
   svg.setAttribute('width', W);
   const H=300, mL=58, mR=20, mT=20, mB=36, cW=W-mL-mR, cH=H-mT-mB;
 
-  // Calculer les données — rendement variable d'une année à l'autre (voir tauxAnnuelVariable),
-  // pour illustrer que les marchés ne montent jamais en ligne droite. Les montants clés affichés
-  // dans la bande de statistiques restent basés sur le rendement moyen entré (capitalCible etc.),
-  // donc un écart entre la courbe et la cible ici est normal et réaliste, pas une erreur.
+  // Calculer les données selon le rendement moyen constant choisi (accumulation et décaissement),
+  // le même que celui utilisé pour le capital cible ci-dessus — pour que la courbe et les chiffres
+  // affichés concordent toujours entre eux.
   const pts = [];
   let capital = actuel;
   const totalYrs = ageDeces - age;
   let ageEpuisement = null;
-  const seedAcc = rendAcc * 37 + age;
-  const seedDec = rendRet * 53 + ageRet;
 
   for (let i = 0; i <= totalYrs; i++) {
     const yr = age + i;
     immoInjections.forEach(inj => { if (i === Math.round(inj.annee) && i > 0) capital += inj.montant; });
     if (yr <= ageRet) {
-      if (i > 0) capital = capital * (1 + tauxAnnuelVariable(rendAcc, i, seedAcc)) + cotisAnn;
+      if (i > 0) capital = capital * (1 + rendAcc) + cotisAnn;
     } else {
       // Décaissement : même retrait annuel net (manqueParAn) que celui utilisé pour
       // calculer le capital cible ci-dessus — inflation et impôt déjà pris en compte
       // en amont dans calcObjSeul(). Sans ça, la courbe et la cible affichée ne concordaient pas.
       if (i > 0) {
         const capitalAvant = capital;
-        capital = Math.max(0, capital * (1 + tauxAnnuelVariable(rendRet, i, seedDec)) - manqueParAn);
+        capital = Math.max(0, capital * (1 + rendRet) - manqueParAn);
         if (capitalAvant > 0 && capital <= 0 && yr < ageDeces && ageEpuisement === null) ageEpuisement = yr;
       }
     }
