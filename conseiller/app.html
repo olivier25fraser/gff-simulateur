@@ -6074,7 +6074,7 @@ function objChartHoverOut() {
 // visé est élevé, plus le portefeuille est typiquement dynamique/volatil, donc plus les
 // variations d'une année à l'autre sont marquées (illustratif, pas une vraie simulation Monte-Carlo).
 function tauxAnnuelVariable(rateBase, i, seed) {
-  const amplitude = Math.max(0.02, Math.min(0.22, rateBase * 2.2));
+  const amplitude = Math.max(0.012, Math.min(0.09, rateBase * 0.9));
   const vague = Math.sin(i*0.9 + seed) * 0.6 + Math.sin(i*2.3 + seed*1.7) * 0.4; // ~[-1,1], allure organique
   return rateBase + vague * amplitude;
 }
