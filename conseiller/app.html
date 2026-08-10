@@ -5892,8 +5892,9 @@ function calcObjSeul() {
 
   const immoInjections = immoResultats.filter(r => r.produitNet > 0).map(r => ({ annee: r.annees, montant: r.produitNet }));
   const ageRrqObj = g('ob-age-rrq');
+  const inflFacteur = Math.pow(1 + inf, yrsAcc);
   drawObjChart(age, ageRet, ageDeces, actuelAujourdhui, cotisAnnuelleActuelle, rendAcc, rendRet, capitalNecessaire, manqueParAn, inf, yrsAcc, immoInjections,
-    { ferr: reerFV, celi: celiFV + capFV, nr: neFV + immoValeurRetraite, rente: rpa, rrqAn: rrq, rrqAge: ageRrqObj, psvAn: psv, psvAge: ageRrqObj, besoin, ratioCeli: 0.70 });
+    { ferr: reerFV, celi: celiFV + capFV, nr: neFV + immoValeurRetraite, rente: rpa * inflFacteur, rrqAn: rrq * inflFacteur, rrqAge: ageRrqObj, psvAn: psv * inflFacteur, psvAge: ageRrqObj, besoin: besoinInflation, ratioCeli: 0.70 });
 
   window._transferAccSeul = {
     ferr: Math.round(reerFV), celi: Math.round(celiFV + capFV), nonreg: Math.round(neFV + immoValeurRetraite),
