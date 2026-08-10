@@ -2302,8 +2302,10 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
           <div class="ch nv">Profil — Client 1</div>
           <div class="cb">
             <div class="field"><label>Âge à la retraite</label><input type="number" id="dc1-age" value="65" min="55" max="75" oninput="calcDecCouple()"></div>
-            <div class="field"><label>FERR / REER ($)</label><input type="number" id="dc1-ferr" value="400000" min="0" oninput="calcDecCouple()"></div>
+            <div class="field"><label>FERR / REER ($)</label><input type="number" id="dc1-ferr" value="400000" min="0" oninput="calcDecCouple()">
+              <div class="hint">Solde à l'âge actuel (aujourd'hui), projeté si l'âge de retraite diffère</div></div>
             <div class="field"><label>CELI ($)</label><input type="number" id="dc1-celi" value="80000" min="0" oninput="calcDecCouple()"></div>
+            <div class="field"><label>Rente / pension annuelle ($)</label><input type="number" id="dc1-rente" value="0" min="0" oninput="calcDecCouple()"></div>
             <div class="field"><label>RRQ ($/an)</label><input type="number" id="dc1-rrq" value="14000" min="0" oninput="calcDecCouple()"></div>
             <div class="field"><label>PSV ($/an)</label><input type="number" id="dc1-psv" value="8088" min="0" oninput="calcDecCouple()"></div>
           </div>
@@ -2314,8 +2316,10 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
           <div class="ch nv">Profil — Client 2</div>
           <div class="cb">
             <div class="field"><label>Âge à la retraite</label><input type="number" id="dc2-age" value="63" min="55" max="75" oninput="calcDecCouple()"></div>
-            <div class="field"><label>FERR / REER ($)</label><input type="number" id="dc2-ferr" value="200000" min="0" oninput="calcDecCouple()"></div>
+            <div class="field"><label>FERR / REER ($)</label><input type="number" id="dc2-ferr" value="200000" min="0" oninput="calcDecCouple()">
+              <div class="hint">Solde à l'âge actuel (aujourd'hui), projeté si l'âge de retraite diffère</div></div>
             <div class="field"><label>CELI ($)</label><input type="number" id="dc2-celi" value="60000" min="0" oninput="calcDecCouple()"></div>
+            <div class="field"><label>Rente / pension annuelle ($)</label><input type="number" id="dc2-rente" value="0" min="0" oninput="calcDecCouple()"></div>
             <div class="field"><label>RRQ ($/an)</label><input type="number" id="dc2-rrq" value="9000" min="0" oninput="calcDecCouple()"></div>
             <div class="field"><label>PSV ($/an)</label><input type="number" id="dc2-psv" value="8088" min="0" oninput="calcDecCouple()"></div>
           </div>
@@ -2323,9 +2327,20 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
         <div class="card">
           <div class="ch gd">Paramètres communs</div>
           <div class="cb">
+            <div class="field"><label>Âge actuel du couple (aujourd'hui)</label><input type="number" id="dc-age-now" value="63" min="30" max="75" oninput="calcDecCouple()">
+              <div class="hint">Si avant l'âge de retraite de chacun, les soldes seront projetés selon le rendement</div></div>
+            <div class="field"><label>Placements non enregistrés du couple ($)</label><input type="number" id="dc-nonreg" value="0" min="0" oninput="calcDecCouple()"></div>
             <div class="field"><label>Rendement annuel (%)</label><input type="number" id="dc-rend" value="5" min="0" max="15" step="0.5" oninput="calcDecCouple()"></div>
             <div class="field"><label>Revenu désiré couple (après impôt, $)</label><input type="number" id="dc-besoin" value="75000" min="0" oninput="calcDecCouple()"></div>
             <div class="field"><label>Âge de décès projeté</label><input type="number" id="dc-deces" value="90" min="70" max="100" oninput="calcDecCouple()"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch gd">Répartition des retraits (au-delà du FERR minimum)</div>
+          <div class="cb">
+            <div class="field"><label>% du besoin additionnel retiré du CELI plutôt que du FERR</label>
+              <input type="number" id="dc-ratio-celi" value="70" min="0" max="100" step="5" oninput="calcDecCouple()">
+              <div class="hint">Après le FERR minimum obligatoire et l'épuisement du non enregistré : favorise le CELI par défaut (non imposable, aucun impact sur la PSV)</div></div>
           </div>
         </div>
       </div>
@@ -2346,7 +2361,9 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
               <th>PSV total ($)</th>
               <th>FERR C1 ($)</th>
               <th>FERR C2 ($)</th>
+              <th>CELI retiré ($)</th>
               <th>Solde FERR total ($)</th>
+              <th>Solde CELI total ($)</th>
               <th>Rev. brut total ($)</th>
               <th>Impôt estimé ($)</th>
               <th>Rev. net ($)</th>
@@ -2356,6 +2373,7 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
         </table>
       </div>
     </div>
+    <div class="note" id="dec-note-couple"></div>
   </div>
 
   </div>
@@ -6466,53 +6484,136 @@ function calcDec() {
     'Taux de retrait minimum FERR selon les règles ARC 2026. Impôt calculé sur le revenu imposable (FERR + gouvernement). Retraits CELI non imposables. Les lignes en jaune indiquent le début de la PSV. Les rendements passés ne garantissent pas les résultats futurs.';
 }
 
+function splitProportionnel(montant, bal1, bal2) {
+  const total = bal1 + bal2;
+  if (total <= 0 || montant <= 0) return [0, 0];
+  let t1 = Math.min(bal1, montant * (bal1 / total));
+  let t2 = Math.min(bal2, montant * (bal2 / total));
+  let manque = montant - (t1 + t2);
+  if (manque > 0.01) {
+    const room1 = bal1 - t1, room2 = bal2 - t2;
+    const extra1 = Math.min(room1, manque);
+    t1 += extra1; manque -= extra1;
+    const extra2 = Math.min(room2, manque);
+    t2 += extra2; manque -= extra2;
+  }
+  return [t1, t2];
+}
+
 function calcDecCouple() {
-  const age1 = g('dc1-age'), ferr1 = g('dc1-ferr'), celi1 = g('dc1-celi');
+  const age1Ret = g('dc1-age'), age2Ret = g('dc2-age');
+  const ageNow = g('dc-age-now') || Math.min(age1Ret, age2Ret);
+  let ferr1Sol = g('dc1-ferr'), celi1Sol = g('dc1-celi'), rente1 = g('dc1-rente');
+  let ferr2Sol = g('dc2-ferr'), celi2Sol = g('dc2-celi'), rente2 = g('dc2-rente');
+  let nrSol = g('dc-nonreg');
   const rrq1 = g('dc1-rrq'), psv1 = g('dc1-psv');
-  const age2 = g('dc2-age'), ferr2 = g('dc2-ferr'), celi2 = g('dc2-celi');
   const rrq2 = g('dc2-rrq'), psv2 = g('dc2-psv');
   const rend = g('dc-rend') / 100, besoin = g('dc-besoin'), ageDeces = g('dc-deces');
+  const ratioCeli = Math.min(1, Math.max(0, g('dc-ratio-celi') / 100));
 
-  const annees = Math.max(1, ageDeces - Math.min(age1, age2));
-  let f1 = ferr1, f2 = ferr2, rows = '', totalImpot = 0, totalNet = 0;
+  // Projection des soldes de l'âge actuel à l'âge de retraite de chacun (et du non enregistré au plus proche des deux)
+  let growthNote = '';
+  const yrs1 = Math.max(0, age1Ret - ageNow), yrs2 = Math.max(0, age2Ret - ageNow);
+  const yrsNr = Math.max(0, Math.min(age1Ret, age2Ret) - ageNow);
+  if (yrs1 > 0 || yrs2 > 0 || yrsNr > 0) {
+    const f1avant = ferr1Sol, c1avant = celi1Sol, f2avant = ferr2Sol, c2avant = celi2Sol, nravant = nrSol;
+    ferr1Sol *= Math.pow(1 + rend, yrs1); celi1Sol *= Math.pow(1 + rend, yrs1);
+    ferr2Sol *= Math.pow(1 + rend, yrs2); celi2Sol *= Math.pow(1 + rend, yrs2);
+    nrSol *= Math.pow(1 + rend, yrsNr);
+    growthNote = `Soldes projetés depuis ${ageNow} ans : Client 1 FERR ${fmt(Math.round(f1avant))}→${fmt(Math.round(ferr1Sol))}, CELI ${fmt(Math.round(c1avant))}→${fmt(Math.round(celi1Sol))} (${yrs1} an${yrs1>1?'s':''}) ; Client 2 FERR ${fmt(Math.round(f2avant))}→${fmt(Math.round(ferr2Sol))}, CELI ${fmt(Math.round(c2avant))}→${fmt(Math.round(celi2Sol))} (${yrs2} an${yrs2>1?'s':''}) ; Non enregistré ${fmt(Math.round(nravant))}→${fmt(Math.round(nrSol))}.`;
+  }
+
+  // Ventes immobilières définies dans Accumulation, prévues après aujourd'hui
+  let immoInjections = [];
+  if (typeof obImmoProps !== 'undefined' && obImmoProps.length > 0 && typeof calcUneObProprieteImmo === 'function') {
+    immoInjections = obImmoProps.map(n => {
+      const p = calcUneObProprieteImmo(n);
+      return { nom: p.nom, anneeIdx: Math.round(p.annees - (Math.min(age1Ret, age2Ret) - ageNow)), montant: p.produitNet };
+    }).filter(inj => inj.anneeIdx >= 0 && inj.montant > 0);
+  }
+  if (immoInjections.length > 0) {
+    growthNote += (growthNote ? ' ' : '') + 'Ventes immobilières intégrées : ' +
+      immoInjections.map(inj => `${inj.nom} (${fmt(Math.round(inj.montant))}, ajouté au non enregistré du couple)`).join(', ') + '.';
+  }
+
+  const annees = Math.max(1, ageDeces - Math.min(age1Ret, age2Ret));
+  let f1 = ferr1Sol, f2 = ferr2Sol, c1 = celi1Sol, c2 = celi2Sol, nr = nrSol;
+  let rows = '', totalImpot = 0, totalNet = 0;
 
   for (let i = 0; i < annees; i++) {
-    const a1 = age1 + i, a2 = age2 + i;
+    const a1 = age1Ret + i, a2 = age2Ret + i;
     const an = 2026 + i;
-    f1 = Math.max(0, f1 * (1 + rend));
-    f2 = Math.max(0, f2 * (1 + rend));
 
-    const govC1 = (a1 >= 65 ? rrq1 : 0) + (a1 >= 65 ? psv1 : 0);
-    const govC2 = (a2 >= 65 ? rrq2 : 0) + (a2 >= 65 ? psv2 : 0);
+    f1 = Math.max(0, f1 * (1 + rend)); f2 = Math.max(0, f2 * (1 + rend));
+    c1 = Math.max(0, c1 * (1 + rend)); c2 = Math.max(0, c2 * (1 + rend));
+    nr = Math.max(0, nr * (1 + rend));
+
+    let venteAn = 0;
+    immoInjections.forEach(inj => { if (inj.anneeIdx === i) venteAn += inj.montant; });
+    if (venteAn > 0) nr += venteAn;
+
+    const rrqA1 = a1 >= 65 ? rrq1 : 0, psvA1 = a1 >= 65 ? psv1 : 0;
+    const rrqA2 = a2 >= 65 ? rrq2 : 0, psvA2 = a2 >= 65 ? psv2 : 0;
+    const govC1 = rrqA1 + psvA1 + rente1, govC2 = rrqA2 + psvA2 + rente2;
     const govTotal = govC1 + govC2;
 
-    const minF1 = f1 > 0 ? f1 * ferrMin(Math.min(a1, 95)) : 0;
-    const minF2 = f2 > 0 ? f2 * ferrMin(Math.min(a2, 95)) : 0;
+    // 1. FERR minimum obligatoire, pour chacun
+    const min1 = f1 > 0 ? f1 * ferrMin(Math.min(a1, 95)) : 0;
+    const min2 = f2 > 0 ? f2 * ferrMin(Math.min(a2, 95)) : 0;
+    let ret1 = Math.min(f1, min1), ret2 = Math.min(f2, min2);
+    f1 = Math.max(0, f1 - ret1); f2 = Math.max(0, f2 - ret2);
 
-    // Retraits équilibrés pour optimiser le fractionnement
-    let ret1 = Math.min(f1, minF1), ret2 = Math.min(f2, minF2);
-    const manque = Math.max(0, besoin * 1.4 - govTotal - ret1 - ret2); // *1.4 pour cibler net
-    // Répartir le manque équitablement entre les deux FERR
-    const suppl = manque / 2;
-    ret1 = Math.min(f1, ret1 + suppl);
-    ret2 = Math.min(f2, ret2 + suppl);
-    f1 = Math.max(0, f1 - ret1);
-    f2 = Math.max(0, f2 - ret2);
+    const besoinBrut = besoin / (1 - marg((besoin + govTotal) / 2) * 0.7);
+    let manque = Math.max(0, besoinBrut - govTotal - ret1 - ret2);
 
-    const revBrut = govTotal + ret1 + ret2;
-    // Impôt avec fractionnement: chacun paie sur sa part
+    // 2. Non enregistré du couple
+    let retraitNr = 0;
+    if (manque > 0 && nr > 0) {
+      retraitNr = Math.min(nr, manque);
+      nr = Math.max(0, nr - retraitNr);
+      manque -= retraitNr;
+    }
+
+    // 3. Le reste réparti entre CELI (des deux) et FERR additionnel (des deux) selon le ratio
+    let retraitCeliTotal = 0;
+    if (manque > 0) {
+      const venantCeli = manque * ratioCeli;
+      const venantFerrSupp = manque - venantCeli;
+
+      const [c1Retire, c2Retire] = splitProportionnel(venantCeli, c1, c2);
+      c1 = Math.max(0, c1 - c1Retire); c2 = Math.max(0, c2 - c2Retire);
+      retraitCeliTotal += c1Retire + c2Retire;
+      const manqueDeCeli = venantCeli - (c1Retire + c2Retire);
+
+      const ferrSuppVoulu = venantFerrSupp + manqueDeCeli;
+      const [f1Retire, f2Retire] = splitProportionnel(ferrSuppVoulu, f1, f2);
+      f1 = Math.max(0, f1 - f1Retire); f2 = Math.max(0, f2 - f2Retire);
+      ret1 += f1Retire; ret2 += f2Retire;
+      const manqueDeFerr = ferrSuppVoulu - (f1Retire + f2Retire);
+
+      if (manqueDeFerr > 0 && (c1 + c2) > 0) {
+        const [c1Extra, c2Extra] = splitProportionnel(manqueDeFerr, c1, c2);
+        c1 = Math.max(0, c1 - c1Extra); c2 = Math.max(0, c2 - c2Extra);
+        retraitCeliTotal += c1Extra + c2Extra;
+      }
+    }
+
+    const revBrut = govTotal + ret1 + ret2 + retraitNr;
     const rev1 = govC1 + ret1, rev2 = govC2 + ret2;
     const impot = Math.round(impotAnnuel(rev1) + impotAnnuel(rev2));
-    const revNet = Math.round(revBrut - impot);
+    const revNet = Math.round(revBrut - impot + retraitCeliTotal);
     totalImpot += impot; totalNet += revNet;
 
-    rows += `<tr>
-      <td>${an} (C1:${a1}/C2:${a2})</td>
-      <td>${fmt(Math.round(govC1+govC2))}</td>
-      <td>${fmt(Math.round((a1>=65?psv1:0)+(a2>=65?psv2:0)))}</td>
+    const cls = venteAn > 0 ? 'age-psv' : '';
+    rows += `<tr class="${cls}">
+      <td>${an} (C1:${a1}/C2:${a2})${venteAn > 0 ? ' <span style="color:var(--gold-br)" title="Vente immobilière">🏠 +' + fmt(Math.round(venteAn)) + '</span>' : ''}</td>
+      <td>${fmt(Math.round(rrqA1+rrqA2))}</td>
+      <td>${fmt(Math.round(psvA1+psvA2))}</td>
       <td>${fmt(Math.round(ret1))}</td>
       <td>${fmt(Math.round(ret2))}</td>
-      <td>${fmt(Math.round(f1+f2))}</td>
+      <td>${retraitCeliTotal > 0 ? fmt(Math.round(retraitCeliTotal)) : '—'}</td>
+      <td>${(f1+f2) > 0 ? fmt(Math.round(f1+f2)) : '<span style="color:var(--org);font-weight:700">Épuisé</span>'}</td>
+      <td>${(c1+c2) > 0 ? fmt(Math.round(c1+c2)) : '—'}</td>
       <td>${fmt(Math.round(revBrut))}</td>
       <td style="color:var(--org)">${fmt(impot)}</td>
       <td style="font-weight:700;color:${revNet>=besoin*0.9?'var(--grn)':'var(--org)'}">${fmt(revNet)}</td>
@@ -6521,15 +6622,15 @@ function calcDecCouple() {
 
   document.getElementById('dec-tbody-couple').innerHTML = rows;
 
-  // Avantage fractionnement
+  // Avantage fractionnement (sur le premier retrait FERR minimum de l'année 1, à titre illustratif)
   const revGouv1 = rrq1 + psv1, revGouv2 = rrq2 + psv2;
-  const sansFract = impotAnnuel(revGouv1 + ferr1 * ferrMin(age1) + ferr2 * ferrMin(age2));
-  const avecFract = impotAnnuel((revGouv1 + ferr1 * ferrMin(age1))) +
-                    impotAnnuel((revGouv2 + ferr2 * ferrMin(age2)));
+  const sansFract = impotAnnuel(revGouv1 + revGouv2 + ferr1Sol * ferrMin(age1Ret) + ferr2Sol * ferrMin(age2Ret));
+  const avecFract = impotAnnuel(revGouv1 + ferr1Sol * ferrMin(age1Ret)) +
+                    impotAnnuel(revGouv2 + ferr2Sol * ferrMin(age2Ret));
   const economie = Math.max(0, sansFract - avecFract);
 
   document.getElementById('dec-fract').innerHTML =
-    rr('Revenu brut total sans fractionnement', fmt(Math.round(revGouv1+revGouv2+ferr1*ferrMin(age1)+ferr2*ferrMin(age2)))) +
+    rr('Revenu brut total sans fractionnement', fmt(Math.round(revGouv1+revGouv2+ferr1Sol*ferrMin(age1Ret)+ferr2Sol*ferrMin(age2Ret)))) +
     rr('Impôt si tout sur un seul déclarant', fmt(Math.round(sansFract))) +
     rr('Impôt avec fractionnement (2 déclarants)', fmt(Math.round(avecFract)), 'hi') +
     rr('Économie annuelle estimée', '<span style="color:var(--grn);font-weight:700">'+fmt(Math.round(economie))+'</span>', 'hi') +
@@ -6537,10 +6638,16 @@ function calcDecCouple() {
 
   document.getElementById('dec-kpis-couple').innerHTML = `
     <div class="kpi"><div class="kl">RRQ + PSV total</div><div class="kv">${fmt(revGouv1+revGouv2)}</div><div class="ks">Revenus gouvernementaux/an</div></div>
-    <div class="kpi gd"><div class="kl">FERR total</div><div class="kv">${fmt(ferr1+ferr2)}</div><div class="ks">Solde combiné initial</div></div>
+    <div class="kpi gd"><div class="kl">FERR + CELI total</div><div class="kv">${fmt(Math.round(ferr1Sol+ferr2Sol+celi1Sol+celi2Sol))}</div><div class="ks">Solde combiné à la retraite</div></div>
     <div class="kpi gn"><div class="kl">Économie fractionnement</div><div class="kv ok">${fmt(Math.round(economie))}</div><div class="ks">Par année estimé</div></div>
     <div class="kpi bl"><div class="kl">Durée planifiée</div><div class="kv">${annees}</div><div class="ks">ans de décaissement</div></div>
   `;
+
+  const noteEl = document.getElementById('dec-note-couple');
+  if (noteEl) {
+    noteEl.textContent = (growthNote ? growthNote + ' ' : '') +
+      'Taux de retrait minimum FERR selon les règles ARC 2026. Impôt calculé séparément pour chaque conjoint (fractionnement). Retraits CELI non imposables. Les rendements passés ne garantissent pas les résultats futurs.';
+  }
 }
 
 
