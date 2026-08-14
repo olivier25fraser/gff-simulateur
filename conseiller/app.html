@@ -1357,27 +1357,23 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
       <button class="sub-btn" onclick="showSub('conservateur','ia',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Industrielle Alliance</button>
       <button class="sub-btn" onclick="showSub('conservateur','beneva',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Beneva</button>
     </div>
-<div class="sub-pane" id="sub-conservateur-assomption">
-<button class="print-btn noprint" onclick="printPane('port','Portefeuille Assomption — Conservateur')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
-
+<div class="sub-pane" id="sub-conservateur-assomption"><button class="print-btn noprint" onclick="printPane('port','Portefeuille Assomption — Conservateur')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
     <div class="port-header">
       <div>
         <div class="port-title">Conservateur — Assomption Vie</div>
-        <div class="port-sub">conservateur, gestion prudente axée revenu</div>
+        <div class="port-sub">conservateur, gestion prudente axée revenu (25 % actions)</div>
       </div>
-      <div class="port-date">Données au : Avril — Mai 2026</div>
+      <div class="port-date">Comptes de placement enregistrés — au 30 juin 2026</div>
     </div>
-
     <div class="g3" style="margin-bottom:16px">
-      <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-conservateur-1a">11.86 %</div><div class="ks">Au 30 avr. 2026</div></div>
-      <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-conservateur-3a">9.13 %</div><div class="ks">Annualisé</div></div>
-      <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-conservateur-5a">5.17 %</div><div class="ks">Annualisé</div></div>
+      <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-assomption-conservateur-1a">11.45 %</div><div class="ks">Annualisé, net RFG</div></div>
+      <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-assomption-conservateur-3a">8.99 %</div><div class="ks">Annualisé</div></div>
+      <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-assomption-conservateur-5a">5.11 %</div><div class="ks">Annualisé</div></div>
     </div>
-
     <div class="g2">
       <div class="card">
         <div class="ch nv">Répartition par catégorie d'actifs</div>
-        <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:29%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">29 %</div></div><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:71%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">71 %</div></div></div>
+        <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:25%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">25 %</div></div><div style="display:flex;align-items:center;gap:10px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:75%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">75 %</div></div></div>
       </div>
       <div class="card">
         <div class="ch gd">Détail des placements</div>
@@ -1386,29 +1382,19 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
             <thead><tr>
               <th style="text-align:left">Fonds</th>
               <th style="text-align:right">Poids</th>
-              <th style="text-align:right">1 an</th>
-              <th style="text-align:right">3 ans</th>
-              <th style="text-align:right">5 ans</th>
+              <th style="text-align:right">1 an</th>
+              <th style="text-align:right">3 ans</th>
+              <th style="text-align:right">5 ans</th>
               <th style="text-align:right">RFG</th>
             </tr></thead>
-            <tbody>
-              <tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Fonds d'obligations de sociétés CI A</a></strong><br><small style="color:#999">Revenu fixe</small></td><td>25 %</td><td id="frow-conservateur-640-1a">6.48 %</td><td id="frow-conservateur-640-3a">6.92 %</td><td id="frow-conservateur-640-5a">3.0 %</td><td>1.41 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions canadiennes momentum (Louisbourg) D 75/75</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td>5 %</td><td id="frow-conservateur-617-1a">55.86 %</td><td id="frow-conservateur-617-3a">24.55 %</td><td id="frow-conservateur-617-5a">16.08 %</td><td>2.68 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Portefeuille conservateur Assomption Vie D 75/75</a></strong><br><small style="color:#999">Portefeuille équilibré conservateur</small></td><td>50 %</td><td id="frow-conservateur-603-1a">8.21 %</td><td id="frow-conservateur-603-3a">6.6 %</td><td id="frow-conservateur-603-5a">3.32 %</td><td>1.94 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Fidelity FNB Simplifié Équilibre B</a></strong><br><small style="color:#999">FNB équilibré diversifié</small></td><td>20 %</td><td id="frow-conservateur-646-1a">16.73 %</td><td id="frow-conservateur-646-3a">14.37 %</td><td id="frow-conservateur-646-5a">9.79 %</td><td>1.7 %</td></tr>
-              <tr style="font-weight:700;background:#f8f8f8">
-                <td>Total portefeuille</td>
-                <td style="text-align:right">100 %</td>
-                <td style="text-align:right" id="ptot-conservateur-1a">11.86 %</td>
-                <td style="text-align:right" id="ptot-conservateur-3a">9.13 %</td>
-                <td style="text-align:right" id="ptot-conservateur-5a">5.17 %</td>
-                <td style="text-align:right" id="ptot-conservateur-rfg">1.8 %</td>
-              </tr>
-            </tbody>
+            <tbody><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Marché monétaire (Louisbourg)</a></strong><br><small style="color:#999">Revenu fixe</small></td><td style="text-align:right">30 %</td><td style="text-align:right" id="frow-assomption-conservateur-mm-1a">1.58 %</td><td style="text-align:right" id="frow-assomption-conservateur-mm-3a">2.77 %</td><td style="text-align:right" id="frow-assomption-conservateur-mm-5a">2.13 %</td><td style="text-align:right">1.06 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Obligations de sociétés (CI)</a></strong><br><small style="color:#999">Revenu fixe</small></td><td style="text-align:right">30 %</td><td style="text-align:right" id="frow-assomption-conservateur-obligsoc-1a">4.92 %</td><td style="text-align:right" id="frow-assomption-conservateur-obligsoc-3a">6.83 %</td><td style="text-align:right" id="frow-assomption-conservateur-obligsoc-5a">2.34 %</td><td style="text-align:right">1.80 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Obligations à haut rendement (TD)</a></strong><br><small style="color:#999">Revenu fixe (haut rendement)</small></td><td style="text-align:right">15 %</td><td style="text-align:right" id="frow-assomption-conservateur-hautrend-1a">3.96 %</td><td style="text-align:right" id="frow-assomption-conservateur-hautrend-3a">5.97 %</td><td style="text-align:right" id="frow-assomption-conservateur-hautrend-5a">s.o.</td><td style="text-align:right">1.75 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions canadiennes momentum (Louisbourg)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">8 %</td><td style="text-align:right" id="frow-assomption-conservateur-mom-1a">40.27 %</td><td style="text-align:right" id="frow-assomption-conservateur-mom-3a">24.03 %</td><td style="text-align:right" id="frow-assomption-conservateur-mom-5a">13.70 %</td><td style="text-align:right">2.68 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions canadiennes de base (Fidelity)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">7 %</td><td style="text-align:right" id="frow-assomption-conservateur-cdnbase-1a">24.18 %</td><td style="text-align:right" id="frow-assomption-conservateur-cdnbase-3a">17.00 %</td><td style="text-align:right" id="frow-assomption-conservateur-cdnbase-5a">10.58 %</td><td style="text-align:right">2.53 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions américaines - Ciblé (Fidelity)</a></strong><br><small style="color:#999">Actions américaines</small></td><td style="text-align:right">6 %</td><td style="text-align:right" id="frow-assomption-conservateur-uscible-1a">47.35 %</td><td style="text-align:right" id="frow-assomption-conservateur-uscible-3a">29.00 %</td><td style="text-align:right" id="frow-assomption-conservateur-uscible-5a">16.08 %</td><td style="text-align:right">3.05 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions mondiales+ (Fidelity)</a></strong><br><small style="color:#999">Actions mondiales</small></td><td style="text-align:right">4 %</td><td style="text-align:right" id="frow-assomption-conservateur-mondplus-1a">28.87 %</td><td style="text-align:right" id="frow-assomption-conservateur-mondplus-3a">s.o.</td><td style="text-align:right" id="frow-assomption-conservateur-mondplus-5a">s.o.</td><td style="text-align:right">2.90 %</td></tr><tr style="font-weight:700;background:#f8f8f8"><td>Total portefeuille</td><td style="text-align:right">100 %</td><td style="text-align:right" id="ptot-assomption-conservateur-1a">11.45 %</td><td style="text-align:right" id="ptot-assomption-conservateur-3a">8.99 %</td><td style="text-align:right" id="ptot-assomption-conservateur-5a">5.11 %</td><td style="text-align:right" id="ptot-assomption-conservateur-rfg">1.81 %</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
-    <div class="note" style="margin-top:12px">Rendements nets des frais de gestion (RFG). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 avril 2026. Source : Assomption Vie CPE Série D 75/75, CI Financial, Fidelity. Portefeuille proposé par Olivier Fraser.</div>
-  
-    </div><div class="sub-pane" id="sub-conservateur-ia" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille iA — Conservateur')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
+    <div class="note" style="margin-top:12px">Rendements nets composés (RFG inclus, série D 75/75 sans frais de sortie). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 juin 2026. Source : Assomption Vie — Comptes de placement enregistrés (CPE), Lipper (LSEG). Portefeuille proposé par Olivier Fraser.</div>
+  </div>
+<div class="sub-pane" id="sub-conservateur-ia" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille iA — Conservateur')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
       <div class="port-header">
         <div>
           <div class="port-title">Conservateur — Industrielle Alliance</div>
@@ -1434,67 +1420,22 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
     </div>
 
 <div class="sub-pane" id="sub-conservateur-beneva" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille Beneva — Conservateur')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
-      <div class="port-header">
-        <div>
-          <div class="port-title">Conservateur — Beneva</div>
-          <div class="port-sub">conservateur, gestion prudente axée revenu (29 % actions)</div>
-        </div>
-        <div class="port-date">Garantie 75/100 — au 30 juin 2026</div>
-      </div>
-      <div class="g3" style="margin-bottom:16px">
-        <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-beneva-conservateur-1a">9.34 %</div><div class="ks">Annualisé, net RFG</div></div>
-        <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-beneva-conservateur-3a">9.34 %</div><div class="ks">Annualisé</div></div>
-        <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-beneva-conservateur-5a">4.20 %</div><div class="ks">Annualisé</div></div>
-      </div>
-      <div class="g2">
-        <div class="card">
-          <div class="ch nv">Répartition par catégorie d'actifs</div>
-          <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:29%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">29 %</div></div><div style="display:flex;align-items:center;gap:10px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:71%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">71 %</div></div></div>
-        </div>
-        <div class="card">
-          <div class="ch gd">Détail des placements</div>
-          <div class="cb" style="overflow-x:auto">
-            <table class="tbl">
-              <thead><tr>
-                <th style="text-align:left">Fonds</th>
-                <th style="text-align:right">Poids</th>
-                <th style="text-align:right">1 an</th>
-                <th style="text-align:right">3 ans</th>
-                <th style="text-align:right">5 ans</th>
-                <th style="text-align:right">RFG</th>
-              </tr></thead>
-              <tbody><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe canadien (AGF)</a></strong><br><small style="color:#999">Revenu fixe</small></td><td style="text-align:right">55 %</td><td style="text-align:right" id="frow-beneva-conservateur-rab-1a">3.68 %</td><td style="text-align:right" id="frow-beneva-conservateur-rab-3a">4.26 %</td><td style="text-align:right" id="frow-beneva-conservateur-rab-5a">0.20 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe à haut rendement (GPTD)</a></strong><br><small style="color:#999">Revenu fixe (haut rendement)</small></td><td style="text-align:right">16 %</td><td style="text-align:right" id="frow-beneva-conservateur-rbp-1a">4.33 %</td><td style="text-align:right" id="frow-beneva-conservateur-rbp-3a">6.30 %</td><td style="text-align:right" id="frow-beneva-conservateur-rbp-5a">2.55 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions canadiennes (Fidelity)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">10 %</td><td style="text-align:right" id="frow-beneva-conservateur-ram-1a">25.81 %</td><td style="text-align:right" id="frow-beneva-conservateur-ram-3a">18.88 %</td><td style="text-align:right" id="frow-beneva-conservateur-ram-5a">11.65 %</td><td style="text-align:right">2.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Indice américain (GPTD)</a></strong><br><small style="color:#999">Actions américaines (indice)</small></td><td style="text-align:right">10 %</td><td style="text-align:right" id="frow-beneva-conservateur-rdc-1a">24.60 %</td><td style="text-align:right" id="frow-beneva-conservateur-rdc-3a">20.74 %</td><td style="text-align:right" id="frow-beneva-conservateur-rdc-5a">13.93 %</td><td style="text-align:right">2.09 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions mondiales (AGF)</a></strong><br><small style="color:#999">Actions mondiales</small></td><td style="text-align:right">9 %</td><td style="text-align:right" id="frow-beneva-conservateur-rbs-1a">17.61 %</td><td style="text-align:right" id="frow-beneva-conservateur-rbs-3a">22.57 %</td><td style="text-align:right" id="frow-beneva-conservateur-rbs-5a">12.46 %</td><td style="text-align:right">2.68 %</td></tr><tr style="font-weight:700;background:#f8f8f8"><td>Total portefeuille</td><td style="text-align:right">100 %</td><td style="text-align:right" id="ptot-beneva-conservateur-1a">9.34 %</td><td style="text-align:right" id="ptot-beneva-conservateur-3a">9.34 %</td><td style="text-align:right" id="ptot-beneva-conservateur-5a">4.20 %</td><td style="text-align:right" id="ptot-beneva-conservateur-rfg">1.77 %</td></tr></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="note" style="margin-top:12px">Rendements nets composés (RFF inclus, garantie 75/100). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 juin 2026. Source : Beneva — Comptes d'investissement (fonds AGF, Dynamique, Fidelity, GPTD sous-jacents). Portefeuille proposé par Olivier Fraser.</div>
-    </div></div><div id="port-modere" class="port-pane" style="display:none">
-    <div class="sub-assureur" style="display:flex;gap:8px;margin-bottom:14px">
-      <button class="sub-btn on" onclick="showSub('modere','assomption',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#0F0F0F;color:#fff">Assomption Vie</button>
-      <button class="sub-btn" onclick="showSub('modere','ia',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Industrielle Alliance</button>
-      <button class="sub-btn" onclick="showSub('modere','beneva',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Beneva</button>
-    </div>
-<div class="sub-pane" id="sub-modere-assomption">
-<button class="print-btn noprint" onclick="printPane('port','Portefeuille Assomption — Modéré')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
     <div class="port-header">
       <div>
-        <div class="port-title">Modéré — Assomption Vie</div>
-        <div class="port-sub">Portefeuille modéré, gestion active et passive</div>
+        <div class="port-title">Conservateur — Beneva</div>
+        <div class="port-sub">conservateur, gestion prudente axée revenu (25 % actions)</div>
       </div>
-      <div class="port-date">Données au : Avril — Mai 2026</div>
+      <div class="port-date">Garantie 75/100 — au 30 juin 2026</div>
     </div>
-
     <div class="g3" style="margin-bottom:16px">
-      <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-modere-1a">15.61 %</div><div class="ks">Au 30 avr. 2026</div></div>
-      <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-modere-3a">12.64 %</div><div class="ks">Annualisé</div></div>
-      <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-modere-5a">8.07 %</div><div class="ks">Annualisé</div></div>
+      <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-beneva-conservateur-1a">8.51 %</div><div class="ks">Annualisé, net RFG</div></div>
+      <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-beneva-conservateur-3a">8.80 %</div><div class="ks">Annualisé</div></div>
+      <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-beneva-conservateur-5a">3.79 %</div><div class="ks">Annualisé</div></div>
     </div>
-
     <div class="g2">
       <div class="card">
         <div class="ch nv">Répartition par catégorie d'actifs</div>
-        <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:45%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">45 %</div></div><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:55%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">55 %</div></div></div>
+        <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:25%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">25 %</div></div><div style="display:flex;align-items:center;gap:10px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:75%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">75 %</div></div></div>
       </div>
       <div class="card">
         <div class="ch gd">Détail des placements</div>
@@ -1503,29 +1444,61 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
             <thead><tr>
               <th style="text-align:left">Fonds</th>
               <th style="text-align:right">Poids</th>
-              <th style="text-align:right">1 an</th>
-              <th style="text-align:right">3 ans</th>
-              <th style="text-align:right">5 ans</th>
+              <th style="text-align:right">1 an</th>
+              <th style="text-align:right">3 ans</th>
+              <th style="text-align:right">5 ans</th>
               <th style="text-align:right">RFG</th>
             </tr></thead>
-            <tbody>
-              <tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Fonds d'obligations de sociétés CI A</a></strong><br><small style="color:#999">Revenu fixe</small></td><td>30 %</td><td id="frow-modere-640-1a">6.48 %</td><td id="frow-modere-640-3a">6.92 %</td><td id="frow-modere-640-5a">3.0 %</td><td>1.41 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions canadiennes momentum (Louisbourg) D 75/75</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td>5 %</td><td id="frow-modere-617-1a">55.86 %</td><td id="frow-modere-617-3a">24.55 %</td><td id="frow-modere-617-5a">16.08 %</td><td>2.68 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Fidelity FNB Simplifié Équilibre B</a></strong><br><small style="color:#999">FNB équilibré diversifié</small></td><td>65 %</td><td id="frow-modere-646-1a">16.73 %</td><td id="frow-modere-646-3a">14.37 %</td><td id="frow-modere-646-5a">9.79 %</td><td>1.7 %</td></tr>
-              <tr style="font-weight:700;background:#f8f8f8">
-                <td>Total portefeuille</td>
-                <td style="text-align:right">100 %</td>
-                <td style="text-align:right" id="ptot-modere-1a">15.61 %</td>
-                <td style="text-align:right" id="ptot-modere-3a">12.64 %</td>
-                <td style="text-align:right" id="ptot-modere-5a">8.07 %</td>
-                <td style="text-align:right" id="ptot-modere-rfg">1.79 %</td>
-              </tr>
-            </tbody>
+            <tbody><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe canadien (AGF)</a></strong><br><small style="color:#999">Revenu fixe</small></td><td style="text-align:right">55 %</td><td style="text-align:right" id="frow-beneva-conservateur-rab-1a">3.68 %</td><td style="text-align:right" id="frow-beneva-conservateur-rab-3a">4.26 %</td><td style="text-align:right" id="frow-beneva-conservateur-rab-5a">0.20 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe à haut rendement (GPTD)</a></strong><br><small style="color:#999">Revenu fixe (haut rendement)</small></td><td style="text-align:right">20 %</td><td style="text-align:right" id="frow-beneva-conservateur-rbp-1a">4.33 %</td><td style="text-align:right" id="frow-beneva-conservateur-rbp-3a">6.30 %</td><td style="text-align:right" id="frow-beneva-conservateur-rbp-5a">2.55 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions canadiennes (Fidelity)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">8 %</td><td style="text-align:right" id="frow-beneva-conservateur-ram-1a">25.81 %</td><td style="text-align:right" id="frow-beneva-conservateur-ram-3a">18.88 %</td><td style="text-align:right" id="frow-beneva-conservateur-ram-5a">11.65 %</td><td style="text-align:right">2.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Indice américain (GPTD)</a></strong><br><small style="color:#999">Actions américaines (indice)</small></td><td style="text-align:right">8 %</td><td style="text-align:right" id="frow-beneva-conservateur-rdc-1a">24.60 %</td><td style="text-align:right" id="frow-beneva-conservateur-rdc-3a">20.74 %</td><td style="text-align:right" id="frow-beneva-conservateur-rdc-5a">13.93 %</td><td style="text-align:right">2.09 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions mondiales (AGF)</a></strong><br><small style="color:#999">Actions mondiales</small></td><td style="text-align:right">9 %</td><td style="text-align:right" id="frow-beneva-conservateur-rbs-1a">17.61 %</td><td style="text-align:right" id="frow-beneva-conservateur-rbs-3a">22.57 %</td><td style="text-align:right" id="frow-beneva-conservateur-rbs-5a">12.46 %</td><td style="text-align:right">2.68 %</td></tr><tr style="font-weight:700;background:#f8f8f8"><td>Total portefeuille</td><td style="text-align:right">100 %</td><td style="text-align:right" id="ptot-beneva-conservateur-1a">8.51 %</td><td style="text-align:right" id="ptot-beneva-conservateur-3a">8.80 %</td><td style="text-align:right" id="ptot-beneva-conservateur-5a">3.79 %</td><td style="text-align:right" id="ptot-beneva-conservateur-rfg">1.73 %</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
-    <div class="note" style="margin-top:12px">Rendements nets des frais de gestion (RFG). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 avril 2026. Source : Assomption Vie CPE Série D 75/75, CI Financial, Fidelity. Portefeuille proposé par Olivier Fraser.</div>
-  
-    </div><div class="sub-pane" id="sub-modere-ia" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille iA — Modéré')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
+    <div class="note" style="margin-top:12px">Rendements nets composés (RFF inclus, garantie 75/100). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 juin 2026. Source : Beneva — Comptes d'investissement (fonds AGF, Dynamique, Fidelity, GPTD sous-jacents). Portefeuille proposé par Olivier Fraser.</div>
+  </div></div><div id="port-modere" class="port-pane" style="display:none">
+    <div class="sub-assureur" style="display:flex;gap:8px;margin-bottom:14px">
+      <button class="sub-btn on" onclick="showSub('modere','assomption',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#0F0F0F;color:#fff">Assomption Vie</button>
+      <button class="sub-btn" onclick="showSub('modere','ia',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Industrielle Alliance</button>
+      <button class="sub-btn" onclick="showSub('modere','beneva',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Beneva</button>
+    </div>
+<div class="sub-pane" id="sub-modere-assomption" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille Assomption — Modéré')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
+    <div class="port-header">
+      <div>
+        <div class="port-title">Modéré — Assomption Vie</div>
+        <div class="port-sub">modéré, équilibre prudence-croissance (40 % actions)</div>
+      </div>
+      <div class="port-date">Comptes de placement enregistrés — au 30 juin 2026</div>
+    </div>
+    <div class="g3" style="margin-bottom:16px">
+      <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-assomption-modere-1a">17.27 %</div><div class="ks">Annualisé, net RFG</div></div>
+      <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-assomption-modere-3a">11.87 %</div><div class="ks">Annualisé</div></div>
+      <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-assomption-modere-5a">6.81 %</div><div class="ks">Annualisé</div></div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="ch nv">Répartition par catégorie d'actifs</div>
+        <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:40%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">40 %</div></div><div style="display:flex;align-items:center;gap:10px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:60%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">60 %</div></div></div>
+      </div>
+      <div class="card">
+        <div class="ch gd">Détail des placements</div>
+        <div class="cb" style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr>
+              <th style="text-align:left">Fonds</th>
+              <th style="text-align:right">Poids</th>
+              <th style="text-align:right">1 an</th>
+              <th style="text-align:right">3 ans</th>
+              <th style="text-align:right">5 ans</th>
+              <th style="text-align:right">RFG</th>
+            </tr></thead>
+            <tbody><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Marché monétaire (Louisbourg)</a></strong><br><small style="color:#999">Revenu fixe</small></td><td style="text-align:right">20 %</td><td style="text-align:right" id="frow-assomption-modere-mm-1a">1.58 %</td><td style="text-align:right" id="frow-assomption-modere-mm-3a">2.77 %</td><td style="text-align:right" id="frow-assomption-modere-mm-5a">2.13 %</td><td style="text-align:right">1.06 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Obligations de sociétés (CI)</a></strong><br><small style="color:#999">Revenu fixe</small></td><td style="text-align:right">25 %</td><td style="text-align:right" id="frow-assomption-modere-obligsoc-1a">4.92 %</td><td style="text-align:right" id="frow-assomption-modere-obligsoc-3a">6.83 %</td><td style="text-align:right" id="frow-assomption-modere-obligsoc-5a">2.34 %</td><td style="text-align:right">1.80 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Obligations à haut rendement (TD)</a></strong><br><small style="color:#999">Revenu fixe (haut rendement)</small></td><td style="text-align:right">15 %</td><td style="text-align:right" id="frow-assomption-modere-hautrend-1a">3.96 %</td><td style="text-align:right" id="frow-assomption-modere-hautrend-3a">5.97 %</td><td style="text-align:right" id="frow-assomption-modere-hautrend-5a">s.o.</td><td style="text-align:right">1.75 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions canadiennes momentum (Louisbourg)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">12 %</td><td style="text-align:right" id="frow-assomption-modere-mom-1a">40.27 %</td><td style="text-align:right" id="frow-assomption-modere-mom-3a">24.03 %</td><td style="text-align:right" id="frow-assomption-modere-mom-5a">13.70 %</td><td style="text-align:right">2.68 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions canadiennes de base (Fidelity)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">8 %</td><td style="text-align:right" id="frow-assomption-modere-cdnbase-1a">24.18 %</td><td style="text-align:right" id="frow-assomption-modere-cdnbase-3a">17.00 %</td><td style="text-align:right" id="frow-assomption-modere-cdnbase-5a">10.58 %</td><td style="text-align:right">2.53 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions américaines - Ciblé (Fidelity)</a></strong><br><small style="color:#999">Actions américaines</small></td><td style="text-align:right">10 %</td><td style="text-align:right" id="frow-assomption-modere-uscible-1a">47.35 %</td><td style="text-align:right" id="frow-assomption-modere-uscible-3a">29.00 %</td><td style="text-align:right" id="frow-assomption-modere-uscible-5a">16.08 %</td><td style="text-align:right">3.05 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions mondiales+ (Fidelity)</a></strong><br><small style="color:#999">Actions mondiales</small></td><td style="text-align:right">7 %</td><td style="text-align:right" id="frow-assomption-modere-mondplus-1a">28.87 %</td><td style="text-align:right" id="frow-assomption-modere-mondplus-3a">s.o.</td><td style="text-align:right" id="frow-assomption-modere-mondplus-5a">s.o.</td><td style="text-align:right">2.90 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Marchés émergents (CI)</a></strong><br><small style="color:#999">Actions marchés émergents</small></td><td style="text-align:right">3 %</td><td style="text-align:right" id="frow-assomption-modere-em-1a">53.59 %</td><td style="text-align:right" id="frow-assomption-modere-em-3a">24.72 %</td><td style="text-align:right" id="frow-assomption-modere-em-5a">s.o.</td><td style="text-align:right">3.05 %</td></tr><tr style="font-weight:700;background:#f8f8f8"><td>Total portefeuille</td><td style="text-align:right">100 %</td><td style="text-align:right" id="ptot-assomption-modere-1a">17.27 %</td><td style="text-align:right" id="ptot-assomption-modere-3a">11.87 %</td><td style="text-align:right" id="ptot-assomption-modere-5a">6.81 %</td><td style="text-align:right" id="ptot-assomption-modere-rfg">2.05 %</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="note" style="margin-top:12px">Rendements nets composés (RFG inclus, série D 75/75 sans frais de sortie). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 juin 2026. Source : Assomption Vie — Comptes de placement enregistrés (CPE), Lipper (LSEG). Portefeuille proposé par Olivier Fraser.</div>
+  </div>
+<div class="sub-pane" id="sub-modere-ia" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille iA — Modéré')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
       <div class="port-header">
         <div>
           <div class="port-title">Modéré — Industrielle Alliance</div>
@@ -1551,67 +1524,22 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
     </div>
 
 <div class="sub-pane" id="sub-modere-beneva" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille Beneva — Modéré')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
-      <div class="port-header">
-        <div>
-          <div class="port-title">Modéré — Beneva</div>
-          <div class="port-sub">modéré, équilibre prudence-croissance (45 % actions)</div>
-        </div>
-        <div class="port-date">Garantie 75/100 — au 30 juin 2026</div>
-      </div>
-      <div class="g3" style="margin-bottom:16px">
-        <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-beneva-modere-1a">15.63 %</div><div class="ks">Annualisé, net RFG</div></div>
-        <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-beneva-modere-3a">12.33 %</div><div class="ks">Annualisé</div></div>
-        <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-beneva-modere-5a">5.84 %</div><div class="ks">Annualisé</div></div>
-      </div>
-      <div class="g2">
-        <div class="card">
-          <div class="ch nv">Répartition par catégorie d'actifs</div>
-          <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:45%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">45 %</div></div><div style="display:flex;align-items:center;gap:10px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:55%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">55 %</div></div></div>
-        </div>
-        <div class="card">
-          <div class="ch gd">Détail des placements</div>
-          <div class="cb" style="overflow-x:auto">
-            <table class="tbl">
-              <thead><tr>
-                <th style="text-align:left">Fonds</th>
-                <th style="text-align:right">Poids</th>
-                <th style="text-align:right">1 an</th>
-                <th style="text-align:right">3 ans</th>
-                <th style="text-align:right">5 ans</th>
-                <th style="text-align:right">RFG</th>
-              </tr></thead>
-              <tbody><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe canadien (AGF)</a></strong><br><small style="color:#999">Revenu fixe</small></td><td style="text-align:right">38 %</td><td style="text-align:right" id="frow-beneva-modere-rab-1a">3.68 %</td><td style="text-align:right" id="frow-beneva-modere-rab-3a">4.26 %</td><td style="text-align:right" id="frow-beneva-modere-rab-5a">0.20 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe à haut rendement (GPTD)</a></strong><br><small style="color:#999">Revenu fixe (haut rendement)</small></td><td style="text-align:right">17 %</td><td style="text-align:right" id="frow-beneva-modere-rbp-1a">4.33 %</td><td style="text-align:right" id="frow-beneva-modere-rbp-3a">6.30 %</td><td style="text-align:right" id="frow-beneva-modere-rbp-5a">2.55 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions canadiennes (Fidelity)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">12 %</td><td style="text-align:right" id="frow-beneva-modere-ram-1a">25.81 %</td><td style="text-align:right" id="frow-beneva-modere-ram-3a">18.88 %</td><td style="text-align:right" id="frow-beneva-modere-ram-5a">11.65 %</td><td style="text-align:right">2.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Indice américain (GPTD)</a></strong><br><small style="color:#999">Actions américaines (indice)</small></td><td style="text-align:right">12 %</td><td style="text-align:right" id="frow-beneva-modere-rdc-1a">24.60 %</td><td style="text-align:right" id="frow-beneva-modere-rdc-3a">20.74 %</td><td style="text-align:right" id="frow-beneva-modere-rdc-5a">13.93 %</td><td style="text-align:right">2.09 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions mondiales (AGF)</a></strong><br><small style="color:#999">Actions mondiales</small></td><td style="text-align:right">12 %</td><td style="text-align:right" id="frow-beneva-modere-rbs-1a">17.61 %</td><td style="text-align:right" id="frow-beneva-modere-rbs-3a">22.57 %</td><td style="text-align:right" id="frow-beneva-modere-rbs-5a">12.46 %</td><td style="text-align:right">2.68 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Marchés émergents (AGF)</a></strong><br><small style="color:#999">Actions marchés émergents</small></td><td style="text-align:right">9 %</td><td style="text-align:right" id="frow-beneva-modere-rav-1a">59.29 %</td><td style="text-align:right" id="frow-beneva-modere-rav-3a">24.17 %</td><td style="text-align:right" id="frow-beneva-modere-rav-5a">8.51 %</td><td style="text-align:right">2.78 %</td></tr><tr style="font-weight:700;background:#f8f8f8"><td>Total portefeuille</td><td style="text-align:right">100 %</td><td style="text-align:right" id="ptot-beneva-modere-1a">15.63 %</td><td style="text-align:right" id="ptot-beneva-modere-3a">12.33 %</td><td style="text-align:right" id="ptot-beneva-modere-5a">5.84 %</td><td style="text-align:right" id="ptot-beneva-modere-rfg">1.95 %</td></tr></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="note" style="margin-top:12px">Rendements nets composés (RFF inclus, garantie 75/100). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 juin 2026. Source : Beneva — Comptes d'investissement (fonds AGF, Dynamique, Fidelity, GPTD sous-jacents). Portefeuille proposé par Olivier Fraser.</div>
-    </div></div><div id="port-equilibre" class="port-pane" style="display:none">
-    <div class="sub-assureur" style="display:flex;gap:8px;margin-bottom:14px">
-      <button class="sub-btn on" onclick="showSub('equilibre','assomption',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#0F0F0F;color:#fff">Assomption Vie</button>
-      <button class="sub-btn" onclick="showSub('equilibre','ia',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Industrielle Alliance</button>
-      <button class="sub-btn" onclick="showSub('equilibre','beneva',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Beneva</button>
-    </div>
-<div class="sub-pane" id="sub-equilibre-assomption">
-<button class="print-btn noprint" onclick="printPane('port','Portefeuille Assomption — Équilibré')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
     <div class="port-header">
       <div>
-        <div class="port-title">Équilibré — Assomption Vie</div>
-        <div class="port-sub">Portefeuille diversifié, gestion active et passive</div>
+        <div class="port-title">Modéré — Beneva</div>
+        <div class="port-sub">modéré, équilibre prudence-croissance (40 % actions)</div>
       </div>
-      <div class="port-date">Données au : Avril — Mai 2026</div>
+      <div class="port-date">Garantie 75/100 — au 30 juin 2026</div>
     </div>
-
     <div class="g3" style="margin-bottom:16px">
-      <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-equilibre-1a">26.87 %</div><div class="ks">Au 30 avr. 2026</div></div>
-      <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-equilibre-3a">15.52 %</div><div class="ks">Annualisé</div></div>
-      <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-equilibre-5a">10.64 %</div><div class="ks">Annualisé</div></div>
+      <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-beneva-modere-1a">13.96 %</div><div class="ks">Annualisé, net RFG</div></div>
+      <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-beneva-modere-3a">11.46 %</div><div class="ks">Annualisé</div></div>
+      <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-beneva-modere-5a">5.32 %</div><div class="ks">Annualisé</div></div>
     </div>
-
     <div class="g2">
       <div class="card">
         <div class="ch nv">Répartition par catégorie d'actifs</div>
-        <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:60%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">60 %</div></div><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:40%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">40 %</div></div></div>
+        <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:40%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">40 %</div></div><div style="display:flex;align-items:center;gap:10px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:60%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">60 %</div></div></div>
       </div>
       <div class="card">
         <div class="ch gd">Détail des placements</div>
@@ -1620,29 +1548,61 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
             <thead><tr>
               <th style="text-align:left">Fonds</th>
               <th style="text-align:right">Poids</th>
-              <th style="text-align:right">1 an</th>
-              <th style="text-align:right">3 ans</th>
-              <th style="text-align:right">5 ans</th>
+              <th style="text-align:right">1 an</th>
+              <th style="text-align:right">3 ans</th>
+              <th style="text-align:right">5 ans</th>
               <th style="text-align:right">RFG</th>
             </tr></thead>
-            <tbody>
-              <tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Fonds d'obligations de sociétés CI A</a></strong><br><small style="color:#999">Revenu fixe</small></td><td>20 %</td><td id="frow-equilibre-640-1a">6.48 %</td><td id="frow-equilibre-640-3a">6.92 %</td><td id="frow-equilibre-640-5a">3.0 %</td><td>1.41 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions canadiennes momentum (Louisbourg) D 75/75</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td>10 %</td><td id="frow-equilibre-617-1a">55.86 %</td><td id="frow-equilibre-617-3a">24.55 %</td><td id="frow-equilibre-617-5a">16.08 %</td><td>2.68 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Fonds de ressources mondiales CI A</a></strong><br><small style="color:#999">Actions mondiales — ressources</small></td><td>10 %</td><td id="frow-equilibre-630-1a">71.28 %</td><td id="frow-equilibre-630-3a">19.45 %</td><td id="frow-equilibre-630-5a">21.66 %</td><td>2.29 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions américaines — Ciblé (Fidelity) D 75/75</a></strong><br><small style="color:#999">Actions américaines</small></td><td>10 %</td><td id="frow-equilibre-623-1a">44.92 %</td><td id="frow-equilibre-623-3a">25.49 %</td><td id="frow-equilibre-623-5a">13.68 %</td><td>3.05 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Fidelity FNB Simplifié Équilibre B</a></strong><br><small style="color:#999">FNB équilibré diversifié</small></td><td>50 %</td><td id="frow-equilibre-646-1a">16.73 %</td><td id="frow-equilibre-646-3a">14.37 %</td><td id="frow-equilibre-646-5a">9.79 %</td><td>1.7 %</td></tr>
-              <tr style="font-weight:700;background:#f8f8f8">
-                <td>Total portefeuille</td>
-                <td style="text-align:right">100 %</td>
-                <td style="text-align:right" id="ptot-equilibre-1a">26.87 %</td>
-                <td style="text-align:right" id="ptot-equilibre-3a">15.52 %</td>
-                <td style="text-align:right" id="ptot-equilibre-5a">10.64 %</td>
-                <td style="text-align:right" id="ptot-equilibre-rfg">2.0 %</td>
-              </tr>
-            </tbody>
+            <tbody><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe canadien (AGF)</a></strong><br><small style="color:#999">Revenu fixe</small></td><td style="text-align:right">42 %</td><td style="text-align:right" id="frow-beneva-modere-rab-1a">3.68 %</td><td style="text-align:right" id="frow-beneva-modere-rab-3a">4.26 %</td><td style="text-align:right" id="frow-beneva-modere-rab-5a">0.20 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe à haut rendement (GPTD)</a></strong><br><small style="color:#999">Revenu fixe (haut rendement)</small></td><td style="text-align:right">18 %</td><td style="text-align:right" id="frow-beneva-modere-rbp-1a">4.33 %</td><td style="text-align:right" id="frow-beneva-modere-rbp-3a">6.30 %</td><td style="text-align:right" id="frow-beneva-modere-rbp-5a">2.55 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions canadiennes (Fidelity)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">11 %</td><td style="text-align:right" id="frow-beneva-modere-ram-1a">25.81 %</td><td style="text-align:right" id="frow-beneva-modere-ram-3a">18.88 %</td><td style="text-align:right" id="frow-beneva-modere-ram-5a">11.65 %</td><td style="text-align:right">2.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Indice américain (GPTD)</a></strong><br><small style="color:#999">Actions américaines (indice)</small></td><td style="text-align:right">11 %</td><td style="text-align:right" id="frow-beneva-modere-rdc-1a">24.60 %</td><td style="text-align:right" id="frow-beneva-modere-rdc-3a">20.74 %</td><td style="text-align:right" id="frow-beneva-modere-rdc-5a">13.93 %</td><td style="text-align:right">2.09 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions mondiales (AGF)</a></strong><br><small style="color:#999">Actions mondiales</small></td><td style="text-align:right">11 %</td><td style="text-align:right" id="frow-beneva-modere-rbs-1a">17.61 %</td><td style="text-align:right" id="frow-beneva-modere-rbs-3a">22.57 %</td><td style="text-align:right" id="frow-beneva-modere-rbs-5a">12.46 %</td><td style="text-align:right">2.68 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Marchés émergents (AGF)</a></strong><br><small style="color:#999">Actions marchés émergents</small></td><td style="text-align:right">7 %</td><td style="text-align:right" id="frow-beneva-modere-rav-1a">59.29 %</td><td style="text-align:right" id="frow-beneva-modere-rav-3a">24.17 %</td><td style="text-align:right" id="frow-beneva-modere-rav-5a">8.51 %</td><td style="text-align:right">2.78 %</td></tr><tr style="font-weight:700;background:#f8f8f8"><td>Total portefeuille</td><td style="text-align:right">100 %</td><td style="text-align:right" id="ptot-beneva-modere-1a">13.96 %</td><td style="text-align:right" id="ptot-beneva-modere-3a">11.46 %</td><td style="text-align:right" id="ptot-beneva-modere-5a">5.32 %</td><td style="text-align:right" id="ptot-beneva-modere-rfg">1.89 %</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
-    <div class="note" style="margin-top:12px">Rendements nets des frais de gestion (RFG). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 avril 2026. Source : Assomption Vie CPE Série D 75/75, CI Financial, Fidelity. Portefeuille proposé par Olivier Fraser.</div>
-  
-    </div><div class="sub-pane" id="sub-equilibre-ia" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille iA — Équilibré')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
+    <div class="note" style="margin-top:12px">Rendements nets composés (RFF inclus, garantie 75/100). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 juin 2026. Source : Beneva — Comptes d'investissement (fonds AGF, Dynamique, Fidelity, GPTD sous-jacents). Portefeuille proposé par Olivier Fraser.</div>
+  </div></div><div id="port-equilibre" class="port-pane" style="display:none">
+    <div class="sub-assureur" style="display:flex;gap:8px;margin-bottom:14px">
+      <button class="sub-btn on" onclick="showSub('equilibre','assomption',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#0F0F0F;color:#fff">Assomption Vie</button>
+      <button class="sub-btn" onclick="showSub('equilibre','ia',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Industrielle Alliance</button>
+      <button class="sub-btn" onclick="showSub('equilibre','beneva',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Beneva</button>
+    </div>
+<div class="sub-pane" id="sub-equilibre-assomption" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille Assomption — Équilibré')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
+    <div class="port-header">
+      <div>
+        <div class="port-title">Équilibré — Assomption Vie</div>
+        <div class="port-sub">équilibré, diversification actions et revenu fixe (60 % actions)</div>
+      </div>
+      <div class="port-date">Comptes de placement enregistrés — au 30 juin 2026</div>
+    </div>
+    <div class="g3" style="margin-bottom:16px">
+      <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-assomption-equilibre-1a">24.64 %</div><div class="ks">Annualisé, net RFG</div></div>
+      <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-assomption-equilibre-3a">15.78 %</div><div class="ks">Annualisé</div></div>
+      <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-assomption-equilibre-5a">9.22 %</div><div class="ks">Annualisé</div></div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="ch nv">Répartition par catégorie d'actifs</div>
+        <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:60%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">60 %</div></div><div style="display:flex;align-items:center;gap:10px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:40%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">40 %</div></div></div>
+      </div>
+      <div class="card">
+        <div class="ch gd">Détail des placements</div>
+        <div class="cb" style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr>
+              <th style="text-align:left">Fonds</th>
+              <th style="text-align:right">Poids</th>
+              <th style="text-align:right">1 an</th>
+              <th style="text-align:right">3 ans</th>
+              <th style="text-align:right">5 ans</th>
+              <th style="text-align:right">RFG</th>
+            </tr></thead>
+            <tbody><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Marché monétaire (Louisbourg)</a></strong><br><small style="color:#999">Revenu fixe</small></td><td style="text-align:right">10 %</td><td style="text-align:right" id="frow-assomption-equilibre-mm-1a">1.58 %</td><td style="text-align:right" id="frow-assomption-equilibre-mm-3a">2.77 %</td><td style="text-align:right" id="frow-assomption-equilibre-mm-5a">2.13 %</td><td style="text-align:right">1.06 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Obligations de sociétés (CI)</a></strong><br><small style="color:#999">Revenu fixe</small></td><td style="text-align:right">18 %</td><td style="text-align:right" id="frow-assomption-equilibre-obligsoc-1a">4.92 %</td><td style="text-align:right" id="frow-assomption-equilibre-obligsoc-3a">6.83 %</td><td style="text-align:right" id="frow-assomption-equilibre-obligsoc-5a">2.34 %</td><td style="text-align:right">1.80 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Obligations à haut rendement (TD)</a></strong><br><small style="color:#999">Revenu fixe (haut rendement)</small></td><td style="text-align:right">12 %</td><td style="text-align:right" id="frow-assomption-equilibre-hautrend-1a">3.96 %</td><td style="text-align:right" id="frow-assomption-equilibre-hautrend-3a">5.97 %</td><td style="text-align:right" id="frow-assomption-equilibre-hautrend-5a">s.o.</td><td style="text-align:right">1.75 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions canadiennes momentum (Louisbourg)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">16 %</td><td style="text-align:right" id="frow-assomption-equilibre-mom-1a">40.27 %</td><td style="text-align:right" id="frow-assomption-equilibre-mom-3a">24.03 %</td><td style="text-align:right" id="frow-assomption-equilibre-mom-5a">13.70 %</td><td style="text-align:right">2.68 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions canadiennes de base (Fidelity)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">10 %</td><td style="text-align:right" id="frow-assomption-equilibre-cdnbase-1a">24.18 %</td><td style="text-align:right" id="frow-assomption-equilibre-cdnbase-3a">17.00 %</td><td style="text-align:right" id="frow-assomption-equilibre-cdnbase-5a">10.58 %</td><td style="text-align:right">2.53 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions américaines - Ciblé (Fidelity)</a></strong><br><small style="color:#999">Actions américaines</small></td><td style="text-align:right">16 %</td><td style="text-align:right" id="frow-assomption-equilibre-uscible-1a">47.35 %</td><td style="text-align:right" id="frow-assomption-equilibre-uscible-3a">29.00 %</td><td style="text-align:right" id="frow-assomption-equilibre-uscible-5a">16.08 %</td><td style="text-align:right">3.05 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions mondiales+ (Fidelity)</a></strong><br><small style="color:#999">Actions mondiales</small></td><td style="text-align:right">12 %</td><td style="text-align:right" id="frow-assomption-equilibre-mondplus-1a">28.87 %</td><td style="text-align:right" id="frow-assomption-equilibre-mondplus-3a">s.o.</td><td style="text-align:right" id="frow-assomption-equilibre-mondplus-5a">s.o.</td><td style="text-align:right">2.90 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Marchés émergents (CI)</a></strong><br><small style="color:#999">Actions marchés émergents</small></td><td style="text-align:right">6 %</td><td style="text-align:right" id="frow-assomption-equilibre-em-1a">53.59 %</td><td style="text-align:right" id="frow-assomption-equilibre-em-3a">24.72 %</td><td style="text-align:right" id="frow-assomption-equilibre-em-5a">s.o.</td><td style="text-align:right">3.05 %</td></tr><tr style="font-weight:700;background:#f8f8f8"><td>Total portefeuille</td><td style="text-align:right">100 %</td><td style="text-align:right" id="ptot-assomption-equilibre-1a">24.64 %</td><td style="text-align:right" id="ptot-assomption-equilibre-3a">15.78 %</td><td style="text-align:right" id="ptot-assomption-equilibre-5a">9.22 %</td><td style="text-align:right" id="ptot-assomption-equilibre-rfg">2.34 %</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="note" style="margin-top:12px">Rendements nets composés (RFG inclus, série D 75/75 sans frais de sortie). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 juin 2026. Source : Assomption Vie — Comptes de placement enregistrés (CPE), Lipper (LSEG). Portefeuille proposé par Olivier Fraser.</div>
+  </div>
+<div class="sub-pane" id="sub-equilibre-ia" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille iA — Équilibré')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
       <div class="port-header">
         <div>
           <div class="port-title">Équilibré — Industrielle Alliance</div>
@@ -1668,67 +1628,22 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
     </div>
 
 <div class="sub-pane" id="sub-equilibre-beneva" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille Beneva — Équilibré')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
-      <div class="port-header">
-        <div>
-          <div class="port-title">Équilibré — Beneva</div>
-          <div class="port-sub">équilibré, diversification actions et revenu fixe (60 % actions)</div>
-        </div>
-        <div class="port-date">Garantie 75/100 — au 30 juin 2026</div>
-      </div>
-      <div class="g3" style="margin-bottom:16px">
-        <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-beneva-equilibre-1a">20.17 %</div><div class="ks">Annualisé, net RFG</div></div>
-        <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-beneva-equilibre-3a">15.00 %</div><div class="ks">Annualisé</div></div>
-        <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-beneva-equilibre-5a">7.53 %</div><div class="ks">Annualisé</div></div>
-      </div>
-      <div class="g2">
-        <div class="card">
-          <div class="ch nv">Répartition par catégorie d'actifs</div>
-          <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:60%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">60 %</div></div><div style="display:flex;align-items:center;gap:10px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:40%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">40 %</div></div></div>
-        </div>
-        <div class="card">
-          <div class="ch gd">Détail des placements</div>
-          <div class="cb" style="overflow-x:auto">
-            <table class="tbl">
-              <thead><tr>
-                <th style="text-align:left">Fonds</th>
-                <th style="text-align:right">Poids</th>
-                <th style="text-align:right">1 an</th>
-                <th style="text-align:right">3 ans</th>
-                <th style="text-align:right">5 ans</th>
-                <th style="text-align:right">RFG</th>
-              </tr></thead>
-              <tbody><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe canadien (AGF)</a></strong><br><small style="color:#999">Revenu fixe</small></td><td style="text-align:right">26 %</td><td style="text-align:right" id="frow-beneva-equilibre-rab-1a">3.68 %</td><td style="text-align:right" id="frow-beneva-equilibre-rab-3a">4.26 %</td><td style="text-align:right" id="frow-beneva-equilibre-rab-5a">0.20 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe à haut rendement (GPTD)</a></strong><br><small style="color:#999">Revenu fixe (haut rendement)</small></td><td style="text-align:right">14 %</td><td style="text-align:right" id="frow-beneva-equilibre-rbp-1a">4.33 %</td><td style="text-align:right" id="frow-beneva-equilibre-rbp-3a">6.30 %</td><td style="text-align:right" id="frow-beneva-equilibre-rbp-5a">2.55 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions canadiennes (Fidelity)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">14 %</td><td style="text-align:right" id="frow-beneva-equilibre-ram-1a">25.81 %</td><td style="text-align:right" id="frow-beneva-equilibre-ram-3a">18.88 %</td><td style="text-align:right" id="frow-beneva-equilibre-ram-5a">11.65 %</td><td style="text-align:right">2.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Indice américain (GPTD)</a></strong><br><small style="color:#999">Actions américaines (indice)</small></td><td style="text-align:right">16 %</td><td style="text-align:right" id="frow-beneva-equilibre-rdc-1a">24.60 %</td><td style="text-align:right" id="frow-beneva-equilibre-rdc-3a">20.74 %</td><td style="text-align:right" id="frow-beneva-equilibre-rdc-5a">13.93 %</td><td style="text-align:right">2.09 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions mondiales (AGF)</a></strong><br><small style="color:#999">Actions mondiales</small></td><td style="text-align:right">16 %</td><td style="text-align:right" id="frow-beneva-equilibre-rbs-1a">17.61 %</td><td style="text-align:right" id="frow-beneva-equilibre-rbs-3a">22.57 %</td><td style="text-align:right" id="frow-beneva-equilibre-rbs-5a">12.46 %</td><td style="text-align:right">2.68 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Marchés émergents (AGF)</a></strong><br><small style="color:#999">Actions marchés émergents</small></td><td style="text-align:right">10 %</td><td style="text-align:right" id="frow-beneva-equilibre-rav-1a">59.29 %</td><td style="text-align:right" id="frow-beneva-equilibre-rav-3a">24.17 %</td><td style="text-align:right" id="frow-beneva-equilibre-rav-5a">8.51 %</td><td style="text-align:right">2.78 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions américaines petites/moy. cap. (AGF)</a></strong><br><small style="color:#999">Actions américaines (petites/moy. cap.)</small></td><td style="text-align:right">4 %</td><td style="text-align:right" id="frow-beneva-equilibre-rda-1a">57.83 %</td><td style="text-align:right" id="frow-beneva-equilibre-rda-3a">25.57 %</td><td style="text-align:right" id="frow-beneva-equilibre-rda-5a">10.39 %</td><td style="text-align:right">2.64 %</td></tr><tr style="font-weight:700;background:#f8f8f8"><td>Total portefeuille</td><td style="text-align:right">100 %</td><td style="text-align:right" id="ptot-beneva-equilibre-1a">20.17 %</td><td style="text-align:right" id="ptot-beneva-equilibre-3a">15.00 %</td><td style="text-align:right" id="ptot-beneva-equilibre-5a">7.53 %</td><td style="text-align:right" id="ptot-beneva-equilibre-rfg">2.10 %</td></tr></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="note" style="margin-top:12px">Rendements nets composés (RFF inclus, garantie 75/100). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 juin 2026. Source : Beneva — Comptes d'investissement (fonds AGF, Dynamique, Fidelity, GPTD sous-jacents). Portefeuille proposé par Olivier Fraser.</div>
-    </div></div><div id="port-croissance" class="port-pane" style="display:none">
-    <div class="sub-assureur" style="display:flex;gap:8px;margin-bottom:14px">
-      <button class="sub-btn on" onclick="showSub('croissance','assomption',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#0F0F0F;color:#fff">Assomption Vie</button>
-      <button class="sub-btn" onclick="showSub('croissance','ia',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Industrielle Alliance</button>
-      <button class="sub-btn" onclick="showSub('croissance','beneva',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Beneva</button>
-    </div>
-<div class="sub-pane" id="sub-croissance-assomption">
-<button class="print-btn noprint" onclick="printPane('port','Portefeuille Assomption — Croissance')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
     <div class="port-header">
       <div>
-        <div class="port-title">Croissance — Assomption Vie</div>
-        <div class="port-sub">Portefeuille de croissance, gestion active et passive</div>
+        <div class="port-title">Équilibré — Beneva</div>
+        <div class="port-sub">équilibré, diversification actions et revenu fixe (60 % actions)</div>
       </div>
-      <div class="port-date">Données au : Avril — Mai 2026</div>
+      <div class="port-date">Garantie 75/100 — au 30 juin 2026</div>
     </div>
-
     <div class="g3" style="margin-bottom:16px">
-      <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-croissance-1a">30.21 %</div><div class="ks">Au 30 avr. 2026</div></div>
-      <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-croissance-3a">19.79 %</div><div class="ks">Annualisé</div></div>
-      <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-croissance-5a">12.1 %</div><div class="ks">Annualisé</div></div>
+      <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-beneva-equilibre-1a">20.17 %</div><div class="ks">Annualisé, net RFG</div></div>
+      <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-beneva-equilibre-3a">15.00 %</div><div class="ks">Annualisé</div></div>
+      <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-beneva-equilibre-5a">7.53 %</div><div class="ks">Annualisé</div></div>
     </div>
-
     <div class="g2">
       <div class="card">
         <div class="ch nv">Répartition par catégorie d'actifs</div>
-        <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:83%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">83 %</div></div><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:17%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">17 %</div></div></div>
+        <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:60%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">60 %</div></div><div style="display:flex;align-items:center;gap:10px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:40%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">40 %</div></div></div>
       </div>
       <div class="card">
         <div class="ch gd">Détail des placements</div>
@@ -1737,29 +1652,61 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
             <thead><tr>
               <th style="text-align:left">Fonds</th>
               <th style="text-align:right">Poids</th>
-              <th style="text-align:right">1 an</th>
-              <th style="text-align:right">3 ans</th>
-              <th style="text-align:right">5 ans</th>
+              <th style="text-align:right">1 an</th>
+              <th style="text-align:right">3 ans</th>
+              <th style="text-align:right">5 ans</th>
               <th style="text-align:right">RFG</th>
             </tr></thead>
-            <tbody>
-              <tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Fonds d'obligations de sociétés CI A</a></strong><br><small style="color:#999">Revenu fixe</small></td><td>10 %</td><td id="frow-croissance-640-1a">6.48 %</td><td id="frow-croissance-640-3a">6.92 %</td><td id="frow-croissance-640-5a">3.0 %</td><td>1.41 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions américaines — Ciblé (Fidelity) D 75/75</a></strong><br><small style="color:#999">Actions américaines</small></td><td>20 %</td><td id="frow-croissance-623-1a">44.92 %</td><td id="frow-croissance-623-3a">25.49 %</td><td id="frow-croissance-623-5a">13.68 %</td><td>3.05 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions canadiennes momentum (Louisbourg) D 75/75</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td>15 %</td><td id="frow-croissance-617-1a">55.86 %</td><td id="frow-croissance-617-3a">24.55 %</td><td id="frow-croissance-617-5a">16.08 %</td><td>2.68 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Fonds des marchés émergents CI A</a></strong><br><small style="color:#999">Actions émergentes</small></td><td>10 %</td><td id="frow-croissance-634-1a">50.58 %</td><td id="frow-croissance-634-3a">21.95 %</td><td id="frow-croissance-634-5a">8.46 %</td><td>2.33 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Fidelity FNB Simplifié Croissance B</a></strong><br><small style="color:#999">FNB croissance diversifié</small></td><td>45 %</td><td id="frow-croissance-647-1a">15.87 %</td><td id="frow-croissance-647-3a">18.05 %</td><td id="frow-croissance-647-5a">12.9 %</td><td>1.7 %</td></tr>
-              <tr style="font-weight:700;background:#f8f8f8">
-                <td>Total portefeuille</td>
-                <td style="text-align:right">100 %</td>
-                <td style="text-align:right" id="ptot-croissance-1a">30.21 %</td>
-                <td style="text-align:right" id="ptot-croissance-3a">19.79 %</td>
-                <td style="text-align:right" id="ptot-croissance-5a">12.1 %</td>
-                <td style="text-align:right" id="ptot-croissance-rfg">2.23 %</td>
-              </tr>
-            </tbody>
+            <tbody><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe canadien (AGF)</a></strong><br><small style="color:#999">Revenu fixe</small></td><td style="text-align:right">26 %</td><td style="text-align:right" id="frow-beneva-equilibre-rab-1a">3.68 %</td><td style="text-align:right" id="frow-beneva-equilibre-rab-3a">4.26 %</td><td style="text-align:right" id="frow-beneva-equilibre-rab-5a">0.20 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe à haut rendement (GPTD)</a></strong><br><small style="color:#999">Revenu fixe (haut rendement)</small></td><td style="text-align:right">14 %</td><td style="text-align:right" id="frow-beneva-equilibre-rbp-1a">4.33 %</td><td style="text-align:right" id="frow-beneva-equilibre-rbp-3a">6.30 %</td><td style="text-align:right" id="frow-beneva-equilibre-rbp-5a">2.55 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions canadiennes (Fidelity)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">14 %</td><td style="text-align:right" id="frow-beneva-equilibre-ram-1a">25.81 %</td><td style="text-align:right" id="frow-beneva-equilibre-ram-3a">18.88 %</td><td style="text-align:right" id="frow-beneva-equilibre-ram-5a">11.65 %</td><td style="text-align:right">2.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Indice américain (GPTD)</a></strong><br><small style="color:#999">Actions américaines (indice)</small></td><td style="text-align:right">16 %</td><td style="text-align:right" id="frow-beneva-equilibre-rdc-1a">24.60 %</td><td style="text-align:right" id="frow-beneva-equilibre-rdc-3a">20.74 %</td><td style="text-align:right" id="frow-beneva-equilibre-rdc-5a">13.93 %</td><td style="text-align:right">2.09 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions mondiales (AGF)</a></strong><br><small style="color:#999">Actions mondiales</small></td><td style="text-align:right">16 %</td><td style="text-align:right" id="frow-beneva-equilibre-rbs-1a">17.61 %</td><td style="text-align:right" id="frow-beneva-equilibre-rbs-3a">22.57 %</td><td style="text-align:right" id="frow-beneva-equilibre-rbs-5a">12.46 %</td><td style="text-align:right">2.68 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Marchés émergents (AGF)</a></strong><br><small style="color:#999">Actions marchés émergents</small></td><td style="text-align:right">10 %</td><td style="text-align:right" id="frow-beneva-equilibre-rav-1a">59.29 %</td><td style="text-align:right" id="frow-beneva-equilibre-rav-3a">24.17 %</td><td style="text-align:right" id="frow-beneva-equilibre-rav-5a">8.51 %</td><td style="text-align:right">2.78 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions américaines petites/moy. cap. (AGF)</a></strong><br><small style="color:#999">Actions américaines (petites/moy. cap.)</small></td><td style="text-align:right">4 %</td><td style="text-align:right" id="frow-beneva-equilibre-rda-1a">57.83 %</td><td style="text-align:right" id="frow-beneva-equilibre-rda-3a">25.57 %</td><td style="text-align:right" id="frow-beneva-equilibre-rda-5a">10.39 %</td><td style="text-align:right">2.64 %</td></tr><tr style="font-weight:700;background:#f8f8f8"><td>Total portefeuille</td><td style="text-align:right">100 %</td><td style="text-align:right" id="ptot-beneva-equilibre-1a">20.17 %</td><td style="text-align:right" id="ptot-beneva-equilibre-3a">15.00 %</td><td style="text-align:right" id="ptot-beneva-equilibre-5a">7.53 %</td><td style="text-align:right" id="ptot-beneva-equilibre-rfg">2.10 %</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
-    <div class="note" style="margin-top:12px">Rendements nets des frais de gestion (RFG). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 avril 2026. Source : Assomption Vie CPE Série D 75/75, CI Financial, Fidelity. Portefeuille proposé par Olivier Fraser.</div>
-  
-    </div><div class="sub-pane" id="sub-croissance-ia" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille iA — Croissance')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
+    <div class="note" style="margin-top:12px">Rendements nets composés (RFF inclus, garantie 75/100). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 juin 2026. Source : Beneva — Comptes d'investissement (fonds AGF, Dynamique, Fidelity, GPTD sous-jacents). Portefeuille proposé par Olivier Fraser.</div>
+  </div></div><div id="port-croissance" class="port-pane" style="display:none">
+    <div class="sub-assureur" style="display:flex;gap:8px;margin-bottom:14px">
+      <button class="sub-btn on" onclick="showSub('croissance','assomption',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#0F0F0F;color:#fff">Assomption Vie</button>
+      <button class="sub-btn" onclick="showSub('croissance','ia',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Industrielle Alliance</button>
+      <button class="sub-btn" onclick="showSub('croissance','beneva',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Beneva</button>
+    </div>
+<div class="sub-pane" id="sub-croissance-assomption" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille Assomption — Croissance')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
+    <div class="port-header">
+      <div>
+        <div class="port-title">Croissance — Assomption Vie</div>
+        <div class="port-sub">orienté croissance, exposition actions dominante (75 % actions)</div>
+      </div>
+      <div class="port-date">Comptes de placement enregistrés — au 30 juin 2026</div>
+    </div>
+    <div class="g3" style="margin-bottom:16px">
+      <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-assomption-croissance-1a">30.05 %</div><div class="ks">Annualisé, net RFG</div></div>
+      <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-assomption-croissance-3a">19.21 %</div><div class="ks">Annualisé</div></div>
+      <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-assomption-croissance-5a">11.45 %</div><div class="ks">Annualisé</div></div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="ch nv">Répartition par catégorie d'actifs</div>
+        <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:75%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">75 %</div></div><div style="display:flex;align-items:center;gap:10px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:25%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">25 %</div></div></div>
+      </div>
+      <div class="card">
+        <div class="ch gd">Détail des placements</div>
+        <div class="cb" style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr>
+              <th style="text-align:left">Fonds</th>
+              <th style="text-align:right">Poids</th>
+              <th style="text-align:right">1 an</th>
+              <th style="text-align:right">3 ans</th>
+              <th style="text-align:right">5 ans</th>
+              <th style="text-align:right">RFG</th>
+            </tr></thead>
+            <tbody><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Obligations de sociétés (CI)</a></strong><br><small style="color:#999">Revenu fixe</small></td><td style="text-align:right">15 %</td><td style="text-align:right" id="frow-assomption-croissance-obligsoc-1a">4.92 %</td><td style="text-align:right" id="frow-assomption-croissance-obligsoc-3a">6.83 %</td><td style="text-align:right" id="frow-assomption-croissance-obligsoc-5a">2.34 %</td><td style="text-align:right">1.80 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Obligations à haut rendement (TD)</a></strong><br><small style="color:#999">Revenu fixe (haut rendement)</small></td><td style="text-align:right">10 %</td><td style="text-align:right" id="frow-assomption-croissance-hautrend-1a">3.96 %</td><td style="text-align:right" id="frow-assomption-croissance-hautrend-3a">5.97 %</td><td style="text-align:right" id="frow-assomption-croissance-hautrend-5a">s.o.</td><td style="text-align:right">1.75 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions canadiennes momentum (Louisbourg)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">20 %</td><td style="text-align:right" id="frow-assomption-croissance-mom-1a">40.27 %</td><td style="text-align:right" id="frow-assomption-croissance-mom-3a">24.03 %</td><td style="text-align:right" id="frow-assomption-croissance-mom-5a">13.70 %</td><td style="text-align:right">2.68 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions canadiennes de base (Fidelity)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">12 %</td><td style="text-align:right" id="frow-assomption-croissance-cdnbase-1a">24.18 %</td><td style="text-align:right" id="frow-assomption-croissance-cdnbase-3a">17.00 %</td><td style="text-align:right" id="frow-assomption-croissance-cdnbase-5a">10.58 %</td><td style="text-align:right">2.53 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions américaines - Ciblé (Fidelity)</a></strong><br><small style="color:#999">Actions américaines</small></td><td style="text-align:right">22 %</td><td style="text-align:right" id="frow-assomption-croissance-uscible-1a">47.35 %</td><td style="text-align:right" id="frow-assomption-croissance-uscible-3a">29.00 %</td><td style="text-align:right" id="frow-assomption-croissance-uscible-5a">16.08 %</td><td style="text-align:right">3.05 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions mondiales+ (Fidelity)</a></strong><br><small style="color:#999">Actions mondiales</small></td><td style="text-align:right">15 %</td><td style="text-align:right" id="frow-assomption-croissance-mondplus-1a">28.87 %</td><td style="text-align:right" id="frow-assomption-croissance-mondplus-3a">s.o.</td><td style="text-align:right" id="frow-assomption-croissance-mondplus-5a">s.o.</td><td style="text-align:right">2.90 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Marchés émergents (CI)</a></strong><br><small style="color:#999">Actions marchés émergents</small></td><td style="text-align:right">6 %</td><td style="text-align:right" id="frow-assomption-croissance-em-1a">53.59 %</td><td style="text-align:right" id="frow-assomption-croissance-em-3a">24.72 %</td><td style="text-align:right" id="frow-assomption-croissance-em-5a">s.o.</td><td style="text-align:right">3.05 %</td></tr><tr style="font-weight:700;background:#f8f8f8"><td>Total portefeuille</td><td style="text-align:right">100 %</td><td style="text-align:right" id="ptot-assomption-croissance-1a">30.05 %</td><td style="text-align:right" id="ptot-assomption-croissance-3a">19.21 %</td><td style="text-align:right" id="ptot-assomption-croissance-5a">11.45 %</td><td style="text-align:right" id="ptot-assomption-croissance-rfg">2.57 %</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="note" style="margin-top:12px">Rendements nets composés (RFG inclus, série D 75/75 sans frais de sortie). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 juin 2026. Source : Assomption Vie — Comptes de placement enregistrés (CPE), Lipper (LSEG). Portefeuille proposé par Olivier Fraser.</div>
+  </div>
+<div class="sub-pane" id="sub-croissance-ia" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille iA — Croissance')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
       <div class="port-header">
         <div>
           <div class="port-title">Croissance — Industrielle Alliance</div>
@@ -1785,67 +1732,22 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
     </div>
 
 <div class="sub-pane" id="sub-croissance-beneva" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille Beneva — Croissance')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
-      <div class="port-header">
-        <div>
-          <div class="port-title">Croissance — Beneva</div>
-          <div class="port-sub">orienté croissance, exposition actions dominante (83 % actions)</div>
-        </div>
-        <div class="port-date">Garantie 75/100 — au 30 juin 2026</div>
-      </div>
-      <div class="g3" style="margin-bottom:16px">
-        <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-beneva-croissance-1a">29.37 %</div><div class="ks">Annualisé, net RFG</div></div>
-        <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-beneva-croissance-3a">19.28 %</div><div class="ks">Annualisé</div></div>
-        <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-beneva-croissance-5a">9.82 %</div><div class="ks">Annualisé</div></div>
-      </div>
-      <div class="g2">
-        <div class="card">
-          <div class="ch nv">Répartition par catégorie d'actifs</div>
-          <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:83%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">83 %</div></div><div style="display:flex;align-items:center;gap:10px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:17%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">17 %</div></div></div>
-        </div>
-        <div class="card">
-          <div class="ch gd">Détail des placements</div>
-          <div class="cb" style="overflow-x:auto">
-            <table class="tbl">
-              <thead><tr>
-                <th style="text-align:left">Fonds</th>
-                <th style="text-align:right">Poids</th>
-                <th style="text-align:right">1 an</th>
-                <th style="text-align:right">3 ans</th>
-                <th style="text-align:right">5 ans</th>
-                <th style="text-align:right">RFG</th>
-              </tr></thead>
-              <tbody><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe canadien (AGF)</a></strong><br><small style="color:#999">Revenu fixe</small></td><td style="text-align:right">12 %</td><td style="text-align:right" id="frow-beneva-croissance-rab-1a">3.68 %</td><td style="text-align:right" id="frow-beneva-croissance-rab-3a">4.26 %</td><td style="text-align:right" id="frow-beneva-croissance-rab-5a">0.20 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe à haut rendement (GPTD)</a></strong><br><small style="color:#999">Revenu fixe (haut rendement)</small></td><td style="text-align:right">5 %</td><td style="text-align:right" id="frow-beneva-croissance-rbp-1a">4.33 %</td><td style="text-align:right" id="frow-beneva-croissance-rbp-3a">6.30 %</td><td style="text-align:right" id="frow-beneva-croissance-rbp-5a">2.55 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions canadiennes (Fidelity)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">15 %</td><td style="text-align:right" id="frow-beneva-croissance-ram-1a">25.81 %</td><td style="text-align:right" id="frow-beneva-croissance-ram-3a">18.88 %</td><td style="text-align:right" id="frow-beneva-croissance-ram-5a">11.65 %</td><td style="text-align:right">2.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Indice américain (GPTD)</a></strong><br><small style="color:#999">Actions américaines (indice)</small></td><td style="text-align:right">20 %</td><td style="text-align:right" id="frow-beneva-croissance-rdc-1a">24.60 %</td><td style="text-align:right" id="frow-beneva-croissance-rdc-3a">20.74 %</td><td style="text-align:right" id="frow-beneva-croissance-rdc-5a">13.93 %</td><td style="text-align:right">2.09 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions mondiales (AGF)</a></strong><br><small style="color:#999">Actions mondiales</small></td><td style="text-align:right">20 %</td><td style="text-align:right" id="frow-beneva-croissance-rbs-1a">17.61 %</td><td style="text-align:right" id="frow-beneva-croissance-rbs-3a">22.57 %</td><td style="text-align:right" id="frow-beneva-croissance-rbs-5a">12.46 %</td><td style="text-align:right">2.68 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Marchés émergents (AGF)</a></strong><br><small style="color:#999">Actions marchés émergents</small></td><td style="text-align:right">14 %</td><td style="text-align:right" id="frow-beneva-croissance-rav-1a">59.29 %</td><td style="text-align:right" id="frow-beneva-croissance-rav-3a">24.17 %</td><td style="text-align:right" id="frow-beneva-croissance-rav-5a">8.51 %</td><td style="text-align:right">2.78 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions américaines petites/moy. cap. (AGF)</a></strong><br><small style="color:#999">Actions américaines (petites/moy. cap.)</small></td><td style="text-align:right">14 %</td><td style="text-align:right" id="frow-beneva-croissance-rda-1a">57.83 %</td><td style="text-align:right" id="frow-beneva-croissance-rda-3a">25.57 %</td><td style="text-align:right" id="frow-beneva-croissance-rda-5a">10.39 %</td><td style="text-align:right">2.64 %</td></tr><tr style="font-weight:700;background:#f8f8f8"><td>Total portefeuille</td><td style="text-align:right">100 %</td><td style="text-align:right" id="ptot-beneva-croissance-1a">29.37 %</td><td style="text-align:right" id="ptot-beneva-croissance-3a">19.28 %</td><td style="text-align:right" id="ptot-beneva-croissance-5a">9.82 %</td><td style="text-align:right" id="ptot-beneva-croissance-rfg">2.34 %</td></tr></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="note" style="margin-top:12px">Rendements nets composés (RFF inclus, garantie 75/100). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 juin 2026. Source : Beneva — Comptes d'investissement (fonds AGF, Dynamique, Fidelity, GPTD sous-jacents). Portefeuille proposé par Olivier Fraser.</div>
-    </div></div><div id="port-audacieux" class="port-pane" style="display:none">
-    <div class="sub-assureur" style="display:flex;gap:8px;margin-bottom:14px">
-      <button class="sub-btn on" onclick="showSub('audacieux','assomption',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#0F0F0F;color:#fff">Assomption Vie</button>
-      <button class="sub-btn" onclick="showSub('audacieux','ia',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Industrielle Alliance</button>
-      <button class="sub-btn" onclick="showSub('audacieux','beneva',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Beneva</button>
-    </div>
-<div class="sub-pane" id="sub-audacieux-assomption">
-<button class="print-btn noprint" onclick="printPane('port','Portefeuille Assomption — Audacieux')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
     <div class="port-header">
       <div>
-        <div class="port-title">Audacieux — Assomption Vie</div>
-        <div class="port-sub">Portefeuille fortement orienté actions, gestion active et passive</div>
+        <div class="port-title">Croissance — Beneva</div>
+        <div class="port-sub">orienté croissance, exposition actions dominante (75 % actions)</div>
       </div>
-      <div class="port-date">Données au : Avril — Mai 2026</div>
+      <div class="port-date">Garantie 75/100 — au 30 juin 2026</div>
     </div>
-
     <div class="g3" style="margin-bottom:16px">
-      <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-audacieux-1a">36.69 %</div><div class="ks">Au 30 avr. 2026</div></div>
-      <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-audacieux-3a">21.04 %</div><div class="ks">Annualisé</div></div>
-      <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-audacieux-5a">13.96 %</div><div class="ks">Annualisé</div></div>
+      <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-beneva-croissance-1a">26.84 %</div><div class="ks">Annualisé, net RFG</div></div>
+      <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-beneva-croissance-3a">17.92 %</div><div class="ks">Annualisé</div></div>
+      <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-beneva-croissance-5a">9.02 %</div><div class="ks">Annualisé</div></div>
     </div>
-
     <div class="g2">
       <div class="card">
         <div class="ch nv">Répartition par catégorie d'actifs</div>
-        <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:93%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">93 %</div></div><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:7%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">7 %</div></div></div>
+        <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:75%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">75 %</div></div><div style="display:flex;align-items:center;gap:10px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:25%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">25 %</div></div></div>
       </div>
       <div class="card">
         <div class="ch gd">Détail des placements</div>
@@ -1854,28 +1756,61 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
             <thead><tr>
               <th style="text-align:left">Fonds</th>
               <th style="text-align:right">Poids</th>
-              <th style="text-align:right">1 an</th>
-              <th style="text-align:right">3 ans</th>
-              <th style="text-align:right">5 ans</th>
+              <th style="text-align:right">1 an</th>
+              <th style="text-align:right">3 ans</th>
+              <th style="text-align:right">5 ans</th>
               <th style="text-align:right">RFG</th>
             </tr></thead>
-            <tbody>
-              <tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions américaines — Ciblé (Fidelity) D 75/75</a></strong><br><small style="color:#999">Actions américaines</small></td><td>20 %</td><td id="frow-audacieux-623-1a">44.92 %</td><td id="frow-audacieux-623-3a">25.49 %</td><td id="frow-audacieux-623-5a">13.68 %</td><td>3.05 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions canadiennes momentum (Louisbourg) D 75/75</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td>15 %</td><td id="frow-audacieux-617-1a">55.86 %</td><td id="frow-audacieux-617-3a">24.55 %</td><td id="frow-audacieux-617-5a">16.08 %</td><td>2.68 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Fonds des marchés émergents CI A</a></strong><br><small style="color:#999">Actions émergentes</small></td><td>10 %</td><td id="frow-audacieux-634-1a">50.58 %</td><td id="frow-audacieux-634-3a">21.95 %</td><td id="frow-audacieux-634-5a">8.46 %</td><td>2.33 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Fonds de ressources mondiales CI A</a></strong><br><small style="color:#999">Actions mondiales — ressources</small></td><td>10 %</td><td id="frow-audacieux-630-1a">71.28 %</td><td id="frow-audacieux-630-3a">19.45 %</td><td id="frow-audacieux-630-5a">21.66 %</td><td>2.29 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Fidelity FNB Simplifié Croissance B</a></strong><br><small style="color:#999">FNB croissance diversifié</small></td><td>45 %</td><td id="frow-audacieux-647-1a">15.87 %</td><td id="frow-audacieux-647-3a">18.05 %</td><td id="frow-audacieux-647-5a">12.9 %</td><td>1.7 %</td></tr>
-              <tr style="font-weight:700;background:#f8f8f8">
-                <td>Total portefeuille</td>
-                <td style="text-align:right">100 %</td>
-                <td style="text-align:right" id="ptot-audacieux-1a">36.69 %</td>
-                <td style="text-align:right" id="ptot-audacieux-3a">21.04 %</td>
-                <td style="text-align:right" id="ptot-audacieux-5a">13.96 %</td>
-                <td style="text-align:right" id="ptot-audacieux-rfg">2.37 %</td>
-              </tr>
-            </tbody>
+            <tbody><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe canadien (AGF)</a></strong><br><small style="color:#999">Revenu fixe</small></td><td style="text-align:right">15 %</td><td style="text-align:right" id="frow-beneva-croissance-rab-1a">3.68 %</td><td style="text-align:right" id="frow-beneva-croissance-rab-3a">4.26 %</td><td style="text-align:right" id="frow-beneva-croissance-rab-5a">0.20 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe à haut rendement (GPTD)</a></strong><br><small style="color:#999">Revenu fixe (haut rendement)</small></td><td style="text-align:right">10 %</td><td style="text-align:right" id="frow-beneva-croissance-rbp-1a">4.33 %</td><td style="text-align:right" id="frow-beneva-croissance-rbp-3a">6.30 %</td><td style="text-align:right" id="frow-beneva-croissance-rbp-5a">2.55 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions canadiennes (Fidelity)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">14 %</td><td style="text-align:right" id="frow-beneva-croissance-ram-1a">25.81 %</td><td style="text-align:right" id="frow-beneva-croissance-ram-3a">18.88 %</td><td style="text-align:right" id="frow-beneva-croissance-ram-5a">11.65 %</td><td style="text-align:right">2.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Indice américain (GPTD)</a></strong><br><small style="color:#999">Actions américaines (indice)</small></td><td style="text-align:right">18 %</td><td style="text-align:right" id="frow-beneva-croissance-rdc-1a">24.60 %</td><td style="text-align:right" id="frow-beneva-croissance-rdc-3a">20.74 %</td><td style="text-align:right" id="frow-beneva-croissance-rdc-5a">13.93 %</td><td style="text-align:right">2.09 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions mondiales (AGF)</a></strong><br><small style="color:#999">Actions mondiales</small></td><td style="text-align:right">18 %</td><td style="text-align:right" id="frow-beneva-croissance-rbs-1a">17.61 %</td><td style="text-align:right" id="frow-beneva-croissance-rbs-3a">22.57 %</td><td style="text-align:right" id="frow-beneva-croissance-rbs-5a">12.46 %</td><td style="text-align:right">2.68 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Marchés émergents (AGF)</a></strong><br><small style="color:#999">Actions marchés émergents</small></td><td style="text-align:right">13 %</td><td style="text-align:right" id="frow-beneva-croissance-rav-1a">59.29 %</td><td style="text-align:right" id="frow-beneva-croissance-rav-3a">24.17 %</td><td style="text-align:right" id="frow-beneva-croissance-rav-5a">8.51 %</td><td style="text-align:right">2.78 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions américaines petites/moy. cap. (AGF)</a></strong><br><small style="color:#999">Actions américaines (petites/moy. cap.)</small></td><td style="text-align:right">12 %</td><td style="text-align:right" id="frow-beneva-croissance-rda-1a">57.83 %</td><td style="text-align:right" id="frow-beneva-croissance-rda-3a">25.57 %</td><td style="text-align:right" id="frow-beneva-croissance-rda-5a">10.39 %</td><td style="text-align:right">2.64 %</td></tr><tr style="font-weight:700;background:#f8f8f8"><td>Total portefeuille</td><td style="text-align:right">100 %</td><td style="text-align:right" id="ptot-beneva-croissance-1a">26.84 %</td><td style="text-align:right" id="ptot-beneva-croissance-3a">17.92 %</td><td style="text-align:right" id="ptot-beneva-croissance-5a">9.02 %</td><td style="text-align:right" id="ptot-beneva-croissance-rfg">2.26 %</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
-    <div class="note" style="margin-top:12px">Rendements nets des frais de gestion (RFG). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 avril 2026. Source : Assomption Vie CPE Série D 75/75, CI Financial, Fidelity. Portefeuille proposé par Olivier Fraser.
-    </div></div><div class="sub-pane" id="sub-audacieux-ia" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille iA — Audacieux')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
+    <div class="note" style="margin-top:12px">Rendements nets composés (RFF inclus, garantie 75/100). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 juin 2026. Source : Beneva — Comptes d'investissement (fonds AGF, Dynamique, Fidelity, GPTD sous-jacents). Portefeuille proposé par Olivier Fraser.</div>
+  </div></div><div id="port-audacieux" class="port-pane" style="display:none">
+    <div class="sub-assureur" style="display:flex;gap:8px;margin-bottom:14px">
+      <button class="sub-btn on" onclick="showSub('audacieux','assomption',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#0F0F0F;color:#fff">Assomption Vie</button>
+      <button class="sub-btn" onclick="showSub('audacieux','ia',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Industrielle Alliance</button>
+      <button class="sub-btn" onclick="showSub('audacieux','beneva',this)" style="padding:6px 16px;border:1px solid var(--gry-l);border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;background:#fff;color:var(--gry)">Beneva</button>
+    </div>
+<div class="sub-pane" id="sub-audacieux-assomption" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille Assomption — Audacieux')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
+    <div class="port-header">
+      <div>
+        <div class="port-title">Audacieux — Assomption Vie</div>
+        <div class="port-sub">fortement orienté actions, croissance maximale (90 % actions)</div>
+      </div>
+      <div class="port-date">Comptes de placement enregistrés — au 30 juin 2026</div>
+    </div>
+    <div class="g3" style="margin-bottom:16px">
+      <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-assomption-audacieux-1a">35.24 %</div><div class="ks">Annualisé, net RFG</div></div>
+      <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-assomption-audacieux-3a">22.27 %</div><div class="ks">Annualisé</div></div>
+      <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-assomption-audacieux-5a">13.98 %</div><div class="ks">Annualisé</div></div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="ch nv">Répartition par catégorie d'actifs</div>
+        <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:90%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">90 %</div></div><div style="display:flex;align-items:center;gap:10px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:10%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">10 %</div></div></div>
+      </div>
+      <div class="card">
+        <div class="ch gd">Détail des placements</div>
+        <div class="cb" style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr>
+              <th style="text-align:left">Fonds</th>
+              <th style="text-align:right">Poids</th>
+              <th style="text-align:right">1 an</th>
+              <th style="text-align:right">3 ans</th>
+              <th style="text-align:right">5 ans</th>
+              <th style="text-align:right">RFG</th>
+            </tr></thead>
+            <tbody><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Obligations à haut rendement (TD)</a></strong><br><small style="color:#999">Revenu fixe (haut rendement)</small></td><td style="text-align:right">10 %</td><td style="text-align:right" id="frow-assomption-audacieux-hautrend-1a">3.96 %</td><td style="text-align:right" id="frow-assomption-audacieux-hautrend-3a">5.97 %</td><td style="text-align:right" id="frow-assomption-audacieux-hautrend-5a">s.o.</td><td style="text-align:right">1.75 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions canadiennes momentum (Louisbourg)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">24 %</td><td style="text-align:right" id="frow-assomption-audacieux-mom-1a">40.27 %</td><td style="text-align:right" id="frow-assomption-audacieux-mom-3a">24.03 %</td><td style="text-align:right" id="frow-assomption-audacieux-mom-5a">13.70 %</td><td style="text-align:right">2.68 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions canadiennes de base (Fidelity)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">14 %</td><td style="text-align:right" id="frow-assomption-audacieux-cdnbase-1a">24.18 %</td><td style="text-align:right" id="frow-assomption-audacieux-cdnbase-3a">17.00 %</td><td style="text-align:right" id="frow-assomption-audacieux-cdnbase-5a">10.58 %</td><td style="text-align:right">2.53 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions américaines - Ciblé (Fidelity)</a></strong><br><small style="color:#999">Actions américaines</small></td><td style="text-align:right">26 %</td><td style="text-align:right" id="frow-assomption-audacieux-uscible-1a">47.35 %</td><td style="text-align:right" id="frow-assomption-audacieux-uscible-3a">29.00 %</td><td style="text-align:right" id="frow-assomption-audacieux-uscible-5a">16.08 %</td><td style="text-align:right">3.05 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Actions mondiales+ (Fidelity)</a></strong><br><small style="color:#999">Actions mondiales</small></td><td style="text-align:right">18 %</td><td style="text-align:right" id="frow-assomption-audacieux-mondplus-1a">28.87 %</td><td style="text-align:right" id="frow-assomption-audacieux-mondplus-3a">s.o.</td><td style="text-align:right" id="frow-assomption-audacieux-mondplus-5a">s.o.</td><td style="text-align:right">2.90 %</td></tr><tr><td><strong><a href="https://cpe.assomption.ca/" target="_blank" rel="noopener" class="fund-link">Marchés émergents (CI)</a></strong><br><small style="color:#999">Actions marchés émergents</small></td><td style="text-align:right">8 %</td><td style="text-align:right" id="frow-assomption-audacieux-em-1a">53.59 %</td><td style="text-align:right" id="frow-assomption-audacieux-em-3a">24.72 %</td><td style="text-align:right" id="frow-assomption-audacieux-em-5a">s.o.</td><td style="text-align:right">3.05 %</td></tr><tr style="font-weight:700;background:#f8f8f8"><td>Total portefeuille</td><td style="text-align:right">100 %</td><td style="text-align:right" id="ptot-assomption-audacieux-1a">35.24 %</td><td style="text-align:right" id="ptot-assomption-audacieux-3a">22.27 %</td><td style="text-align:right" id="ptot-assomption-audacieux-5a">13.98 %</td><td style="text-align:right" id="ptot-assomption-audacieux-rfg">2.73 %</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="note" style="margin-top:12px">Rendements nets composés (RFG inclus, série D 75/75 sans frais de sortie). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 juin 2026. Source : Assomption Vie — Comptes de placement enregistrés (CPE), Lipper (LSEG). Portefeuille proposé par Olivier Fraser.</div>
+  </div>
+<div class="sub-pane" id="sub-audacieux-ia" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille iA — Audacieux')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
       <div class="port-header">
         <div>
           <div class="port-title">Audacieux — Industrielle Alliance</div>
@@ -1901,42 +1836,42 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
     </div>
     <div class="note" style="margin-top:4px">Les rendements indiqués sont nets des frais de gestion (RFG). Les rendements passés ne garantissent pas les résultats futurs. Données iA — Série Classique 75/75.</div>
   <div class="sub-pane" id="sub-audacieux-beneva" style="display:none"><button class="print-btn noprint" onclick="printPane('port','Portefeuille Beneva — Audacieux')" style="float:right"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer</button>
-      <div class="port-header">
-        <div>
-          <div class="port-title">Audacieux — Beneva</div>
-          <div class="port-sub">fortement orienté actions, croissance maximale (93 % actions)</div>
-        </div>
-        <div class="port-date">Garantie 75/100 — au 30 juin 2026</div>
+    <div class="port-header">
+      <div>
+        <div class="port-title">Audacieux — Beneva</div>
+        <div class="port-sub">fortement orienté actions, croissance maximale (90 % actions)</div>
       </div>
-      <div class="g3" style="margin-bottom:16px">
-        <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-beneva-audacieux-1a">32.85 %</div><div class="ks">Annualisé, net RFG</div></div>
-        <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-beneva-audacieux-3a">21.16 %</div><div class="ks">Annualisé</div></div>
-        <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-beneva-audacieux-5a">10.86 %</div><div class="ks">Annualisé</div></div>
-      </div>
-      <div class="g2">
-        <div class="card">
-          <div class="ch nv">Répartition par catégorie d'actifs</div>
-          <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:93%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">93 %</div></div><div style="display:flex;align-items:center;gap:10px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:7%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">7 %</div></div></div>
-        </div>
-        <div class="card">
-          <div class="ch gd">Détail des placements</div>
-          <div class="cb" style="overflow-x:auto">
-            <table class="tbl">
-              <thead><tr>
-                <th style="text-align:left">Fonds</th>
-                <th style="text-align:right">Poids</th>
-                <th style="text-align:right">1 an</th>
-                <th style="text-align:right">3 ans</th>
-                <th style="text-align:right">5 ans</th>
-                <th style="text-align:right">RFG</th>
-              </tr></thead>
-              <tbody><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe canadien (AGF)</a></strong><br><small style="color:#999">Revenu fixe</small></td><td style="text-align:right">5 %</td><td style="text-align:right" id="frow-beneva-audacieux-rab-1a">3.68 %</td><td style="text-align:right" id="frow-beneva-audacieux-rab-3a">4.26 %</td><td style="text-align:right" id="frow-beneva-audacieux-rab-5a">0.20 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe à haut rendement (GPTD)</a></strong><br><small style="color:#999">Revenu fixe (haut rendement)</small></td><td style="text-align:right">2 %</td><td style="text-align:right" id="frow-beneva-audacieux-rbp-1a">4.33 %</td><td style="text-align:right" id="frow-beneva-audacieux-rbp-3a">6.30 %</td><td style="text-align:right" id="frow-beneva-audacieux-rbp-5a">2.55 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions canadiennes (Fidelity)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">14 %</td><td style="text-align:right" id="frow-beneva-audacieux-ram-1a">25.81 %</td><td style="text-align:right" id="frow-beneva-audacieux-ram-3a">18.88 %</td><td style="text-align:right" id="frow-beneva-audacieux-ram-5a">11.65 %</td><td style="text-align:right">2.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Indice américain (GPTD)</a></strong><br><small style="color:#999">Actions américaines (indice)</small></td><td style="text-align:right">22 %</td><td style="text-align:right" id="frow-beneva-audacieux-rdc-1a">24.60 %</td><td style="text-align:right" id="frow-beneva-audacieux-rdc-3a">20.74 %</td><td style="text-align:right" id="frow-beneva-audacieux-rdc-5a">13.93 %</td><td style="text-align:right">2.09 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions mondiales (AGF)</a></strong><br><small style="color:#999">Actions mondiales</small></td><td style="text-align:right">24 %</td><td style="text-align:right" id="frow-beneva-audacieux-rbs-1a">17.61 %</td><td style="text-align:right" id="frow-beneva-audacieux-rbs-3a">22.57 %</td><td style="text-align:right" id="frow-beneva-audacieux-rbs-5a">12.46 %</td><td style="text-align:right">2.68 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Marchés émergents (AGF)</a></strong><br><small style="color:#999">Actions marchés émergents</small></td><td style="text-align:right">17 %</td><td style="text-align:right" id="frow-beneva-audacieux-rav-1a">59.29 %</td><td style="text-align:right" id="frow-beneva-audacieux-rav-3a">24.17 %</td><td style="text-align:right" id="frow-beneva-audacieux-rav-5a">8.51 %</td><td style="text-align:right">2.78 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions américaines petites/moy. cap. (AGF)</a></strong><br><small style="color:#999">Actions américaines (petites/moy. cap.)</small></td><td style="text-align:right">16 %</td><td style="text-align:right" id="frow-beneva-audacieux-rda-1a">57.83 %</td><td style="text-align:right" id="frow-beneva-audacieux-rda-3a">25.57 %</td><td style="text-align:right" id="frow-beneva-audacieux-rda-5a">10.39 %</td><td style="text-align:right">2.64 %</td></tr><tr style="font-weight:700;background:#f8f8f8"><td>Total portefeuille</td><td style="text-align:right">100 %</td><td style="text-align:right" id="ptot-beneva-audacieux-1a">32.85 %</td><td style="text-align:right" id="ptot-beneva-audacieux-3a">21.16 %</td><td style="text-align:right" id="ptot-beneva-audacieux-5a">10.86 %</td><td style="text-align:right" id="ptot-beneva-audacieux-rfg">2.45 %</td></tr></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="note" style="margin-top:12px">Rendements nets composés (RFF inclus, garantie 75/100). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 juin 2026. Source : Beneva — Comptes d'investissement (fonds AGF, Dynamique, Fidelity, GPTD sous-jacents). Portefeuille proposé par Olivier Fraser.</div>
+      <div class="port-date">Garantie 75/100 — au 30 juin 2026</div>
     </div>
+    <div class="g3" style="margin-bottom:16px">
+      <div class="kpi"><div class="kl">Rendement 1 an</div><div class="kv gold" id="kpi-beneva-audacieux-1a">32.09 %</div><div class="ks">Annualisé, net RFG</div></div>
+      <div class="kpi"><div class="kl">Rendement 3 ans</div><div class="kv" id="kpi-beneva-audacieux-3a">20.75 %</div><div class="ks">Annualisé</div></div>
+      <div class="kpi"><div class="kl">Rendement 5 ans</div><div class="kv" id="kpi-beneva-audacieux-5a">10.70 %</div><div class="ks">Annualisé</div></div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="ch nv">Répartition par catégorie d'actifs</div>
+        <div class="cb"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:120px;font-size:11px;color:var(--gry)">Actions</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:90%;height:100%;background:#0F0F0F;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">90 %</div></div><div style="display:flex;align-items:center;gap:10px"><div style="width:120px;font-size:11px;color:var(--gry)">Revenu fixe</div><div style="flex:1;background:var(--gry-l);border-radius:3px;height:10px;overflow:hidden"><div style="width:10%;height:100%;background:#2E75B6;border-radius:3px"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700">10 %</div></div></div>
+      </div>
+      <div class="card">
+        <div class="ch gd">Détail des placements</div>
+        <div class="cb" style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr>
+              <th style="text-align:left">Fonds</th>
+              <th style="text-align:right">Poids</th>
+              <th style="text-align:right">1 an</th>
+              <th style="text-align:right">3 ans</th>
+              <th style="text-align:right">5 ans</th>
+              <th style="text-align:right">RFG</th>
+            </tr></thead>
+            <tbody><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Revenu fixe à haut rendement (GPTD)</a></strong><br><small style="color:#999">Revenu fixe (haut rendement)</small></td><td style="text-align:right">10 %</td><td style="text-align:right" id="frow-beneva-audacieux-rbp-1a">4.33 %</td><td style="text-align:right" id="frow-beneva-audacieux-rbp-3a">6.30 %</td><td style="text-align:right" id="frow-beneva-audacieux-rbp-5a">2.55 %</td><td style="text-align:right">1.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions canadiennes (Fidelity)</a></strong><br><small style="color:#999">Actions canadiennes</small></td><td style="text-align:right">14 %</td><td style="text-align:right" id="frow-beneva-audacieux-ram-1a">25.81 %</td><td style="text-align:right" id="frow-beneva-audacieux-ram-3a">18.88 %</td><td style="text-align:right" id="frow-beneva-audacieux-ram-5a">11.65 %</td><td style="text-align:right">2.50 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Indice américain (GPTD)</a></strong><br><small style="color:#999">Actions américaines (indice)</small></td><td style="text-align:right">22 %</td><td style="text-align:right" id="frow-beneva-audacieux-rdc-1a">24.60 %</td><td style="text-align:right" id="frow-beneva-audacieux-rdc-3a">20.74 %</td><td style="text-align:right" id="frow-beneva-audacieux-rdc-5a">13.93 %</td><td style="text-align:right">2.09 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions mondiales (AGF)</a></strong><br><small style="color:#999">Actions mondiales</small></td><td style="text-align:right">22 %</td><td style="text-align:right" id="frow-beneva-audacieux-rbs-1a">17.61 %</td><td style="text-align:right" id="frow-beneva-audacieux-rbs-3a">22.57 %</td><td style="text-align:right" id="frow-beneva-audacieux-rbs-5a">12.46 %</td><td style="text-align:right">2.68 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Marchés émergents (AGF)</a></strong><br><small style="color:#999">Actions marchés émergents</small></td><td style="text-align:right">17 %</td><td style="text-align:right" id="frow-beneva-audacieux-rav-1a">59.29 %</td><td style="text-align:right" id="frow-beneva-audacieux-rav-3a">24.17 %</td><td style="text-align:right" id="frow-beneva-audacieux-rav-5a">8.51 %</td><td style="text-align:right">2.78 %</td></tr><tr><td><strong><a href="https://www.beneva.ca/fr/conseillers-aisf/taux-rendements" target="_blank" rel="noopener" class="fund-link">Actions américaines petites/moy. cap. (AGF)</a></strong><br><small style="color:#999">Actions américaines (petites/moy. cap.)</small></td><td style="text-align:right">15 %</td><td style="text-align:right" id="frow-beneva-audacieux-rda-1a">57.83 %</td><td style="text-align:right" id="frow-beneva-audacieux-rda-3a">25.57 %</td><td style="text-align:right" id="frow-beneva-audacieux-rda-5a">10.39 %</td><td style="text-align:right">2.64 %</td></tr><tr style="font-weight:700;background:#f8f8f8"><td>Total portefeuille</td><td style="text-align:right">100 %</td><td style="text-align:right" id="ptot-beneva-audacieux-1a">32.09 %</td><td style="text-align:right" id="ptot-beneva-audacieux-3a">20.75 %</td><td style="text-align:right" id="ptot-beneva-audacieux-5a">10.70 %</td><td style="text-align:right" id="ptot-beneva-audacieux-rfg">2.42 %</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="note" style="margin-top:12px">Rendements nets composés (RFF inclus, garantie 75/100). Pondérés selon les poids de chaque fonds. Les rendements passés ne garantissent pas les résultats futurs. Période de référence : 30 juin 2026. Source : Beneva — Comptes d'investissement (fonds AGF, Dynamique, Fidelity, GPTD sous-jacents). Portefeuille proposé par Olivier Fraser.</div>
+  </div>
   </div>
 </div>
 
