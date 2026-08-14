@@ -657,6 +657,58 @@ body.dark .abf-auto-note{background:#1a1a0a;border-color:#333;color:#999}
 .abf-calc-val{font-size:12px;font-weight:800;color:var(--gold);min-width:110px;text-align:right;display:block}
 .abf-auto-note{font-size:10px;color:var(--gry);font-style:italic;padding:4px 16px;background:#fffef8;border-bottom:1px solid #f0f0f0}
 
+/* ══ DÉCAISSEMENT — habillage raffiné aux couleurs GFF (crème / or / noir) ══ */
+#retraite-dec .card{border-radius:20px;box-shadow:0 2px 14px rgba(15,15,15,.06);border:1px solid rgba(191,143,0,.08)}
+#retraite-dec .ch{padding:16px 22px;font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;border-bottom:none}
+#retraite-dec .ch.nv{background:var(--navy)}
+#retraite-dec .ch.gd,#retraite-dec .ch.bl,#retraite-dec .ch.gn{
+  background:linear-gradient(120deg,var(--gold) 0%,var(--gold-br) 100%);color:#fff}
+#retraite-dec .cb{padding:22px}
+#retraite-dec .field input,#retraite-dec .field select{border-color:rgba(191,143,0,.35);height:40px;font-size:14.5px}
+#retraite-dec .field input:focus,#retraite-dec .field select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(191,143,0,.12)}
+
+#retraite-dec .kpi{border-radius:16px;border-left:none;border-top:3px solid var(--gold);
+  box-shadow:0 2px 12px rgba(15,15,15,.05);padding:18px 18px 16px}
+#retraite-dec .kpi.gd,#retraite-dec .kpi.gn,#retraite-dec .kpi.bl,#retraite-dec .kpi.or{border-top-color:var(--gold)}
+#retraite-dec .kv{font-family:'DM Serif Display',serif;font-weight:400;font-size:24px;color:var(--navy)}
+#retraite-dec .kpi.or .kv{color:var(--gold-br)}
+#retraite-dec .kl{color:var(--gold-br);font-weight:800}
+
+#retraite-dec .rrow{padding:11px 0}
+#retraite-dec .rrow .rv{font-family:'DM Serif Display',serif;font-weight:400;font-size:16px}
+#retraite-dec .rrow.tot{background:linear-gradient(120deg,var(--navy) 0%,#262620 100%)}
+
+#retraite-dec .ordre-step{padding:18px 0}
+#retraite-dec .ordre-num{background:linear-gradient(135deg,var(--gold),var(--gold-br));color:#fff;
+  width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;flex-shrink:0}
+#retraite-dec .ordre-body .titre{font-weight:800;font-size:13.5px;color:var(--navy);margin-bottom:4px}
+#retraite-dec .ordre-body .desc{font-size:12px;color:var(--gry);line-height:1.55}
+#retraite-dec .ordre-body .raison{font-size:11px;color:var(--gold-br);font-style:italic;margin-top:4px}
+
+#retraite-dec .proj-tbl{border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(15,15,15,.05)}
+#retraite-dec .proj-tbl th{background:var(--navy);font-size:10.5px;letter-spacing:.4px;padding:12px}
+#retraite-dec .proj-tbl td{padding:10px 12px;font-size:12.5px}
+#retraite-dec .proj-tbl tr:nth-child(even) td{background:#FBF8F1}
+#retraite-dec .proj-tbl tr.age-psv td{background:var(--gold-l)}
+#retraite-dec .proj-tbl tr.total-row td{background:var(--navy);color:#fff;font-weight:700;border-top:2px solid var(--gold)}
+#retraite-dec .note{background:var(--gold-p);border-left:3px solid var(--gold);border-radius:10px;padding:14px 18px;font-size:11.5px;color:var(--gry)}
+
+body.dark #retraite-dec .card{background:#1a1a1a;border-color:rgba(191,143,0,.15)}
+body.dark #retraite-dec .kv{color:#fff}
+body.dark #retraite-dec .rv{color:#fff}
+body.dark #retraite-dec .rl{color:#aaa}
+body.dark #retraite-dec .ks{color:#999}
+body.dark #retraite-dec .proj-tbl tr:nth-child(even) td{background:#222}
+body.dark #retraite-dec .proj-tbl tr.age-psv td{background:#3a2e0a;color:#f5dfa0}
+body.dark #retraite-dec .proj-tbl td{color:#eee}
+body.dark #retraite-dec .proj-tbl tr.total-row td{background:#000}
+body.dark #retraite-dec .ordre-body .titre{color:#fff}
+body.dark #retraite-dec .ordre-body .desc{color:#bbb}
+body.dark #retraite-dec .field label{color:#bbb}
+body.dark #retraite-dec .field input,body.dark #retraite-dec .field select{background:#2a2a2a;color:#fff;border-color:rgba(191,143,0,.3)}
+body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
+
 </style>
 </head>
 <body>
