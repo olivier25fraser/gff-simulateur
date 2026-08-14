@@ -51,9 +51,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,248,225,
   border-radius:var(--r);font-weight:700!important;font-size:13px!important;
   transition:background .2s!important}
 .nav-cta:hover{background:var(--gold-l)!important;color:#fff!important}
-.nav-conseiller{border:1px solid rgba(15,15,15,.2);color:rgba(15,15,15,.6)!important;
-  padding:8px 18px;border-radius:var(--r);font-size:12px!important;transition:all .2s!important}
-.nav-conseiller:hover{border-color:rgba(15,15,15,.4)!important;color:var(--noir)!important}
+.nav-conseiller{background:var(--gold);border:1px solid var(--gold);color:#fff!important;
+  padding:8px 18px;border-radius:var(--r);font-size:12px!important;font-weight:600!important;transition:all .2s!important}
+.nav-conseiller:hover{background:var(--gold-l)!important;border-color:var(--gold-l)!important;color:#fff!important}
+
+/* ── VAGUE CRÈME (transition nav → hero) ── */
+.cream-wave-divider{position:absolute;top:0;left:0;width:100%;height:150px;z-index:2;pointer-events:none}
+.scroll-arrow{position:absolute;top:150px;left:50%;transform:translateX(-50%);z-index:2;
+  animation:scrollBounce 2.2s ease-in-out infinite;opacity:.55}
+@keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(10px)}}
 
 /* ── HERO ── */
 .hero{min-height:100vh;background:var(--noir);display:flex;align-items:center;
@@ -254,6 +260,12 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
 
 <!-- ═══ HERO ═══ -->
 <section class="hero" style="position:relative;overflow:hidden">
+  <svg class="cream-wave-divider" viewBox="0 0 1440 150" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#FFF8E1" d="M0,0 L1440,0 L1440,35 C1260,75 1100,100 940,85 C790,71 700,20 550,25 C400,30 320,90 170,95 C110,97 55,88 0,75 Z"/>
+  </svg>
+  <svg class="scroll-arrow" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFF8E1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M6 9l6 6 6-6"/>
+  </svg>
   <div class="hero-content">
     <div class="hero-badge">
       <span>Cabinet de services financiers</span>
