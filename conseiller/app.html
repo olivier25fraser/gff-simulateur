@@ -6489,7 +6489,7 @@ function calcDec() {
   });
 
   document.getElementById('dec-tbody-seul').innerHTML = rows +
-    `<tr class="total-row"><td>TOTAUX</td><td colspan="6"></td><td></td><td></td><td>${fmt(totalFerr)}</td><td>${fmt(totalImpot)}</td><td>${fmt(totalNet)}</td></tr>`;
+    `<tr class="total-row"><td>TOTAUX</td><td colspan="3"></td><td>${fmt(totalFerr)}</td><td colspan="4"></td><td>${fmt(totalImpot)}</td><td>${fmt(totalNet)}</td></tr>`;
 
   // Synthèse
   const revGouv = rrqAn + psvAn + srgAn + rente;
