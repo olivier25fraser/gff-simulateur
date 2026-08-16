@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Preview | Actualités du marché | GFF</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--noir:#0F0F0F;--gold:#BF8F00;--gold-l:#D4A017;--gold-p:#FFF8E1;--gold-d:#8B6700;--gry:#6B6B6B;--gry-l:#F5F5F5;--r:8px;--r-lg:16px}
-body{font-family:'DM Sans',sans-serif;color:var(--noir);background:#fff}
+body{font-family:'Public Sans',sans-serif;color:var(--noir);background:#fff}
 
 /* NAV */
 nav{background:var(--noir);height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,.06)}
@@ -24,17 +24,16 @@ nav{background:var(--noir);height:72px;display:flex;align-items:center;justify-c
 .hero{background:var(--noir);padding:72px 5% 56px;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 75% 50%,rgba(191,143,0,.1) 0%,transparent 60%);pointer-events:none}
 .hero-inner{position:relative;z-index:2;max-width:680px}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(191,143,0,.12);border:1px solid rgba(191,143,0,.25);border-radius:99px;padding:5px 16px;font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.8px;text-transform:uppercase;margin-bottom:24px}
-.live-dot{width:7px;height:7px;background:var(--gold);border-radius:50%;animation:blink 2s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
-.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(30px,4vw,50px);color:#fff;line-height:1.15;margin-bottom:16px}
+.hero-badge{display:inline-flex;align-items:center;gap:12px;font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.8px;text-transform:uppercase;margin-bottom:24px}
+.hero-badge-rule{width:26px;height:2px;background:var(--gold);flex-shrink:0}
+.hero h1{font-family:'Fraunces',serif;font-size:clamp(30px,4vw,50px);color:#fff;line-height:1.15;margin-bottom:16px}
 .hero h1 em{color:var(--gold);font-style:normal}
 .hero p{font-size:16px;color:rgba(255,255,255,.55);line-height:1.7;max-width:520px}
 
 /* SECTION */
 .section{padding:60px 5%}
 .section-tag{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
-.section h2{font-family:'DM Serif Display',serif;font-size:clamp(24px,3vw,36px);margin-bottom:12px;line-height:1.2}
+.section h2{font-family:'Fraunces',serif;font-size:clamp(24px,3vw,36px);margin-bottom:12px;line-height:1.2}
 .section p.sub{font-size:15px;color:var(--gry);margin-bottom:36px;max-width:540px;line-height:1.7}
 
 /* INDICES */
@@ -46,7 +45,7 @@ nav{background:var(--noir);height:72px;display:flex;align-items:center;justify-c
 .indice-pays{font-size:11px;color:var(--gry);margin-top:2px}
 .indice-icone{width:36px;height:36px;background:var(--gold-p);border-radius:var(--r);display:flex;align-items:center;justify-content:center}
 .indice-icone svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.indice-val{font-size:26px;font-weight:700;color:var(--noir);margin-bottom:6px;font-family:'DM Serif Display',serif}
+.indice-val{font-size:26px;font-weight:700;color:var(--noir);margin-bottom:6px;font-family:'Fraunces',serif}
 .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700}
 .pill.haut{background:var(--gold-p);color:var(--gold-d)}
 .pill.bas{background:#F5F5F5;color:#444}
@@ -61,7 +60,7 @@ nav{background:var(--noir);height:72px;display:flex;align-items:center;justify-c
 .macro-icone{width:38px;height:38px;background:rgba(191,143,0,.12);border-radius:var(--r);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
 .macro-icone svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .macro-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.macro-val{font-size:22px;font-weight:700;color:#fff;margin-bottom:3px;font-family:'DM Serif Display',serif}
+.macro-val{font-size:22px;font-weight:700;color:#fff;margin-bottom:3px;font-family:'Fraunces',serif}
 .macro-sub{font-size:11px;color:rgba(255,255,255,.35);margin-bottom:6px}
 .macro-chg{font-size:12px;font-weight:600}
 .macro-chg.haut{color:var(--gold)}
@@ -157,11 +156,10 @@ nav{background:var(--noir);height:72px;display:flex;align-items:center;justify-c
 <!-- HERO -->
 <div class="hero">
   <div class="hero-inner">
-    <div class="hero-badge"><div class="live-dot"></div> Mise à jour chaque matin à 9h00 EST</div>
+    <div class="hero-badge"><span class="hero-badge-rule"></span> Mise à jour chaque matin à 9h00 EST</div>
     <h1>Actualités<br>du <em>marché</em></h1>
     <p>Suivez les principaux indicateurs financiers, expliqués simplement. Ces informations vous aident à comprendre le contexte économique actuel.</p>
   </div>
-  <canvas id="heroWave" style="position:absolute;bottom:0;left:0;width:100%;height:110px;pointer-events:none;z-index:1"></canvas>
 </div>
 
 <!-- INDICES -->
@@ -363,10 +361,9 @@ nav{background:var(--noir);height:72px;display:flex;align-items:center;justify-c
 
 <!-- MACRO -->
 <div class="macro-bg">
-  <canvas id="macroWave" style="position:absolute;bottom:0;left:0;width:100%;height:100px;pointer-events:none;z-index:1"></canvas>
   <div style="position:relative;z-index:2;padding-bottom:16px">
     <div class="section-tag">Indicateurs économiques</div>
-    <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(24px,3vw,36px);color:#fff;margin-bottom:12px;line-height:1.2">Ce qui influence votre portefeuille</h2>
+    <h2 style="font-family:'Fraunces',serif;font-size:clamp(24px,3vw,36px);color:#fff;margin-bottom:12px;line-height:1.2">Ce qui influence votre portefeuille</h2>
     <p style="font-size:15px;color:rgba(255,255,255,.5);margin-bottom:36px;max-width:540px;line-height:1.7">Ces indicateurs ont un impact direct sur vos épargnes, vos placements et le coût de votre hypothèque.</p>
   </div>
   <div class="macro-grid">
