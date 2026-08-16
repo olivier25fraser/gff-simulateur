@@ -100,14 +100,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
 .service-card{background:#fff;border:1px solid #E8E8E8;border-radius:var(--r-lg);
   padding:32px;transition:all .25s;position:relative;overflow:hidden}
 .service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:var(--sc-color,var(--gold));transform:scaleX(0);transform-origin:left;
-  transition:transform .3s}
-.service-card:hover{border-color:var(--sc-color,var(--gold));box-shadow:var(--shadow-lg);
+  background:var(--gold)}
+.service-card:hover{border-color:var(--gold);box-shadow:var(--shadow-lg);
   transform:translateY(-4px)}
-.service-card:hover::before{transform:scaleX(1)}
 .sc-icon{width:52px;height:52px;border-radius:var(--r);display:flex;align-items:center;
-  justify-content:center;margin-bottom:20px;font-size:24px;
-  background:var(--sc-bg,var(--gold-p))}
+  justify-content:center;margin-bottom:20px;
+  background:var(--gold-p)}
 .sc-title{font-size:18px;font-weight:700;color:var(--noir);margin-bottom:10px}
 .sc-desc{font-size:14px;color:var(--gry);line-height:1.7}
 .sc-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
@@ -259,6 +257,10 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
 
 <!-- ═══ HERO ═══ -->
 <section class="hero" style="position:relative;overflow:hidden">
+  <svg style="position:absolute;top:0;right:0;width:48%;height:100%;z-index:0;pointer-events:none" viewBox="0 0 600 900" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M600,0 L600,900 L260,900 C160,760 320,620 210,470 C100,320 270,160 160,0 Z" fill="#BF8F00" opacity=".08"/>
+    <path d="M600,120 L600,900 L360,900 C280,780 400,660 320,540 C240,420 370,300 300,180 C260,120 340,80 380,60 Z" fill="#0F0F0F" opacity=".035"/>
+  </svg>
   <svg class="scroll-arrow" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#BF8F00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <path d="M6 9l6 6 6-6"/>
   </svg>
@@ -294,8 +296,8 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
     <p class="section-sub">Que vous débutiez dans la vie active ou planifiiez votre retraite, nous avons les outils et l'expertise pour vous protéger.</p>
     <div class="services-grid">
 
-      <div class="service-card" style="--sc-color:#0F0F0F;--sc-bg:#F5F5F5">
-        <div class="sc-icon" style="background:#F5F5F5">🛡️</div>
+      <div class="service-card">
+        <div class="sc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#BF8F00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
         <div class="sc-title">Assurance vie</div>
         <div class="sc-desc">Protégez votre famille en cas de décès prématuré. Assurance temporaire ou permanente, selon votre situation et vos objectifs.</div>
         <div class="sc-tags">
@@ -305,8 +307,8 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
         </div>
       </div>
 
-      <div class="service-card" style="--sc-color:#BF8F00;--sc-bg:#FFF8E1">
-        <div class="sc-icon" style="background:#FFF8E1">🏥</div>
+      <div class="service-card">
+        <div class="sc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#BF8F00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
         <div class="sc-title">Assurance invalidité</div>
         <div class="sc-desc">Maintenez votre revenu si une maladie ou un accident vous empêche de travailler. Le risque le plus sous-estimé en assurance de personnes.</div>
         <div class="sc-tags">
@@ -316,8 +318,8 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
         </div>
       </div>
 
-      <div class="service-card" style="--sc-color:#375623;--sc-bg:#E8F5E9">
-        <div class="sc-icon" style="background:#E8F5E9">🌿</div>
+      <div class="service-card">
+        <div class="sc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#BF8F00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></div>
         <div class="sc-title">Assurance maladies graves</div>
         <div class="sc-desc">Recevez un capital forfaitaire si vous êtes diagnostiqué d'une maladie grave comme le cancer, une crise cardiaque ou un AVC. Concentrez-vous sur votre guérison.</div>
         <div class="sc-tags">
@@ -327,8 +329,8 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
         </div>
       </div>
 
-      <div class="service-card" style="--sc-color:#1565C0;--sc-bg:#E3F2FD">
-        <div class="sc-icon" style="background:#E3F2FD">📈</div>
+      <div class="service-card">
+        <div class="sc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#BF8F00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
         <div class="sc-title">Épargne et retraite</div>
         <div class="sc-desc">REER, CELI, CELIAPP, REEE, REEI : maximisez vos avantages fiscaux et bâtissez un patrimoine solide.</div>
         <div class="sc-tags">
@@ -340,8 +342,8 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
         </div>
       </div>
 
-      <div class="service-card" style="--sc-color:#6A1B9A;--sc-bg:#F3E5F5">
-        <div class="sc-icon" style="background:#F3E5F5">🏡</div>
+      <div class="service-card">
+        <div class="sc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#BF8F00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
         <div class="sc-title">Assurance hypothécaire</div>
         <div class="sc-desc">Protégez votre maison et vos proches. Une assurance vie personnelle est souvent plus avantageuse que celle offerte par votre banque.</div>
         <div class="sc-tags">
@@ -351,8 +353,8 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
         </div>
       </div>
 
-      <div class="service-card" style="--sc-color:#C55A11;--sc-bg:#FFF3E0">
-        <div class="sc-icon" style="background:#FFF3E0">👴</div>
+      <div class="service-card">
+        <div class="sc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#BF8F00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
         <div class="sc-title">Planification successorale</div>
         <div class="sc-desc">Préparez la transmission de votre patrimoine. Assurance vie permanente, bénéficiaires désignés et planification financière pour assurer la sérénité de vos proches.</div>
         <div class="sc-tags">
