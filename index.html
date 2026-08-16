@@ -61,10 +61,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
 @keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(10px)}}
 
 /* ── HERO ── */
-.hero{min-height:100vh;background:#fff;display:flex;align-items:center;
+.hero{min-height:100vh;background:var(--noir);display:flex;align-items:center;
   padding:120px 5% 80px;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;
-  background:radial-gradient(ellipse at 70% 50%,rgba(191,143,0,.08) 0%,transparent 60%);
+  background:radial-gradient(ellipse at 70% 50%,rgba(191,143,0,.14) 0%,transparent 60%);
   pointer-events:none}
 .hero-content{max-width:640px;position:relative;z-index:1}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(191,143,0,.15);
@@ -75,19 +75,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
   border-radius:50%;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .hero h1{font-family:'DM Serif Display',serif;font-size:clamp(36px,5vw,64px);
-  color:var(--noir);line-height:1.1;margin-bottom:24px}
+  color:#fff;line-height:1.1;margin-bottom:24px}
 .hero h1 em{color:var(--gold);font-style:normal}
-.hero p{font-size:18px;color:rgba(15,15,15,.65);margin-bottom:40px;
+.hero p{font-size:18px;color:rgba(255,255,255,.65);margin-bottom:40px;
   line-height:1.7;max-width:520px}
 .hero-btns{display:flex;gap:16px;flex-wrap:wrap}
 .btn-primary{background:var(--gold);color:#fff;padding:16px 32px;border-radius:var(--r);
   font-weight:700;font-size:15px;text-decoration:none;transition:all .2s;
   display:inline-flex;align-items:center;gap:8px}
 .btn-primary:hover{background:var(--gold-l);transform:translateY(-2px);box-shadow:0 8px 24px rgba(191,143,0,.3)}
-.btn-secondary{background:rgba(15,15,15,.05);color:var(--noir);padding:16px 32px;
+.btn-secondary{background:rgba(255,255,255,.08);color:#fff;padding:16px 32px;
   border-radius:var(--r);font-weight:600;font-size:15px;text-decoration:none;
-  border:1px solid rgba(15,15,15,.15);transition:all .2s;display:inline-flex;align-items:center}
-.btn-secondary:hover{background:rgba(15,15,15,.09);border-color:rgba(15,15,15,.3)}
+  border:1px solid rgba(255,255,255,.15);transition:all .2s;display:inline-flex;align-items:center}
+.btn-secondary:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3)}
 
 /* ── SERVICES ── */
 .section{padding:96px 5%}
@@ -258,8 +258,8 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
 <!-- ═══ HERO ═══ -->
 <section class="hero" style="position:relative;overflow:hidden">
   <svg style="position:absolute;top:0;right:0;width:48%;height:100%;z-index:0;pointer-events:none" viewBox="0 0 600 900" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M600,0 L600,900 L260,900 C160,760 320,620 210,470 C100,320 270,160 160,0 Z" fill="#BF8F00" opacity=".08"/>
-    <path d="M600,120 L600,900 L360,900 C280,780 400,660 320,540 C240,420 370,300 300,180 C260,120 340,80 380,60 Z" fill="#0F0F0F" opacity=".035"/>
+    <path d="M600,0 L600,900 L260,900 C160,760 320,620 210,470 C100,320 270,160 160,0 Z" fill="#BF8F00" opacity=".16"/>
+    <path d="M600,120 L600,900 L360,900 C280,780 400,660 320,540 C240,420 370,300 300,180 C260,120 340,80 380,60 Z" fill="#D4A017" opacity=".10"/>
   </svg>
   <svg class="scroll-arrow" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#BF8F00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <path d="M6 9l6 6 6-6"/>
@@ -285,7 +285,6 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
       </a>
     </div>
   </div>
-  <canvas id="heroWave" class="wave-canvas-bottom"></canvas>
 </section>
 
 <!-- ═══ SERVICES ═══ -->
