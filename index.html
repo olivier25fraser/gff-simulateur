@@ -154,15 +154,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
 .partner-logo svg{flex-shrink:0}
 @keyframes scrollLeft{from{transform:translateX(-50%)}to{transform:translateX(0)}}
 
-.cta-section{background:linear-gradient(135deg,var(--noir) 0%,#1a1a1a 100%);
+.cta-section{background:var(--gry-l);
   padding:96px 5%;text-align:center;position:relative;overflow:hidden}
 .cta-section::before{content:'';position:absolute;top:50%;left:50%;
   transform:translate(-50%,-50%);width:600px;height:600px;
-  background:radial-gradient(circle,rgba(191,143,0,.15) 0%,transparent 70%);
+  background:radial-gradient(circle,rgba(191,143,0,.10) 0%,transparent 70%);
   pointer-events:none}
 .cta-section h2{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,48px);
-  color:#fff;margin-bottom:16px}
-.cta-section p{font-size:18px;color:rgba(255,255,255,.65);margin-bottom:40px;max-width:520px;margin-left:auto;margin-right:auto}
+  color:var(--noir);margin-bottom:16px}
+.cta-section p{font-size:18px;color:var(--gry);margin-bottom:40px;max-width:520px;margin-left:auto;margin-right:auto}
 
 /* ── CONTACT ── */
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
@@ -449,7 +449,6 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
       Prendre rendez-vous maintenant →
     </a>
   </div>
-  <canvas id="ctaWave" class="wave-canvas-bottom"></canvas>
 </section>
 
 <!-- ═══ CONTACT ═══ -->
