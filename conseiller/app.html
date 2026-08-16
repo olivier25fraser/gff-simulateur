@@ -967,34 +967,42 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
 <!-- ═══════ REER ═══════ -->
 <div id="pane-reer" class="pane">
   <button class="print-btn" onclick="printPane('reer','Analyse REER — Profil fiscal')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer / Sauvegarder en PDF</button>
-  <div class="g2">
-    <div>
-      <div class="card">
-        <div class="ch nv">Votre situation</div>
-        <div class="cb">
-          <div class="field" style="margin-bottom:16px">
-            <label>Situation familiale</label>
-            <div class="freq-group">
-              <button type="button" class="freq-btn on" id="rr-sit-seul" onclick="setSituationReer('seul')">Célibataire</button>
-              <button type="button" class="freq-btn" id="rr-sit-couple" onclick="setSituationReer('couple')">En couple</button>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px">
-            <div>
-              <div style="font-size:10px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Vous</div>
-              <div class="field"><label>Revenu brut annuel ($)</label><input type="number" id="rr-rev" value="75000" min="0" oninput="calcReer()"></div>
-              <div class="field"><label>Âge actuel</label><input type="number" id="rr-age" value="35" min="18" max="75" oninput="calcReer()"></div>
-              <div class="field"><label>Âge de retraite prévu</label><input type="number" id="rr-ret" value="65" min="50" max="75" oninput="calcReer()"></div>
-              <div class="field"><label>Enfants à charge</label><input type="number" id="rr-enf" value="0" min="0" max="10" oninput="updateEnfantsAges();calcReer()"></div>
-              <div id="rr-enfants-ages" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"></div>
-            </div>
-            <div id="rr-conjoint-col" style="display:none">
-              <div style="font-size:10px;font-weight:700;color:var(--gold-br);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Conjoint(e)</div>
-              <div class="field"><label>Revenu brut annuel ($)</label><input type="number" id="rr-rev2" value="0" min="0" oninput="calcReer()"></div>
-            </div>
-          </div>
+
+  <div class="card">
+    <div class="ch nv">Votre situation</div>
+    <div class="cb">
+      <div class="field" style="margin-bottom:16px">
+        <label>Situation familiale</label>
+        <div class="freq-group">
+          <button type="button" class="freq-btn on" id="rr-sit-seul" onclick="setSituationReer('seul')">Célibataire</button>
+          <button type="button" class="freq-btn" id="rr-sit-couple" onclick="setSituationReer('couple')">En couple</button>
         </div>
       </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px">
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Vous</div>
+          <div class="field"><label>Revenu brut annuel ($)</label><input type="number" id="rr-rev" value="75000" min="0" oninput="calcReer()"></div>
+          <div class="field"><label>Âge actuel</label><input type="number" id="rr-age" value="35" min="18" max="75" oninput="calcReer()"></div>
+          <div class="field"><label>Âge de retraite prévu</label><input type="number" id="rr-ret" value="65" min="50" max="75" oninput="calcReer()"></div>
+          <div class="field"><label>Enfants à charge</label><input type="number" id="rr-enf" value="0" min="0" max="10" oninput="updateEnfantsAges();calcReer()"></div>
+          <div id="rr-enfants-ages" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"></div>
+        </div>
+        <div id="rr-conjoint-col" style="display:none">
+          <div style="font-size:10px;font-weight:700;color:var(--gold-br);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Conjoint(e)</div>
+          <div class="field"><label>Revenu brut annuel ($)</label><input type="number" id="rr-rev2" value="0" min="0" oninput="calcReer()"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="port-tabs noprint" style="display:flex;gap:10px;margin:18px 0">
+    <button class="port-btn on" id="reer-sub-btn-calc" onclick="showReerSub('calc',this)">Calculateur REER</button>
+    <button class="port-btn" id="reer-sub-btn-verdict" onclick="showReerSub('verdict',this)">REER ou CELI ?</button>
+  </div>
+
+  <div id="reer-sub-calc">
+  <div class="g2">
+    <div>
       <div class="card">
         <div class="ch nv">Paramètres REER</div>
         <div class="cb">
@@ -1037,18 +1045,6 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
     </div>
   </div>
   <div class="card">
-    <div class="ch nv">REER ou CELI ? — Comparaison adaptée au profil</div>
-    <div class="cb">
-      <div class="field" style="margin-bottom:6px">
-        <label>Revenu net imposable estimé à la retraite ($/an)</label>
-        <input type="number" id="rr-fut-rev" min="0" oninput="rrFutRevManual=true;calcReer()">
-      </div>
-      <div class="freq-equiv" id="rr-fut-rev-note" style="margin-bottom:14px"></div>
-      <a href="#" onclick="rrFutRevManual=false;calcReer();return false;" style="font-size:11px;color:var(--gold-br);text-decoration:underline">↺ Revenir à l'estimation automatique</a>
-      <div id="r-verdict" style="margin-top:14px"></div>
-    </div>
-  </div>
-  <div class="card">
     <div class="ch gd">Impact fiscal complet — par tranche de 5 000 $ cotisée</div>
     <div class="cb">
       <div id="imp-kpi-zone"></div>
@@ -1061,6 +1057,22 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
         <div id="imp-table-zone"></div>
       </div>
     </div>
+  </div>
+  </div>
+
+  <div id="reer-sub-verdict" style="display:none">
+  <div class="card">
+    <div class="ch nv">REER ou CELI ? — Comparaison adaptée au profil</div>
+    <div class="cb">
+      <div class="field" style="margin-bottom:6px">
+        <label>Revenu net imposable estimé à la retraite ($/an)</label>
+        <input type="number" id="rr-fut-rev" min="0" oninput="rrFutRevManual=true;calcReer()">
+      </div>
+      <div class="freq-equiv" id="rr-fut-rev-note" style="margin-bottom:14px"></div>
+      <a href="#" onclick="rrFutRevManual=false;calcReer();return false;" style="font-size:11px;color:var(--gold-br);text-decoration:underline">↺ Revenir à l'estimation automatique</a>
+      <div id="r-verdict" style="margin-top:14px"></div>
+    </div>
+  </div>
   </div>
 </div>
 
@@ -3646,6 +3658,14 @@ function setSituationReer(sit){
     if(cot2) cot2.value = 0;
   }
   calcReer();
+}
+
+function showReerSub(which, btn){
+  document.getElementById('reer-sub-calc').style.display = which==='calc' ? '' : 'none';
+  document.getElementById('reer-sub-verdict').style.display = which==='verdict' ? '' : 'none';
+  document.getElementById('reer-sub-btn-calc').classList.toggle('on', which==='calc');
+  document.getElementById('reer-sub-btn-verdict').classList.toggle('on', which==='verdict');
+  if(which==='calc') calcReer(); // redessine le graphique avec la bonne largeur
 }
 
 function calcReer(){
@@ -6932,6 +6952,16 @@ function printPane(paneId, title) {
 
   // Cloner le pane et remplacer chaque champ de saisie par sa valeur ACTUELLE (pas la valeur par défaut du HTML)
   const clone = pane.cloneNode(true);
+
+  // Cas particulier REER : toujours inclure le calculateur ET le verdict REER/CELI dans le PDF,
+  // peu importe quel sous-onglet est actif à l'écran.
+  const subCalc = clone.querySelector('#reer-sub-calc');
+  const subVerdict = clone.querySelector('#reer-sub-verdict');
+  if (subCalc) subCalc.style.display = '';
+  if (subVerdict) subVerdict.style.display = '';
+  const subTabs = clone.querySelector('.port-tabs');
+  if (subTabs) subTabs.remove();
+
   const liveFields = pane.querySelectorAll('input, select, textarea');
   const cloneFields = clone.querySelectorAll('input, select, textarea');
   liveFields.forEach((liveEl, i) => {
