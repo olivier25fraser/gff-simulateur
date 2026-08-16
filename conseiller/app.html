@@ -1064,12 +1064,18 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
   <div class="card">
     <div class="ch nv">REER ou CELI ? — Comparaison adaptée au profil</div>
     <div class="cb">
-      <div class="field" style="margin-bottom:6px">
-        <label>Revenu net imposable estimé à la retraite ($/an)</label>
-        <input type="number" id="rr-fut-rev" min="0" oninput="rrFutRevManual=true;calcReer()">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px;margin-bottom:6px">
+        <div class="field">
+          <label>Cotisation REER annuelle utilisée ($)</label>
+          <input type="number" id="rr-cot-verdict" min="0" oninput="setCotFromVerdict(this)">
+        </div>
+        <div class="field">
+          <label>Revenu net imposable estimé à la retraite ($/an)</label>
+          <input type="number" id="rr-fut-rev" min="0" oninput="rrFutRevManual=true;calcReer()">
+        </div>
       </div>
       <div class="freq-equiv" id="rr-fut-rev-note" style="margin-bottom:14px"></div>
-      <a href="#" onclick="rrFutRevManual=false;calcReer();return false;" style="font-size:11px;color:var(--gold-br);text-decoration:underline">↺ Revenir à l'estimation automatique</a>
+      <a href="#" onclick="rrFutRevManual=false;calcReer();return false;" style="font-size:11px;color:var(--gold-br);text-decoration:underline">↺ Revenir à l'estimation automatique du revenu de retraite</a>
       <div id="r-verdict" style="margin-top:14px"></div>
     </div>
   </div>
@@ -3668,6 +3674,18 @@ function showReerSub(which, btn){
   if(which==='calc') calcReer(); // redessine le graphique avec la bonne largeur
 }
 
+// Édition du montant de cotisation directement depuis l'onglet "REER ou CELI ?" :
+// on force le groupe de fréquence 'r' en mode Annuel et on synchronise le champ du Calculateur.
+function setCotFromVerdict(inputEl){
+  document.getElementById('r-freq-val').value = 1;
+  document.querySelectorAll('[data-freq-group="r"]').forEach(b => b.classList.remove('on'));
+  const btnAnnuel = document.querySelector('[data-freq-group="r"][onclick*="1,this"]');
+  if(btnAnnuel) btnAnnuel.classList.add('on');
+  document.getElementById('r-cot-input').value = inputEl.value;
+  updateFreqEquiv('r');
+  calcReer();
+}
+
 function calcReer(){
   const rev=g('rr-rev'), age=g('rr-age'), ret=g('rr-ret'), enf=g('rr-enf'), rev2=g('rr-rev2');
   const tm=marg(rev);
@@ -3683,6 +3701,11 @@ function calcReer(){
   $('r-res').innerHTML=rr('Plafond REER 2026',fmt(plaf))+rr('Plafond disponible (après RPDB)',fmt(plafD))+rr('Statut cotisation',st)+rr("Taux marginal",fp(tm))+rr("Palier d'imposition",`Palier ${PAL.findIndex(p=>rev>=p.min&&rev<p.max)+1}`)+`<div style="height:8px"></div>`+rr('Remboursement fédéral',fmt(rembFed))+rr('Remboursement Québec',fmt(rembQc))+rr('REMBOURSEMENT TOTAL',`<span style="color:var(--grn);font-size:16px;font-weight:700">${fmt(remb)}</span>`)+rr('Coût réel',`<span style="color:var(--org);font-weight:700">${fmt(cout)}</span>`);
 
   $('r-proj').innerHTML=rr('Années restantes',yrs+' ans')+rr('Cotisation annuelle',fmt(cot))+rr('Rendement',fp(rend))+rt('Valeur à la retraite',fmt(val));
+
+  // Synchroniser le champ "Cotisation REER annuelle utilisée" de l'onglet REER ou CELI,
+  // sauf si l'utilisateur est justement en train d'y taper (éviter de lui couper le clavier)
+  const cotVerdictEl = document.getElementById('rr-cot-verdict');
+  if (cotVerdictEl && document.activeElement !== cotVerdictEl) cotVerdictEl.value = Math.round(cot);
 
   const tm2=marg(rev2), plaf2=Math.min(rev2*.18,FISCAL.reer_plafond), remb2=getAnnualCot('r-cot2')*tm2;
   $('conj-res').innerHTML=rr('Taux marginal conjoint(e)',fp(tm2))+rr('Plafond REER conjoint(e)',fmt(plaf2))+rr('Remboursement conjoint(e)',`<span class="ok">${fmt(remb2)}</span>`,'hi')+rr('Total remboursements couple',`<span class="ok">${fmt(remb+remb2)}</span>`,'hi');
@@ -3785,7 +3808,7 @@ function drawReerCeliVerdict(rev, tm, age, ret, val, cot, cout, rend, sol){
       </div>
     </div>
 
-    <div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.5px;margin:18px 0 8px">Projeté à la retraite (${ret} ans), en dollars</div>
+    <div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.5px;margin:18px 0 8px">Projeté à la retraite (${ret} ans), en dollars — basé sur ${fmt(Math.round(cot))} $/an cotisés</div>
     <div class="rc-hero">
       <div class="rc-col today">
         <div class="rc-lbl">REER</div>
