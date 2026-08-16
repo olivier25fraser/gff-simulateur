@@ -39,7 +39,7 @@ html{scroll-behavior:smooth}
 body{font-family:'DM Sans',sans-serif;color:var(--noir);background:#fff;line-height:1.6}
 
 /* ── NAVIGATION ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,248,225,.97);
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.97);
   backdrop-filter:blur(12px);padding:0 5%;display:flex;align-items:center;
   justify-content:space-between;height:72px;border-bottom:1px solid rgba(15,15,15,.08);box-shadow:0 1px 3px rgba(15,15,15,.04)}
 .nav-logo img{height:38px;width:auto;display:block}
@@ -61,10 +61,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,248,225,
 @keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(10px)}}
 
 /* ── HERO ── */
-.hero{min-height:100vh;background:#FFF8E1;display:flex;align-items:center;
+.hero{min-height:100vh;background:#fff;display:flex;align-items:center;
   padding:120px 5% 80px;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;
-  background:radial-gradient(ellipse at 70% 50%,rgba(191,143,0,.14) 0%,transparent 60%);
+  background:radial-gradient(ellipse at 70% 50%,rgba(191,143,0,.08) 0%,transparent 60%);
   pointer-events:none}
 .hero-content{max-width:640px;position:relative;z-index:1}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(191,143,0,.15);
@@ -115,7 +115,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,248,225,
   background:var(--sc-bg,var(--gold-p));color:var(--sc-color,var(--gold))}
 
 /* ── POURQUOI ── */
-.pourquoi{background:#FFF8E1;padding:96px 5%}
+.pourquoi{background:var(--gry-l);padding:96px 5%}
 .pourquoi .section-title{color:var(--noir)}
 .pourquoi .section-sub{color:var(--gry)}
 .atouts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px}
@@ -574,8 +574,8 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 window.addEventListener('scroll', () => {
   const nav = document.querySelector('nav');
   nav.style.background = window.scrollY > 50
-    ? 'rgba(255,248,225,0.98)'
-    : 'rgba(255,248,225,0.97)';
+    ? 'rgba(255,255,255,0.98)'
+    : 'rgba(255,255,255,0.97)';
 });
 </script>
 
