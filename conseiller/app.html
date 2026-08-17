@@ -7076,6 +7076,7 @@ function printPane(paneId, title) {
   liveFields.forEach((liveEl, i) => {
     const cloneEl = cloneFields[i];
     if (!cloneEl) return;
+    if (liveEl.type === 'file') { cloneEl.remove(); return; }
     let valText = '';
     if (liveEl.tagName === 'SELECT') {
       valText = liveEl.options[liveEl.selectedIndex] ? liveEl.options[liveEl.selectedIndex].text : '—';
@@ -7093,12 +7094,14 @@ function printPane(paneId, title) {
 
   // Retirer les éléments purement interactifs qui n'ont pas leur place dans un rapport imprimé
   clone.querySelectorAll('.scen-btn, .phase-btn, .print-btn, button').forEach(el => el.remove());
+  clone.querySelectorAll('#comp-dropzone, #comp-pdf-status, #comp-pending-zone, #comp-pdf-input').forEach(el => el.remove());
 
   const d = new Date();
   const dateStr = d.toLocaleDateString('fr-CA',{year:'numeric',month:'long',day:'numeric'});
   const w = window.open('','_blank','width=900,height=700');
   if (!w) { alert('Autorisez les pop-ups pour imprimer.'); return; }
   const css = [
+    ':root{--ink:#0F0F0F;--gold:#BF8F00;--gold-l:#FFF2CC;--gold-p:#FFFAED;--gold-br:#D4A800;--blue:#2E75B6;--gry:#595959;--gry-l:#F2F2F2;--gry-m:#D6DCE4;--r:6px;--r-lg:10px}',
     '*{box-sizing:border-box;margin:0;padding:0}',
     'body{font-family:Georgia,\'Times New Roman\',serif;font-size:11.5px;color:#1a1a1a;background:#fff;padding:0}',
     '.page{max-width:800px;margin:0 auto;padding:32px 40px 60px}',
@@ -8346,15 +8349,6 @@ function compCalc(){
   var html = '<div style="background:var(--gold-p);border:1px solid rgba(191,143,0,.3);border-radius:var(--r);padding:8px 14px;margin-bottom:16px;font-size:12.5px;font-weight:700;color:var(--gold-br)">Profil d\'investisseur recommandé : '+PROFIL_LABELS[compState.profil]+' — '+ASSUREUR_LABELS[compState.assureur]+'</div>';
 
   html += '<div class="g2">'+
-    '<div><div style="font-weight:700;margin-bottom:2px">'+clientTitre+'</div>'+
-    (clientDesc?'<div style="font-size:11.5px;color:var(--gry);margin-bottom:8px">'+clientDesc+'</div>':'<div style="margin-bottom:8px"></div>')+
-    compBarHtml(cm.actions, cm.rf)+
-    '<table class="tbl" style="margin-top:10px"><tbody>'+
-    '<tr><td>Rendement net 1 an</td><td style="text-align:right;font-weight:700">'+cm.r1.toFixed(2)+' %</td></tr>'+
-    '<tr><td>Rendement net 3 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(cm.r3)+'</td></tr>'+
-    '<tr><td>Rendement net 5 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(cm.r5)+'</td></tr>'+
-    '<tr><td style="color:var(--gry)">RFG pondéré</td><td style="text-align:right;color:var(--gry)">'+cm.rfg.toFixed(2)+' %</td></tr>'+
-    '</tbody></table></div>'+
     '<div><div style="font-weight:700;margin-bottom:2px">'+recoTitre+'</div>'+
     (recoDesc?'<div style="font-size:11.5px;color:var(--gry);margin-bottom:8px">'+recoDesc+'</div>':'<div style="margin-bottom:8px"></div>')+
     compBarHtml(rm.actions, rm.rf)+
@@ -8364,12 +8358,24 @@ function compCalc(){
     '<tr><td>Rendement net 5 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(rm.r5)+'</td></tr>'+
     '<tr><td style="color:var(--gry)">RFG pondéré</td><td style="text-align:right;color:var(--gry)">'+rm.rfg.toFixed(2)+' %</td></tr>'+
     '</tbody></table></div>'+
+    '<div><div style="font-weight:700;margin-bottom:2px">'+clientTitre+'</div>'+
+    (clientDesc?'<div style="font-size:11.5px;color:var(--gry);margin-bottom:8px">'+clientDesc+'</div>':'<div style="margin-bottom:8px"></div>')+
+    compBarHtml(cm.actions, cm.rf)+
+    '<table class="tbl" style="margin-top:10px"><tbody>'+
+    '<tr><td>Rendement net 1 an</td><td style="text-align:right;font-weight:700">'+cm.r1.toFixed(2)+' %</td></tr>'+
+    '<tr><td>Rendement net 3 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(cm.r3)+'</td></tr>'+
+    '<tr><td>Rendement net 5 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(cm.r5)+'</td></tr>'+
+    '<tr><td style="color:var(--gry)">RFG pondéré</td><td style="text-align:right;color:var(--gry)">'+cm.rfg.toFixed(2)+' %</td></tr>'+
+    '</tbody></table></div>'+
     '</div>';
 
   // Géographie / secteurs (disponible pour le portefeuille recommandé ; notes libres pour le client si fournies)
   var clientGeoNotes = compState.clientFunds.filter(function(f){return f.geoNote;}).map(function(f){return f.nom+' : '+f.geoNote;});
   var clientSectNotes = compState.clientFunds.filter(function(f){return f.sectNote;}).map(function(f){return f.nom+' : '+f.sectNote;});
   html += '<div class="g2" style="margin-top:18px">'+
+    '<div><div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Géographie — '+recoTitre+'</div>'+compGeoSectBarsHtml(rm.geo,5)+
+    '<div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin:12px 0 8px">Secteurs — '+recoTitre+'</div>'+compGeoSectBarsHtml(rm.sect,5)+
+    '</div>'+
     '<div><div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Géographie / secteurs — '+clientTitre+'</div>'+
     (clientGeoNotes.length || clientSectNotes.length ?
       ('<div style="font-size:11.5px;line-height:1.7">'+
@@ -8377,9 +8383,6 @@ function compCalc(){
        (clientSectNotes.length? '<strong>Secteur :</strong> '+clientSectNotes.join(' · ') : '')+
        '</div>')
       : '<div class="note">Non fourni pour ce portefeuille.</div>')+
-    '</div>'+
-    '<div><div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Géographie — '+recoTitre+'</div>'+compGeoSectBarsHtml(rm.geo,5)+
-    '<div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin:12px 0 8px">Secteurs — '+recoTitre+'</div>'+compGeoSectBarsHtml(rm.sect,5)+
     '</div>'+
     '</div>';
 
