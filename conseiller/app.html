@@ -8074,7 +8074,7 @@ function compFundTableHtml(rows, editable){
       '<td style="text-align:right">'+fmtPct(r.r3)+'</td>'+
       '<td style="text-align:right">'+fmtPct(r.r5)+'</td>'+
       '<td style="text-align:right">'+r.rfg.toFixed(2)+' %</td>'+
-      (editable?'<td><button class="freq-btn" style="padding:2px 8px;font-size:11px" onclick="compRemoveFund('+i+')">✕</button></td>':'')+
+      (editable?('<td style="white-space:nowrap"><button class="freq-btn" style="padding:2px 8px;font-size:11px;margin-right:4px" onclick="compEditFund('+i+')">✎</button><button class="freq-btn" style="padding:2px 8px;font-size:11px" onclick="compRemoveFund('+i+')">✕</button></td>'):'')+
       '</tr>';
   });
   html += '</tbody></table>';
@@ -8352,6 +8352,24 @@ function compConfirmPending(idx){
   if(el) el.remove();
   compRenderClientTable();
   compCalc();
+}
+
+function compEditFund(i){
+  var f = compState.clientFunds[i];
+  if(!f) return;
+  compState.clientFunds.splice(i,1);
+  compRenderClientTable();
+  compCalc();
+  compAddPendingFund({
+    nom: f.nom, rfg: f.rfg, r1: f.r1, r3: f.r3, r5: f.r5, cat: f.cat,
+    geoDetected: f.geoNote || null, sectDetected: f.sectNote || null,
+    poidsExistant: f.poids
+  });
+  // pré-remplir aussi le poids (non géré par compAddPendingFund)
+  var newIdx = compPendingList.length - 1;
+  var poidsEl = document.getElementById('pend-poids-'+newIdx);
+  if(poidsEl) poidsEl.value = f.poids;
+  document.getElementById('comp-pending-'+newIdx).scrollIntoView({behavior:'smooth', block:'center'});
 }
 
 function compRemoveFund(i){
