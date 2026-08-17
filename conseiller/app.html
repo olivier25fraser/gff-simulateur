@@ -1981,6 +1981,14 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
       <div class="ch nv">Portefeuille recommandé</div>
       <div class="cb">
         <div class="field" style="margin-bottom:12px">
+          <label>Titre du portefeuille recommandé</label>
+          <input type="text" id="comp-reco-titre" value="Portefeuille recommandé" oninput="compCalc()">
+        </div>
+        <div class="field" style="margin-bottom:16px">
+          <label>Description (optionnel)</label>
+          <input type="text" id="comp-reco-desc" placeholder="Ex. Basé sur votre profil d'investisseur et votre horizon de placement" oninput="compCalc()">
+        </div>
+        <div class="field" style="margin-bottom:12px">
           <label>Assureur</label>
           <div class="freq-group">
             <button type="button" class="freq-btn on" id="comp-ins-assomption" onclick="compSetAssureur('assomption')">Assomption Vie</button>
@@ -2005,6 +2013,14 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
     <div class="card">
       <div class="ch gd">Portefeuille actuel du client</div>
       <div class="cb">
+        <div class="field" style="margin-bottom:12px">
+          <label>Titre du portefeuille actuel</label>
+          <input type="text" id="comp-client-titre" value="Portefeuille actuel du client" oninput="compCalc()">
+        </div>
+        <div class="field" style="margin-bottom:16px">
+          <label>Description (optionnel)</label>
+          <input type="text" id="comp-client-desc" placeholder="Ex. REER chez Desjardins, en place depuis 2019" oninput="compCalc()">
+        </div>
         <div class="field">
           <label>Valeur marchande totale actuelle ($)</label>
           <input type="number" id="comp-valeur-totale" min="0" placeholder="Ex. 150000" oninput="compCalc()">
@@ -8234,8 +8250,14 @@ function compCalc(){
   var coutReco = valeur * rm.rfg/100;
   var ecartDollars = coutClient - coutReco;
 
+  var clientTitre = document.getElementById('comp-client-titre').value || 'Portefeuille actuel du client';
+  var clientDesc = document.getElementById('comp-client-desc').value;
+  var recoTitre = document.getElementById('comp-reco-titre').value || 'Portefeuille recommandé';
+  var recoDesc = document.getElementById('comp-reco-desc').value;
+
   var html = '<div class="g2">'+
-    '<div><div style="font-weight:700;margin-bottom:8px">Portefeuille actuel du client</div>'+
+    '<div><div style="font-weight:700;margin-bottom:2px">'+clientTitre+'</div>'+
+    (clientDesc?'<div style="font-size:11.5px;color:var(--gry);margin-bottom:8px">'+clientDesc+'</div>':'<div style="margin-bottom:8px"></div>')+
     compBarHtml(cm.actions, cm.rf)+
     '<table class="tbl" style="margin-top:10px"><tbody>'+
     '<tr><td>RFG pondéré</td><td style="text-align:right;font-weight:700">'+cm.rfg.toFixed(2)+' %</td></tr>'+
@@ -8243,7 +8265,8 @@ function compCalc(){
     '<tr><td>Rendement 3 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(cm.r3)+'</td></tr>'+
     '<tr><td>Rendement 5 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(cm.r5)+'</td></tr>'+
     '</tbody></table></div>'+
-    '<div><div style="font-weight:700;margin-bottom:8px">Portefeuille recommandé (GFF)</div>'+
+    '<div><div style="font-weight:700;margin-bottom:2px">'+recoTitre+'</div>'+
+    (recoDesc?'<div style="font-size:11.5px;color:var(--gry);margin-bottom:8px">'+recoDesc+'</div>':'<div style="margin-bottom:8px"></div>')+
     compBarHtml(rm.actions, rm.rf)+
     '<table class="tbl" style="margin-top:10px"><tbody>'+
     '<tr><td>RFG pondéré</td><td style="text-align:right;font-weight:700">'+rm.rfg.toFixed(2)+' %</td></tr>'+
@@ -8257,8 +8280,8 @@ function compCalc(){
     html += '<div class="card" style="margin-top:16px;background:var(--gold-p);box-shadow:none;border:1px solid rgba(191,143,0,.25)"><div class="cb">'+
       '<div style="font-weight:700;margin-bottom:8px">Impact des frais sur '+valeur.toLocaleString('fr-CA')+' $</div>'+
       '<table class="tbl"><tbody>'+
-      '<tr><td>Coût annuel estimé — portefeuille actuel</td><td style="text-align:right;font-weight:700">'+coutClient.toLocaleString('fr-CA',{maximumFractionDigits:0})+' $</td></tr>'+
-      '<tr><td>Coût annuel estimé — portefeuille recommandé</td><td style="text-align:right;font-weight:700">'+coutReco.toLocaleString('fr-CA',{maximumFractionDigits:0})+' $</td></tr>'+
+      '<tr><td>Coût annuel estimé — '+clientTitre+'</td><td style="text-align:right;font-weight:700">'+coutClient.toLocaleString('fr-CA',{maximumFractionDigits:0})+' $</td></tr>'+
+      '<tr><td>Coût annuel estimé — '+recoTitre+'</td><td style="text-align:right;font-weight:700">'+coutReco.toLocaleString('fr-CA',{maximumFractionDigits:0})+' $</td></tr>'+
       '<tr style="font-weight:700;background:#fff"><td>'+(ecartDollars>=0?'Économie potentielle par année':'Coût additionnel par année')+'</td><td style="text-align:right">'+Math.abs(ecartDollars).toLocaleString('fr-CA',{maximumFractionDigits:0})+' $</td></tr>'+
       '</tbody></table>'+
       '<div class="note" style="margin-top:8px">Estimation basée sur les RFG pondérés appliqués à la valeur marchande totale déclarée. N\'inclut pas l\'effet composé des rendements sur plusieurs années.</div>'+
