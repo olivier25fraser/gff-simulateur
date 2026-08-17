@@ -7980,7 +7980,7 @@ if (document.readyState === 'loading') {
 
 
 // ══════════════════ COMPARATEUR DE PORTEFEUILLES ══════════════════
-var COMP_DATA = {"funds": {"assomption": {"mm": {"nom": "Marché monétaire (Louisbourg)", "rfg": 1.06, "r1": 1.58, "r3": 2.77, "r5": 2.13, "cat": "RF"}, "obligsoc": {"nom": "Obligations de sociétés (CI)", "rfg": 1.8, "r1": 4.92, "r3": 6.83, "r5": 2.34, "cat": "RF"}, "hautrend": {"nom": "Obligations à haut rendement (TD)", "rfg": 1.75, "r1": 3.96, "r3": 5.97, "r5": null, "cat": "RF"}, "mom": {"nom": "Actions canadiennes momentum (Louisbourg)", "rfg": 2.68, "r1": 40.27, "r3": 24.03, "r5": 13.7, "cat": "Actions"}, "cdnbase": {"nom": "Actions canadiennes de base (Fidelity)", "rfg": 2.53, "r1": 24.18, "r3": 17.0, "r5": 10.58, "cat": "Actions"}, "uscible": {"nom": "Actions américaines - Ciblé (Fidelity)", "rfg": 3.05, "r1": 47.35, "r3": 29.0, "r5": 16.08, "cat": "Actions"}, "mondplus": {"nom": "Actions mondiales+ (Fidelity)", "rfg": 2.9, "r1": 28.87, "r3": null, "r5": null, "cat": "Actions"}, "em": {"nom": "Marchés émergents (CI)", "rfg": 3.05, "r1": 53.59, "r3": 24.72, "r5": null, "cat": "Actions"}}, "beneva": {"rab": {"nom": "Revenu fixe canadien (AGF)", "rfg": 1.5, "r1": 3.68, "r3": 4.26, "r5": 0.2, "cat": "RF"}, "rbp": {"nom": "Revenu fixe haut rendement (GPTD)", "rfg": 1.5, "r1": 4.33, "r3": 6.3, "r5": 2.55, "cat": "RF"}, "ram": {"nom": "Actions canadiennes (Fidelity)", "rfg": 2.5, "r1": 25.81, "r3": 18.88, "r5": 11.65, "cat": "Actions"}, "rdc": {"nom": "Indice américain (GPTD)", "rfg": 2.09, "r1": 24.6, "r3": 20.74, "r5": 13.93, "cat": "Actions"}, "rbs": {"nom": "Actions mondiales (AGF)", "rfg": 2.68, "r1": 17.61, "r3": 22.57, "r5": 12.46, "cat": "Actions"}, "rav": {"nom": "Marchés émergents (AGF)", "rfg": 2.78, "r1": 59.29, "r3": 24.17, "r5": 8.51, "cat": "Actions"}, "rda": {"nom": "Actions am. petites/moy cap (AGF)", "rfg": 2.64, "r1": 57.83, "r3": 25.57, "r5": 10.39, "cat": "Actions"}}, "ia": {"070": {"nom": "Marché monétaire (iA)", "rfg": 1.4, "r1": 1.39, "r3": 2.53, "r5": 1.97, "cat": "RF"}, "762": {"nom": "Stratégie d'obligations de sociétés (iA)", "rfg": 2.21, "r1": 4.5, "r3": 5.62, "r5": 2.73, "cat": "RF"}, "222": {"nom": "Fidelity Titres am. rendement élevé - Devises neutres", "rfg": 2.65, "r1": 3.3, "r3": 5.94, "r5": 2.14, "cat": "RF"}, "280": {"nom": "Potentiel Canada Fidelity", "rfg": 2.86, "r1": 16.26, "r3": 11.89, "r5": 9.44, "cat": "Actions"}, "870": {"nom": "Actions canadiennes petite cap (iA)", "rfg": 2.81, "r1": 50.08, "r3": 28.6, "r5": 16.08, "cat": "Actions"}, "180": {"nom": "Indiciel américain (BlackRock)", "rfg": 2.6, "r1": 23.59, "r3": 19.89, "r5": 13.18, "cat": "Actions"}, "233": {"nom": "Innovation thématique (iA)", "rfg": 2.62, "r1": 25.63, "r3": 23.03, "r5": 12.61, "cat": "Actions"}, "876": {"nom": "Indiciel mondial tous pays (BlackRock)", "rfg": 2.45, "r1": 25.38, "r3": 19.4, "r5": 11.14, "cat": "Actions"}, "084": {"nom": "Marchés émergents (Jarislowsky Fraser)", "rfg": 3.21, "r1": 22.44, "r3": 12.35, "r5": 0.92, "cat": "Actions"}}}, "portfolios": {"assomption": {"conservateur": {"mm": 30, "obligsoc": 30, "hautrend": 15, "mom": 8, "cdnbase": 7, "uscible": 6, "mondplus": 4}, "modere": {"mm": 20, "obligsoc": 25, "hautrend": 15, "mom": 12, "cdnbase": 8, "uscible": 10, "mondplus": 7, "em": 3}, "equilibre": {"mm": 10, "obligsoc": 18, "hautrend": 12, "mom": 16, "cdnbase": 10, "uscible": 16, "mondplus": 12, "em": 6}, "croissance": {"obligsoc": 15, "hautrend": 10, "mom": 20, "cdnbase": 12, "uscible": 22, "mondplus": 15, "em": 6}, "audacieux": {"hautrend": 10, "mom": 24, "cdnbase": 14, "uscible": 26, "mondplus": 18, "em": 8}}, "beneva": {"conservateur": {"rab": 55, "rbp": 20, "ram": 8, "rdc": 8, "rbs": 9}, "modere": {"rab": 42, "rbp": 18, "ram": 11, "rdc": 11, "rbs": 11, "rav": 7}, "equilibre": {"rab": 26, "rbp": 14, "ram": 14, "rdc": 16, "rbs": 16, "rav": 10, "rda": 4}, "croissance": {"rab": 15, "rbp": 10, "ram": 14, "rdc": 18, "rbs": 18, "rav": 13, "rda": 12}, "audacieux": {"rbp": 10, "ram": 14, "rdc": 22, "rbs": 22, "rav": 17, "rda": 15}}, "ia": {"conservateur": {"070": 25, "762": 35, "222": 15, "280": 8, "180": 9, "876": 8}, "modere": {"070": 15, "762": 30, "222": 15, "280": 10, "870": 4, "180": 13, "876": 13}, "equilibre": {"070": 6, "762": 20, "222": 14, "280": 12, "870": 8, "180": 16, "233": 8, "876": 10, "084": 6}, "croissance": {"762": 16, "222": 9, "280": 14, "870": 12, "180": 18, "233": 12, "876": 11, "084": 8}, "audacieux": {"762": 6, "222": 4, "280": 16, "870": 14, "180": 20, "233": 14, "876": 14, "084": 12}}}};
+var COMP_DATA = {"funds": {"assomption": {"mm": {"nom": "Marché monétaire (Louisbourg)", "rfg": 1.06, "r1": 1.58, "r3": 2.77, "r5": 2.13, "cat": "RF", "geo": {"Canada": 100}, "sect": {"Marché monétaire/Liquidités": 100}}, "obligsoc": {"nom": "Obligations de sociétés (CI)", "rfg": 1.8, "r1": 4.92, "r3": 6.83, "r5": 2.34, "cat": "RF", "geo": {"Canada": 55, "États-Unis": 35, "International": 10}, "sect": {"Services financiers": 28, "Énergie": 15, "Produits industriels": 14, "Communication": 10, "Consommation discrétionnaire": 9, "Technologies de l'information": 8, "Matériaux": 6, "Autres": 10}}, "hautrend": {"nom": "Obligations à haut rendement (TD)", "rfg": 1.75, "r1": 3.96, "r3": 5.97, "r5": null, "cat": "RF", "geo": {"États-Unis": 82.7, "Canada": 14.9, "Europe": 2.3, "Multinational": 0.1}, "sect": {"Énergie": 15, "Communication": 12, "Consommation discrétionnaire": 12, "Produits industriels": 10, "Technologies de l'information": 10, "Santé": 8, "Services financiers": 8, "Matériaux": 8, "Services publics": 5, "Autres": 12}}, "mom": {"nom": "Actions canadiennes momentum (Louisbourg)", "rfg": 2.68, "r1": 40.27, "r3": 24.03, "r5": 13.7, "cat": "Actions", "geo": {"Canada": 97.49, "Liquidités": 2.51}, "sect": {"Services financiers": 30, "Énergie": 18, "Matériaux": 18, "Produits industriels": 11, "Technologies de l'information": 7, "Consommation de base": 5, "Autres": 11}}, "cdnbase": {"nom": "Actions canadiennes de base (Fidelity)", "rfg": 2.53, "r1": 24.18, "r3": 17.0, "r5": 10.58, "cat": "Actions", "geo": {"Canada": 94.9, "États-Unis": 1.94, "Revenu fixe/Liquidités": 3.16}, "sect": {"Services financiers": 30, "Énergie": 17, "Produits industriels": 13, "Matériaux": 11, "Technologies de l'information": 8, "Consommation discrétionnaire": 4, "Consommation de base": 4, "Communication": 4, "Services publics": 3, "Immobilier": 2, "Santé": 1, "Autres": 3}}, "uscible": {"nom": "Actions américaines - Ciblé (Fidelity)", "rfg": 3.05, "r1": 47.35, "r3": 29.0, "r5": 16.08, "cat": "Actions", "geo": {"États-Unis": 97, "International/Liquidités": 3}, "sect": {"Technologies de l'information": 40.9, "Produits industriels": 13.4, "Communication": 11.1, "Consommation discrétionnaire": 10.8, "Services financiers": 9.8, "Santé": 9.3, "Matériaux": 2.7, "Énergie": 1.6}}, "mondplus": {"nom": "Actions mondiales+ (Fidelity)", "rfg": 2.9, "r1": 28.87, "r3": null, "r5": null, "cat": "Actions", "geo": {"Canada": 36.17, "États-Unis": 37.86, "International": 19.23, "Revenu fixe/Autres": 6.74}, "sect": {"Technologies de l'information": 23, "Produits industriels": 13, "Énergie": 12, "Matériaux": 11, "Services financiers": 10, "Consommation discrétionnaire": 7, "Communication": 7, "Santé": 5, "Consommation de base": 3, "Autres": 9}}, "em": {"nom": "Marchés émergents (CI)", "rfg": 3.05, "r1": 53.59, "r3": 24.72, "r5": null, "cat": "Actions", "geo": {"Taïwan": 23.36, "Chine": 19.22, "Corée du Sud": 16.7, "Inde": 11.06, "Royaume-Uni": 8.48, "Canada": 7.45, "Brésil": 4.75, "Mexique": 3.19, "Autres": 5.79}, "sect": {"Technologies de l'information": 44.72, "Services financiers": 22.42, "Produits industriels": 8.23, "Matériaux": 6.73, "Énergie": 5.73, "Consommation": 3.92, "Communication": 1.3, "Consommation discrétionnaire": 1.19, "Santé": 0.92, "Immobilier": 0.8}}}, "beneva": {"rab": {"nom": "Revenu fixe canadien (AGF)", "rfg": 1.5, "r1": 3.68, "r3": 4.26, "r5": 0.2, "cat": "RF", "geo": {"Canada": 77.28, "États-Unis": 15.33, "Liquidités": 4.39, "France": 0.9, "Australie": 0.44, "Autres": 0.66}, "sect": {"Obligations fédérales": 48.95, "Obligations de sociétés": 36.92, "Haut rendement": 8.81, "Liquidités": 4.39, "Actions étrangères": 0.89, "Autres": 0.04}}, "rbp": {"nom": "Revenu fixe haut rendement (GPTD)", "rfg": 1.5, "r1": 4.33, "r3": 6.3, "r5": 2.55, "cat": "RF", "geo": {"États-Unis": 71.8, "Canada": 18.08, "Autres pays": 2.14, "Luxembourg": 1.79, "Jersey": 1.71, "France": 1.23, "Reste": 3.25}, "sect": {"Obligations à haut rendement": 100}}, "ram": {"nom": "Actions canadiennes (Fidelity)", "rfg": 2.5, "r1": 25.81, "r3": 18.88, "r5": 11.65, "cat": "Actions", "geo": {"Canada": 96.35, "États-Unis": 2.18, "Liquidités": 1.47}, "sect": {"Services financiers": 30.46, "Matériaux": 18.77, "Énergie": 18.51, "Produits industriels": 10.6, "Technologies de l'information": 7.01, "Consommation de base": 5.1, "Consommation discrétionnaire": 3.21, "Services publics": 2.42, "Liquidités": 1.47, "Immobilier": 1.31, "Communication": 1.13}}, "rdc": {"nom": "Indice américain (GPTD)", "rfg": 2.09, "r1": 24.6, "r3": 20.74, "r5": 13.93, "cat": "Actions", "geo": {"États-Unis": 98.3, "Europe": 1.16, "Reste": 0.54}, "sect": {"Technologies de l'information": 32.82, "Services financiers": 12.56, "Communication": 10.26, "Consommation discrétionnaire": 9.84, "Santé": 9.45, "Produits industriels": 8.99, "Consommation de base": 5.24, "Énergie": 4.0, "Services publics": 2.53, "Matériaux": 2.09, "Immobilier": 1.95, "Liquidités": 0.29}}, "rbs": {"nom": "Actions mondiales (AGF)", "rfg": 2.68, "r1": 17.61, "r3": 22.57, "r5": 12.46, "cat": "Actions", "geo": {"États-Unis": 51.89, "Allemagne": 8.42, "Liquidités": 8.22, "Japon": 7.77, "Canada": 4.1, "Chine": 4.04, "Reste du monde": 15.56}, "sect": {"Technologies de l'information": 22.8, "Produits industriels": 13.45, "Énergie": 12.46, "Matériaux": 10.63, "Services financiers": 10.39, "Liquidités": 8.22, "Consommation discrétionnaire": 7.07, "Communication": 6.71, "Santé": 5.18, "Consommation de base": 3.08}}, "rav": {"nom": "Marchés émergents (AGF)", "rfg": 2.78, "r1": 59.29, "r3": 24.17, "r5": 8.51, "cat": "Actions", "geo": {"Chine": 26.02, "Taïwan": 21.62, "Corée du Sud": 15.57, "Inde": 9.96, "Autres pays": 9.89, "Brésil": 8.12, "Liquidités": 3.04, "Reste": 5.78}, "sect": {"Technologies de l'information": 33.94, "Services financiers": 24.3, "Produits industriels": 10.55, "Consommation discrétionnaire": 7.39, "Communication": 7.01, "Matériaux": 6.1, "Énergie": 3.21, "Liquidités": 3.04, "Services publics": 2.51, "Consommation de base": 1.01, "Santé": 0.94}}, "rda": {"nom": "Actions am. petites/moy cap (AGF)", "rfg": 2.64, "r1": 57.83, "r3": 25.57, "r5": 10.39, "cat": "Actions", "geo": {"États-Unis": 91.67, "Liquidités": 6.86, "Israël": 1.47}, "sect": {"Produits industriels": 22.24, "Technologies de l'information": 20.75, "Matériaux": 13.88, "Consommation discrétionnaire": 11.09, "Services financiers": 10.23, "Liquidités": 6.86, "Santé": 6.39, "Énergie": 5.63, "Consommation de base": 2.93}}}, "ia": {"070": {"nom": "Marché monétaire (iA)", "rfg": 1.4, "r1": 1.39, "r3": 2.53, "r5": 1.97, "cat": "RF", "geo": {"Canada": 89.57, "États-Unis": 4.94, "Europe": 4.83, "Liquidités": 0.66}, "sect": null}, "762": {"nom": "Stratégie d'obligations de sociétés (iA)", "rfg": 2.21, "r1": 4.5, "r3": 5.62, "r5": 2.73, "cat": "RF", "geo": {"Canada": 67.3, "États-Unis": 26.47, "Europe": 2.47, "Moyen-Orient/Afrique": 2.01, "Court terme": 1.75}, "sect": null}, "222": {"nom": "Fidelity Titres am. rendement élevé - Devises neutres", "rfg": 2.65, "r1": 3.3, "r3": 5.94, "r5": 2.14, "cat": "RF", "geo": {"États-Unis (approx.)": 93.62, "Canada": 3.42, "Court terme": 2.96}, "sect": null}, "280": {"nom": "Potentiel Canada Fidelity", "rfg": 2.86, "r1": 16.26, "r3": 11.89, "r5": 9.44, "cat": "Actions", "geo": {"Canada": 85.04, "Étranger": 6.52, "Court terme": 8.41, "Obligations": 0.03}, "sect": {"Matériaux": 25.88, "Industrie": 24.72, "Énergie": 15.29, "Technologies de l'information": 8.82, "Finance": 8.72, "Consommation de base": 3.41, "Services publics": 3.17, "Consommation discrétionnaire": 0.82, "Immobilier": 0.72, "Communication": 0.18}}, "870": {"nom": "Actions canadiennes petite cap (iA)", "rfg": 2.81, "r1": 50.08, "r3": 28.6, "r5": 16.08, "cat": "Actions", "geo": {"Canada": 92.98, "États-Unis": 2.22, "Amérique latine": 2.19, "Court terme": 1.13, "Asie-Pacifique": 0.97, "Moyen-Orient/Afrique": 0.51}, "sect": {"Matériaux": 27.87, "Énergie": 24.35, "Industrie": 15.52, "Immobilier": 9.07, "Technologies de l'information": 5.84, "Santé": 5.38, "Consommation de base": 4.31, "Finance": 2.17, "Services publics": 1.76, "Consommation discrétionnaire": 1.69, "Communication": 0.91}}, "180": {"nom": "Indiciel américain (BlackRock)", "rfg": 2.6, "r1": 23.59, "r3": 19.89, "r5": 13.18, "cat": "Actions", "geo": {"États-Unis": 97.41, "Europe": 2.15, "Asie-Pacifique": 0.33, "Court terme": 0.09, "Canada": 0.02}, "sect": {"Technologies de l'information": 38.04, "Finance": 11.74, "Communication": 9.68, "Consommation discrétionnaire": 9.31, "Industrie": 8.94, "Santé": 8.88, "Consommation de base": 4.57, "Énergie": 2.98, "Services publics": 2.2, "Immobilier": 1.83, "Matériaux": 1.83}}, "233": {"nom": "Innovation thématique (iA)", "rfg": 2.62, "r1": 25.63, "r3": 23.03, "r5": 12.61, "cat": "Actions", "geo": {"États-Unis": 91.96, "Asie-Pacifique": 3.22, "Europe": 2.97, "Court terme": 1.28, "Amérique latine": 0.33, "Canada": 0.24}, "sect": {"Technologies de l'information": 38.11, "Finance": 11.27, "Communication": 10.65, "Santé": 10.51, "Industrie": 9.77, "Consommation discrétionnaire": 9.09, "Consommation de base": 3.91, "Services publics": 2.88, "Énergie": 1.86, "Matériaux": 0.65}}, "876": {"nom": "Indiciel mondial tous pays (BlackRock)", "rfg": 2.45, "r1": 25.38, "r3": 19.4, "r5": 11.14, "cat": "Actions", "geo": {"États-Unis": 76.81, "Europe": 15.67, "Asie-Pacifique": 6.19, "Australie": 1.43, "Moyen-Orient/Afrique": 0.26, "Amérique latine": 0.08, "Canada": 0.03}, "sect": {"Technologies de l'information": 32.85, "Finance": 15.47, "Industrie": 11.09, "Consommation discrétionnaire": 8.94, "Santé": 8.43, "Communication": 8.03, "Consommation de base": 4.7, "Matériaux": 3.24, "Énergie": 3.12, "Services publics": 2.49, "Immobilier": 1.64}}, "084": {"nom": "Marchés émergents (Jarislowsky Fraser)", "rfg": 3.21, "r1": 22.44, "r3": 12.35, "r5": 0.92, "cat": "Actions", "geo": {"Asie-Pacifique": 79.43, "Amérique latine": 12.46, "Europe": 3.21, "États-Unis": 3.06, "Moyen-Orient/Afrique": 1.84}, "sect": null}}}, "portfolios": {"assomption": {"conservateur": {"mm": 30, "obligsoc": 30, "hautrend": 15, "mom": 8, "cdnbase": 7, "uscible": 6, "mondplus": 4}, "modere": {"mm": 20, "obligsoc": 25, "hautrend": 15, "mom": 12, "cdnbase": 8, "uscible": 10, "mondplus": 7, "em": 3}, "equilibre": {"mm": 10, "obligsoc": 18, "hautrend": 12, "mom": 16, "cdnbase": 10, "uscible": 16, "mondplus": 12, "em": 6}, "croissance": {"obligsoc": 15, "hautrend": 10, "mom": 20, "cdnbase": 12, "uscible": 22, "mondplus": 15, "em": 6}, "audacieux": {"hautrend": 10, "mom": 24, "cdnbase": 14, "uscible": 26, "mondplus": 18, "em": 8}}, "beneva": {"conservateur": {"rab": 55, "rbp": 20, "ram": 8, "rdc": 8, "rbs": 9}, "modere": {"rab": 42, "rbp": 18, "ram": 11, "rdc": 11, "rbs": 11, "rav": 7}, "equilibre": {"rab": 26, "rbp": 14, "ram": 14, "rdc": 16, "rbs": 16, "rav": 10, "rda": 4}, "croissance": {"rab": 15, "rbp": 10, "ram": 14, "rdc": 18, "rbs": 18, "rav": 13, "rda": 12}, "audacieux": {"rbp": 10, "ram": 14, "rdc": 22, "rbs": 22, "rav": 17, "rda": 15}}, "ia": {"conservateur": {"070": 25, "762": 35, "222": 15, "280": 8, "180": 9, "876": 8}, "modere": {"070": 15, "762": 30, "222": 15, "280": 10, "870": 4, "180": 13, "876": 13}, "equilibre": {"070": 6, "762": 20, "222": 14, "280": 12, "870": 8, "180": 16, "233": 8, "876": 10, "084": 6}, "croissance": {"762": 16, "222": 9, "280": 14, "870": 12, "180": 18, "233": 12, "876": 11, "084": 8}, "audacieux": {"762": 6, "222": 4, "280": 16, "870": 14, "180": 20, "233": 14, "876": 14, "084": 12}}}};
 var compState = { assureur: 'assomption', profil: 'conservateur', clientFunds: [] };
 
 function compSetAssureur(ins){
@@ -8000,11 +8000,29 @@ function compSetProfil(prof){
   compCalc();
 }
 
+function compAggregateGeoSect(items){
+  // items: [{val:{clé:%}, poids:%}]
+  var out = {};
+  items.forEach(function(it){
+    if(!it.val) return;
+    Object.keys(it.val).forEach(function(k){
+      out[k] = (out[k]||0) + it.val[k]*it.poids/100;
+    });
+  });
+  var keys = Object.keys(out);
+  if(!keys.length) return null;
+  keys.sort(function(a,b){ return out[b]-out[a]; });
+  var sorted = {};
+  keys.forEach(function(k){ sorted[k]=out[k]; });
+  return sorted;
+}
+
 function compGetPortfolioMetrics(insurerKey, profilKey){
   var alloc = COMP_DATA.portfolios[insurerKey][profilKey];
   var funds = COMP_DATA.funds[insurerKey];
   var rows = [];
   var rfg=0, r1=0, r3=0, r3w=0, r5=0, r5w=0, actions=0, rf=0;
+  var geoItems = [], sectItems = [];
   Object.keys(alloc).forEach(function(fkey){
     var w = alloc[fkey], f = funds[fkey];
     rows.push({nom:f.nom, poids:w, rfg:f.rfg, r1:f.r1, r3:f.r3, r5:f.r5, cat:f.cat});
@@ -8013,12 +8031,16 @@ function compGetPortfolioMetrics(insurerKey, profilKey){
     if(f.r3!=null){ r3 += f.r3*w/100; r3w += w; }
     if(f.r5!=null){ r5 += f.r5*w/100; r5w += w; }
     if(f.cat==='Actions') actions += w; else rf += w;
+    geoItems.push({val:f.geo, poids:w});
+    sectItems.push({val:f.sect, poids:w});
   });
   return {
     rows: rows, rfg: rfg, r1: r1,
     r3: r3w>0 ? r3*100/r3w : null,
     r5: r5w>0 ? r5*100/r5w : null,
-    actions: actions, rf: rf
+    actions: actions, rf: rf,
+    geo: compAggregateGeoSect(geoItems),
+    sect: compAggregateGeoSect(sectItems)
   };
 }
 
@@ -8038,7 +8060,10 @@ function fmtPct(v){ return v==null ? 's.o.' : v.toFixed(2)+' %'; }
 function compFundTableHtml(rows, editable){
   var html = '<table class="tbl"><thead><tr><th style="text-align:left">Fonds</th><th style="text-align:right">Poids</th><th style="text-align:right">1 an</th><th style="text-align:right">3 ans</th><th style="text-align:right">5 ans</th><th style="text-align:right">RFG</th>'+(editable?'<th></th>':'')+'</tr></thead><tbody>';
   rows.forEach(function(r, i){
-    html += '<tr><td>'+r.nom+'<br><small style="color:#999">'+r.cat+'</small></td>'+
+    var noteBits = [r.cat];
+    if(r.geoNote) noteBits.push('Région : '+r.geoNote);
+    if(r.sectNote) noteBits.push('Secteur : '+r.sectNote);
+    html += '<tr><td>'+r.nom+'<br><small style="color:#999">'+noteBits.join(' · ')+'</small></td>'+
       '<td style="text-align:right">'+r.poids+' %</td>'+
       '<td style="text-align:right">'+fmtPct(r.r1)+'</td>'+
       '<td style="text-align:right">'+fmtPct(r.r3)+'</td>'+
@@ -8051,15 +8076,37 @@ function compFundTableHtml(rows, editable){
   return html;
 }
 
+var PROFIL_LABELS = {conservateur:'Conservateur', modere:'Modéré', equilibre:'Équilibré', croissance:'Croissance', audacieux:'Audacieux'};
+var ASSUREUR_LABELS = {assomption:'Assomption Vie', ia:'iA', beneva:'Beneva'};
+
+function compGeoSectBarsHtml(dict, n){
+  if(!dict) return '<div class="note">Détail non disponible pour ce portefeuille.</div>';
+  var keys = Object.keys(dict).slice(0, n||6);
+  var colors = ['#0F0F0F','#BF8F00','#2E75B6','#7FA88C','#D9534F','#8064A2','#4BACC6','#F79646'];
+  var html = '';
+  keys.forEach(function(k,i){
+    var v = dict[k];
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">'+
+      '<div style="width:110px;font-size:10.5px;color:var(--gry);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+k+'</div>'+
+      '<div style="flex:1;background:var(--gry-l);border-radius:3px;height:8px;overflow:hidden"><div style="width:'+Math.min(v,100).toFixed(1)+'%;height:100%;background:'+colors[i%colors.length]+'"></div></div>'+
+      '<div style="width:38px;text-align:right;font-size:10.5px;font-weight:700">'+v.toFixed(1)+'%</div></div>';
+  });
+  return html;
+}
+
 function compRenderReco(){
   var m = compGetPortfolioMetrics(compState.assureur, compState.profil);
-  var html = '<div class="g3" style="margin-bottom:14px">'+
-    '<div class="kpi"><div class="kl">RFG pondéré</div><div class="kv">'+m.rfg.toFixed(2)+' %</div></div>'+
-    '<div class="kpi"><div class="kl">Rend. 1 an</div><div class="kv gold">'+m.r1.toFixed(2)+' %</div></div>'+
-    '<div class="kpi"><div class="kl">Rend. 3 ans</div><div class="kv">'+fmtPct(m.r3)+'</div></div>'+
+  var html = '<div style="background:var(--gold-p);border:1px solid rgba(191,143,0,.3);border-radius:var(--r);padding:8px 14px;margin-bottom:14px;font-size:12.5px;font-weight:700;color:var(--gold-br)">Profil d\'investisseur : '+PROFIL_LABELS[compState.profil]+' — '+ASSUREUR_LABELS[compState.assureur]+'</div>'+
+    '<div class="g3" style="margin-bottom:14px">'+
+    '<div class="kpi"><div class="kl">Rend. net 1 an</div><div class="kv gold">'+m.r1.toFixed(2)+' %</div></div>'+
+    '<div class="kpi"><div class="kl">Rend. net 3 ans</div><div class="kv">'+fmtPct(m.r3)+'</div></div>'+
+    '<div class="kpi"><div class="kl">Rend. net 5 ans</div><div class="kv">'+fmtPct(m.r5)+'</div></div>'+
     '</div>'+
     compBarHtml(m.actions, m.rf)+
-    '<div style="margin-top:14px;overflow-x:auto">'+compFundTableHtml(m.rows, false)+'</div>';
+    '<div style="font-size:11px;color:var(--gry);margin-top:10px">RFG pondéré : <strong style="color:var(--ink)">'+m.rfg.toFixed(2)+' %</strong></div>'+
+    '<div style="margin-top:16px"><div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Répartition géographique</div>'+compGeoSectBarsHtml(m.geo,6)+'</div>'+
+    '<div style="margin-top:14px"><div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Répartition sectorielle</div>'+compGeoSectBarsHtml(m.sect,6)+'</div>'+
+    '<div style="margin-top:16px;overflow-x:auto">'+compFundTableHtml(m.rows, false)+'</div>';
   document.getElementById('comp-reco-content').innerHTML = html;
 }
 
@@ -8169,6 +8216,8 @@ function compAddPendingFund(parsed){
     '<div class="field"><label>Rendement 1 an (%)</label><input type="number" step="0.01" id="pend-r1-'+idx+'" value="'+(parsed.r1!=null?parsed.r1:'')+'"></div>'+
     '<div class="field"><label>Rendement 3 ans (%)</label><input type="number" step="0.01" id="pend-r3-'+idx+'" value="'+(parsed.r3!=null?parsed.r3:'')+'"></div>'+
     '<div class="field"><label>Rendement 5 ans (%)</label><input type="number" step="0.01" id="pend-r5-'+idx+'" value="'+(parsed.r5!=null?parsed.r5:'')+'"></div>'+
+    '<div class="field"><label>Région principale (optionnel)</label><input type="text" id="pend-geo-'+idx+'" placeholder="Ex. Canada 80%, É-U 20%"></div>'+
+    '<div class="field"><label>Secteur principal (optionnel)</label><input type="text" id="pend-sect-'+idx+'" placeholder="Ex. Services financiers"></div>'+
     '</div>'+
     (parsed.rfg==null||parsed.r1==null ? '<div class="note" style="color:#B23">Certaines valeurs n\'ont pas été détectées automatiquement — complétez-les manuellement.</div>' : '')+
     '<button class="freq-btn on" style="margin-top:8px" onclick="compConfirmPending('+idx+')">✓ Confirmer et ajouter au portefeuille client</button>'+
@@ -8184,7 +8233,9 @@ function compConfirmPending(idx){
   var r1 = document.getElementById('pend-r1-'+idx).value; r1 = r1===''?null:parseFloat(r1);
   var r3 = document.getElementById('pend-r3-'+idx).value; r3 = r3===''?null:parseFloat(r3);
   var r5 = document.getElementById('pend-r5-'+idx).value; r5 = r5===''?null:parseFloat(r5);
-  compState.clientFunds.push({nom:nom, cat:cat, poids:poids, rfg:rfg, r1:r1, r3:r3, r5:r5});
+  var geo = document.getElementById('pend-geo-'+idx).value || '';
+  var sect = document.getElementById('pend-sect-'+idx).value || '';
+  compState.clientFunds.push({nom:nom, cat:cat, poids:poids, rfg:rfg, r1:r1, r3:r3, r5:r5, geoNote:geo, sectNote:sect});
   var el = document.getElementById('comp-pending-'+idx);
   if(el) el.remove();
   compRenderClientTable();
@@ -8255,25 +8306,44 @@ function compCalc(){
   var recoTitre = document.getElementById('comp-reco-titre').value || 'Portefeuille recommandé';
   var recoDesc = document.getElementById('comp-reco-desc').value;
 
-  var html = '<div class="g2">'+
+  var html = '<div style="background:var(--gold-p);border:1px solid rgba(191,143,0,.3);border-radius:var(--r);padding:8px 14px;margin-bottom:16px;font-size:12.5px;font-weight:700;color:var(--gold-br)">Profil d\'investisseur recommandé : '+PROFIL_LABELS[compState.profil]+' — '+ASSUREUR_LABELS[compState.assureur]+'</div>';
+
+  html += '<div class="g2">'+
     '<div><div style="font-weight:700;margin-bottom:2px">'+clientTitre+'</div>'+
     (clientDesc?'<div style="font-size:11.5px;color:var(--gry);margin-bottom:8px">'+clientDesc+'</div>':'<div style="margin-bottom:8px"></div>')+
     compBarHtml(cm.actions, cm.rf)+
     '<table class="tbl" style="margin-top:10px"><tbody>'+
-    '<tr><td>RFG pondéré</td><td style="text-align:right;font-weight:700">'+cm.rfg.toFixed(2)+' %</td></tr>'+
-    '<tr><td>Rendement 1 an</td><td style="text-align:right;font-weight:700">'+cm.r1.toFixed(2)+' %</td></tr>'+
-    '<tr><td>Rendement 3 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(cm.r3)+'</td></tr>'+
-    '<tr><td>Rendement 5 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(cm.r5)+'</td></tr>'+
+    '<tr><td>Rendement net 1 an</td><td style="text-align:right;font-weight:700">'+cm.r1.toFixed(2)+' %</td></tr>'+
+    '<tr><td>Rendement net 3 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(cm.r3)+'</td></tr>'+
+    '<tr><td>Rendement net 5 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(cm.r5)+'</td></tr>'+
+    '<tr><td style="color:var(--gry)">RFG pondéré</td><td style="text-align:right;color:var(--gry)">'+cm.rfg.toFixed(2)+' %</td></tr>'+
     '</tbody></table></div>'+
     '<div><div style="font-weight:700;margin-bottom:2px">'+recoTitre+'</div>'+
     (recoDesc?'<div style="font-size:11.5px;color:var(--gry);margin-bottom:8px">'+recoDesc+'</div>':'<div style="margin-bottom:8px"></div>')+
     compBarHtml(rm.actions, rm.rf)+
     '<table class="tbl" style="margin-top:10px"><tbody>'+
-    '<tr><td>RFG pondéré</td><td style="text-align:right;font-weight:700">'+rm.rfg.toFixed(2)+' %</td></tr>'+
-    '<tr><td>Rendement 1 an</td><td style="text-align:right;font-weight:700">'+rm.r1.toFixed(2)+' %</td></tr>'+
-    '<tr><td>Rendement 3 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(rm.r3)+'</td></tr>'+
-    '<tr><td>Rendement 5 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(rm.r5)+'</td></tr>'+
+    '<tr><td>Rendement net 1 an</td><td style="text-align:right;font-weight:700">'+rm.r1.toFixed(2)+' %</td></tr>'+
+    '<tr><td>Rendement net 3 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(rm.r3)+'</td></tr>'+
+    '<tr><td>Rendement net 5 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(rm.r5)+'</td></tr>'+
+    '<tr><td style="color:var(--gry)">RFG pondéré</td><td style="text-align:right;color:var(--gry)">'+rm.rfg.toFixed(2)+' %</td></tr>'+
     '</tbody></table></div>'+
+    '</div>';
+
+  // Géographie / secteurs (disponible pour le portefeuille recommandé ; notes libres pour le client si fournies)
+  var clientGeoNotes = compState.clientFunds.filter(function(f){return f.geoNote;}).map(function(f){return f.nom+' : '+f.geoNote;});
+  var clientSectNotes = compState.clientFunds.filter(function(f){return f.sectNote;}).map(function(f){return f.nom+' : '+f.sectNote;});
+  html += '<div class="g2" style="margin-top:18px">'+
+    '<div><div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Géographie / secteurs — '+clientTitre+'</div>'+
+    (clientGeoNotes.length || clientSectNotes.length ?
+      ('<div style="font-size:11.5px;line-height:1.7">'+
+       (clientGeoNotes.length? '<strong>Région :</strong> '+clientGeoNotes.join(' · ')+'<br>' : '')+
+       (clientSectNotes.length? '<strong>Secteur :</strong> '+clientSectNotes.join(' · ') : '')+
+       '</div>')
+      : '<div class="note">Non fourni pour ce portefeuille.</div>')+
+    '</div>'+
+    '<div><div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Géographie — '+recoTitre+'</div>'+compGeoSectBarsHtml(rm.geo,5)+
+    '<div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin:12px 0 8px">Secteurs — '+recoTitre+'</div>'+compGeoSectBarsHtml(rm.sect,5)+
+    '</div>'+
     '</div>';
 
   if(valeur>0){
