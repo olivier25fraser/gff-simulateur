@@ -710,6 +710,8 @@ body.dark #retraite-dec .field input,body.dark #retraite-dec .field select{backg
 body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
 
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>if(typeof pdfjsLib!=="undefined"){pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";}</script>
 </head>
 <body>
 
@@ -733,6 +735,7 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
   <button class="tab" onclick="show('pret',this)">Prêt vs Investir</button>
   <button class="tab" onclick="show('budget',this)">Budget</button>
   <button class="tab" onclick="show('port',this)">Portefeuilles</button>
+  <button class="tab" onclick="show('comp',this)">Comparateur</button>
   <button class="tab" onclick="show('abf',this)">ABF</button>
   <button class="tab" onclick="show('presentations',this)">Présentations</button>
 </div>
@@ -1970,6 +1973,72 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
 
 
 <!-- ABF -->
+<div id="pane-comp" class="pane">
+  <button class="print-btn" onclick="printComparateur()"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimer / Sauvegarder le comparatif</button>
+
+  <div class="g2">
+    <div class="card">
+      <div class="ch nv">Portefeuille recommandé</div>
+      <div class="cb">
+        <div class="field" style="margin-bottom:12px">
+          <label>Assureur</label>
+          <div class="freq-group">
+            <button type="button" class="freq-btn on" id="comp-ins-assomption" onclick="compSetAssureur('assomption')">Assomption Vie</button>
+            <button type="button" class="freq-btn" id="comp-ins-ia" onclick="compSetAssureur('ia')">iA</button>
+            <button type="button" class="freq-btn" id="comp-ins-beneva" onclick="compSetAssureur('beneva')">Beneva</button>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:16px">
+          <label>Profil</label>
+          <div class="freq-group" style="flex-wrap:wrap">
+            <button type="button" class="freq-btn on" id="comp-prof-conservateur" onclick="compSetProfil('conservateur')">Conservateur</button>
+            <button type="button" class="freq-btn" id="comp-prof-modere" onclick="compSetProfil('modere')">Modéré</button>
+            <button type="button" class="freq-btn" id="comp-prof-equilibre" onclick="compSetProfil('equilibre')">Équilibré</button>
+            <button type="button" class="freq-btn" id="comp-prof-croissance" onclick="compSetProfil('croissance')">Croissance</button>
+            <button type="button" class="freq-btn" id="comp-prof-audacieux" onclick="compSetProfil('audacieux')">Audacieux</button>
+          </div>
+        </div>
+        <div id="comp-reco-content"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ch gd">Portefeuille actuel du client</div>
+      <div class="cb">
+        <div class="field">
+          <label>Valeur marchande totale actuelle ($)</label>
+          <input type="number" id="comp-valeur-totale" min="0" placeholder="Ex. 150000" oninput="compCalc()">
+        </div>
+
+        <div id="comp-dropzone" style="border:2px dashed var(--gry-m);border-radius:var(--r-lg);padding:24px;text-align:center;cursor:pointer;margin:14px 0;transition:all .15s"
+          onclick="document.getElementById('comp-pdf-input').click()"
+          ondragover="event.preventDefault();this.style.borderColor='var(--gold-br)';this.style.background='var(--gold-p)'"
+          ondragleave="this.style.borderColor='var(--gry-m)';this.style.background='transparent'"
+          ondrop="event.preventDefault();this.style.borderColor='var(--gry-m)';this.style.background='transparent';compHandleFiles(event.dataTransfer.files)">
+          <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px">📄 Déposez les aperçus de fonds (PDF) ici</div>
+          <div style="font-size:11px;color:var(--gry)">ou cliquez pour parcourir — plusieurs fichiers à la fois</div>
+        </div>
+        <input type="file" id="comp-pdf-input" accept="application/pdf" multiple style="display:none" onchange="compHandleFiles(this.files)">
+        <div id="comp-pdf-status" style="font-size:11px;color:var(--gry);margin-bottom:10px"></div>
+
+        <div id="comp-pending-zone"></div>
+
+        <div id="comp-client-table"></div>
+
+        <div id="comp-client-summary"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch nv">Comparatif</div>
+    <div class="cb" id="comp-comparatif-zone">
+      <div class="note">Choisis un portefeuille recommandé à gauche et ajoute au moins un fonds du client à droite pour voir le comparatif.</div>
+    </div>
+  </div>
+</div>
+
+
 <div id="pane-abf" class="pane">
   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
     <div>
@@ -7891,6 +7960,318 @@ if (document.readyState === 'loading') {
     initTabsDrag();
   }
 })();
+
+
+// ══════════════════ COMPARATEUR DE PORTEFEUILLES ══════════════════
+var COMP_DATA = {"funds": {"assomption": {"mm": {"nom": "Marché monétaire (Louisbourg)", "rfg": 1.06, "r1": 1.58, "r3": 2.77, "r5": 2.13, "cat": "RF"}, "obligsoc": {"nom": "Obligations de sociétés (CI)", "rfg": 1.8, "r1": 4.92, "r3": 6.83, "r5": 2.34, "cat": "RF"}, "hautrend": {"nom": "Obligations à haut rendement (TD)", "rfg": 1.75, "r1": 3.96, "r3": 5.97, "r5": null, "cat": "RF"}, "mom": {"nom": "Actions canadiennes momentum (Louisbourg)", "rfg": 2.68, "r1": 40.27, "r3": 24.03, "r5": 13.7, "cat": "Actions"}, "cdnbase": {"nom": "Actions canadiennes de base (Fidelity)", "rfg": 2.53, "r1": 24.18, "r3": 17.0, "r5": 10.58, "cat": "Actions"}, "uscible": {"nom": "Actions américaines - Ciblé (Fidelity)", "rfg": 3.05, "r1": 47.35, "r3": 29.0, "r5": 16.08, "cat": "Actions"}, "mondplus": {"nom": "Actions mondiales+ (Fidelity)", "rfg": 2.9, "r1": 28.87, "r3": null, "r5": null, "cat": "Actions"}, "em": {"nom": "Marchés émergents (CI)", "rfg": 3.05, "r1": 53.59, "r3": 24.72, "r5": null, "cat": "Actions"}}, "beneva": {"rab": {"nom": "Revenu fixe canadien (AGF)", "rfg": 1.5, "r1": 3.68, "r3": 4.26, "r5": 0.2, "cat": "RF"}, "rbp": {"nom": "Revenu fixe haut rendement (GPTD)", "rfg": 1.5, "r1": 4.33, "r3": 6.3, "r5": 2.55, "cat": "RF"}, "ram": {"nom": "Actions canadiennes (Fidelity)", "rfg": 2.5, "r1": 25.81, "r3": 18.88, "r5": 11.65, "cat": "Actions"}, "rdc": {"nom": "Indice américain (GPTD)", "rfg": 2.09, "r1": 24.6, "r3": 20.74, "r5": 13.93, "cat": "Actions"}, "rbs": {"nom": "Actions mondiales (AGF)", "rfg": 2.68, "r1": 17.61, "r3": 22.57, "r5": 12.46, "cat": "Actions"}, "rav": {"nom": "Marchés émergents (AGF)", "rfg": 2.78, "r1": 59.29, "r3": 24.17, "r5": 8.51, "cat": "Actions"}, "rda": {"nom": "Actions am. petites/moy cap (AGF)", "rfg": 2.64, "r1": 57.83, "r3": 25.57, "r5": 10.39, "cat": "Actions"}}, "ia": {"070": {"nom": "Marché monétaire (iA)", "rfg": 1.4, "r1": 1.39, "r3": 2.53, "r5": 1.97, "cat": "RF"}, "762": {"nom": "Stratégie d'obligations de sociétés (iA)", "rfg": 2.21, "r1": 4.5, "r3": 5.62, "r5": 2.73, "cat": "RF"}, "222": {"nom": "Fidelity Titres am. rendement élevé - Devises neutres", "rfg": 2.65, "r1": 3.3, "r3": 5.94, "r5": 2.14, "cat": "RF"}, "280": {"nom": "Potentiel Canada Fidelity", "rfg": 2.86, "r1": 16.26, "r3": 11.89, "r5": 9.44, "cat": "Actions"}, "870": {"nom": "Actions canadiennes petite cap (iA)", "rfg": 2.81, "r1": 50.08, "r3": 28.6, "r5": 16.08, "cat": "Actions"}, "180": {"nom": "Indiciel américain (BlackRock)", "rfg": 2.6, "r1": 23.59, "r3": 19.89, "r5": 13.18, "cat": "Actions"}, "233": {"nom": "Innovation thématique (iA)", "rfg": 2.62, "r1": 25.63, "r3": 23.03, "r5": 12.61, "cat": "Actions"}, "876": {"nom": "Indiciel mondial tous pays (BlackRock)", "rfg": 2.45, "r1": 25.38, "r3": 19.4, "r5": 11.14, "cat": "Actions"}, "084": {"nom": "Marchés émergents (Jarislowsky Fraser)", "rfg": 3.21, "r1": 22.44, "r3": 12.35, "r5": 0.92, "cat": "Actions"}}}, "portfolios": {"assomption": {"conservateur": {"mm": 30, "obligsoc": 30, "hautrend": 15, "mom": 8, "cdnbase": 7, "uscible": 6, "mondplus": 4}, "modere": {"mm": 20, "obligsoc": 25, "hautrend": 15, "mom": 12, "cdnbase": 8, "uscible": 10, "mondplus": 7, "em": 3}, "equilibre": {"mm": 10, "obligsoc": 18, "hautrend": 12, "mom": 16, "cdnbase": 10, "uscible": 16, "mondplus": 12, "em": 6}, "croissance": {"obligsoc": 15, "hautrend": 10, "mom": 20, "cdnbase": 12, "uscible": 22, "mondplus": 15, "em": 6}, "audacieux": {"hautrend": 10, "mom": 24, "cdnbase": 14, "uscible": 26, "mondplus": 18, "em": 8}}, "beneva": {"conservateur": {"rab": 55, "rbp": 20, "ram": 8, "rdc": 8, "rbs": 9}, "modere": {"rab": 42, "rbp": 18, "ram": 11, "rdc": 11, "rbs": 11, "rav": 7}, "equilibre": {"rab": 26, "rbp": 14, "ram": 14, "rdc": 16, "rbs": 16, "rav": 10, "rda": 4}, "croissance": {"rab": 15, "rbp": 10, "ram": 14, "rdc": 18, "rbs": 18, "rav": 13, "rda": 12}, "audacieux": {"rbp": 10, "ram": 14, "rdc": 22, "rbs": 22, "rav": 17, "rda": 15}}, "ia": {"conservateur": {"070": 25, "762": 35, "222": 15, "280": 8, "180": 9, "876": 8}, "modere": {"070": 15, "762": 30, "222": 15, "280": 10, "870": 4, "180": 13, "876": 13}, "equilibre": {"070": 6, "762": 20, "222": 14, "280": 12, "870": 8, "180": 16, "233": 8, "876": 10, "084": 6}, "croissance": {"762": 16, "222": 9, "280": 14, "870": 12, "180": 18, "233": 12, "876": 11, "084": 8}, "audacieux": {"762": 6, "222": 4, "280": 16, "870": 14, "180": 20, "233": 14, "876": 14, "084": 12}}}};
+var compState = { assureur: 'assomption', profil: 'conservateur', clientFunds: [] };
+
+function compSetAssureur(ins){
+  compState.assureur = ins;
+  ['assomption','ia','beneva'].forEach(function(i){
+    document.getElementById('comp-ins-'+i).classList.toggle('on', i===ins);
+  });
+  compRenderReco();
+  compCalc();
+}
+function compSetProfil(prof){
+  compState.profil = prof;
+  ['conservateur','modere','equilibre','croissance','audacieux'].forEach(function(p){
+    document.getElementById('comp-prof-'+p).classList.toggle('on', p===prof);
+  });
+  compRenderReco();
+  compCalc();
+}
+
+function compGetPortfolioMetrics(insurerKey, profilKey){
+  var alloc = COMP_DATA.portfolios[insurerKey][profilKey];
+  var funds = COMP_DATA.funds[insurerKey];
+  var rows = [];
+  var rfg=0, r1=0, r3=0, r3w=0, r5=0, r5w=0, actions=0, rf=0;
+  Object.keys(alloc).forEach(function(fkey){
+    var w = alloc[fkey], f = funds[fkey];
+    rows.push({nom:f.nom, poids:w, rfg:f.rfg, r1:f.r1, r3:f.r3, r5:f.r5, cat:f.cat});
+    rfg += f.rfg*w/100;
+    r1 += (f.r1||0)*w/100;
+    if(f.r3!=null){ r3 += f.r3*w/100; r3w += w; }
+    if(f.r5!=null){ r5 += f.r5*w/100; r5w += w; }
+    if(f.cat==='Actions') actions += w; else rf += w;
+  });
+  return {
+    rows: rows, rfg: rfg, r1: r1,
+    r3: r3w>0 ? r3*100/r3w : null,
+    r5: r5w>0 ? r5*100/r5w : null,
+    actions: actions, rf: rf
+  };
+}
+
+function compBarHtml(actionsPct, rfPct){
+  return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'+
+    '<div style="width:90px;font-size:10.5px;color:var(--gry)">Actions</div>'+
+    '<div style="flex:1;background:var(--gry-l);border-radius:3px;height:9px;overflow:hidden"><div style="width:'+actionsPct+'%;height:100%;background:#0F0F0F"></div></div>'+
+    '<div style="width:40px;text-align:right;font-size:10.5px;font-weight:700">'+actionsPct.toFixed(0)+'%</div></div>'+
+    '<div style="display:flex;align-items:center;gap:8px">'+
+    '<div style="width:90px;font-size:10.5px;color:var(--gry)">Revenu fixe</div>'+
+    '<div style="flex:1;background:var(--gry-l);border-radius:3px;height:9px;overflow:hidden"><div style="width:'+rfPct+'%;height:100%;background:#2E75B6"></div></div>'+
+    '<div style="width:40px;text-align:right;font-size:10.5px;font-weight:700">'+rfPct.toFixed(0)+'%</div></div>';
+}
+
+function fmtPct(v){ return v==null ? 's.o.' : v.toFixed(2)+' %'; }
+
+function compFundTableHtml(rows, editable){
+  var html = '<table class="tbl"><thead><tr><th style="text-align:left">Fonds</th><th style="text-align:right">Poids</th><th style="text-align:right">1 an</th><th style="text-align:right">3 ans</th><th style="text-align:right">5 ans</th><th style="text-align:right">RFG</th>'+(editable?'<th></th>':'')+'</tr></thead><tbody>';
+  rows.forEach(function(r, i){
+    html += '<tr><td>'+r.nom+'<br><small style="color:#999">'+r.cat+'</small></td>'+
+      '<td style="text-align:right">'+r.poids+' %</td>'+
+      '<td style="text-align:right">'+fmtPct(r.r1)+'</td>'+
+      '<td style="text-align:right">'+fmtPct(r.r3)+'</td>'+
+      '<td style="text-align:right">'+fmtPct(r.r5)+'</td>'+
+      '<td style="text-align:right">'+r.rfg.toFixed(2)+' %</td>'+
+      (editable?'<td><button class="freq-btn" style="padding:2px 8px;font-size:11px" onclick="compRemoveFund('+i+')">✕</button></td>':'')+
+      '</tr>';
+  });
+  html += '</tbody></table>';
+  return html;
+}
+
+function compRenderReco(){
+  var m = compGetPortfolioMetrics(compState.assureur, compState.profil);
+  var html = '<div class="g3" style="margin-bottom:14px">'+
+    '<div class="kpi"><div class="kl">RFG pondéré</div><div class="kv">'+m.rfg.toFixed(2)+' %</div></div>'+
+    '<div class="kpi"><div class="kl">Rend. 1 an</div><div class="kv gold">'+m.r1.toFixed(2)+' %</div></div>'+
+    '<div class="kpi"><div class="kl">Rend. 3 ans</div><div class="kv">'+fmtPct(m.r3)+'</div></div>'+
+    '</div>'+
+    compBarHtml(m.actions, m.rf)+
+    '<div style="margin-top:14px;overflow-x:auto">'+compFundTableHtml(m.rows, false)+'</div>';
+  document.getElementById('comp-reco-content').innerHTML = html;
+}
+
+// ---------- Lecture PDF (PDF.js) ----------
+function compHandleFiles(fileList){
+  var files = Array.from(fileList).filter(function(f){ return f.type==='application/pdf'; });
+  if(!files.length) return;
+  var statusEl = document.getElementById('comp-pdf-status');
+  statusEl.textContent = 'Lecture de '+files.length+' fichier(s)...';
+  files.forEach(function(file){
+    var reader = new FileReader();
+    reader.onload = function(){
+      var typedArray = new Uint8Array(this.result);
+      if(typeof pdfjsLib === 'undefined'){
+        statusEl.textContent = 'Erreur : bibliothèque PDF non chargée. Réessayez.';
+        return;
+      }
+      pdfjsLib.getDocument(typedArray).promise.then(function(pdf){
+        var textPromises = [];
+        for(var p=1; p<=pdf.numPages; p++){
+          textPromises.push(pdf.getPage(p).then(function(page){
+            return page.getTextContent().then(function(tc){
+              return tc.items.map(function(it){ return it.str; }).join(' ');
+            });
+          }));
+        }
+        Promise.all(textPromises).then(function(pages){
+          var fullText = pages.join('\n');
+          var parsed = compParseFundText(fullText, file.name);
+          compAddPendingFund(parsed);
+          statusEl.textContent = '';
+        });
+      }).catch(function(err){
+        statusEl.textContent = 'Impossible de lire '+file.name+' (PDF protégé ou corrompu).';
+      });
+    };
+    reader.readAsArrayBuffer(file);
+  });
+  document.getElementById('comp-pdf-input').value = '';
+}
+
+function compParseFundText(text, filename){
+  var result = { nom: filename.replace(/\.pdf$/i,''), rfg: null, r1: null, r3: null, r5: null, cat: 'Actions' };
+
+  // --- Nom du fonds (heuristique : ligne après "Fonds de placement" ou avant "Au XX")
+  var nameMatch = text.match(/([A-ZÉÈÀÂÎÔÛÇ][a-zà-ÿ0-9()°%\-\/ ]{4,60})\s+Au \d{1,2}\s*(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)/i);
+  if(nameMatch) result.nom = nameMatch[1].trim();
+
+  // --- RFG / RFF (plusieurs libellés possibles selon l'assureur)
+  var rfgPatterns = [
+    /RFG\s*total\s*[¹1]?\s*:?\s*([\d,\.]+)\s*%/i,
+    /RFF\s*[³3]?\s*\(RFG total \+ RFO\)\s*:?\s*([\d,\.]+)\s*%/i,
+    /RFG\s*projeté\s*%?\s+([\d,\.]+)/i,
+    /S[ée]rie\s+Classique\s+75\/75\s+([\d,\.]+)/i,
+    /75\/100\s+(?:Sans\s+Frais\s+\(SF\)\s+)?F\dR\w{2}\s+([\d,\.]+)/i,
+    /Frais\s+total\s+([\d,\.]+)\s*%/i,
+  ];
+  for(var i=0;i<rfgPatterns.length;i++){
+    var m = text.match(rfgPatterns[i]);
+    if(m){ result.rfg = parseFloat(m[1].replace(',','.')); break; }
+  }
+
+  // --- Rendements composés : chercher "1 an" ... "3 ans" ... "5 ans" suivis de 3 nombres
+  var rendMatch = text.match(/1\s*an\s+3\s*ans\s+5\s*ans[^\d\-]*(-?[\d,\.]+)\s*%?\s+(-?[\d,\.]+)\s*%?\s+(-?[\d,\.]+)\s*%?/i);
+  if(!rendMatch){
+    // format alternatif : DDA 3 mois 6 mois 1 an 3 ans 5 ans ... (iA) -> chercher la 4e,5e,6e valeur après "an"
+    rendMatch = text.match(/DDA[^\n]*?1\s*an[^\n]*?3\s*ans[^\n]*?5\s*ans[\s\S]{0,80}?(-?[\d,\.]+)\s+(-?[\d,\.]+)\s+(-?[\d,\.]+)\s+(-?[\d,\.]+)\s+(-?[\d,\.]+)\s+(-?[\d,\.]+)/i);
+    if(rendMatch){
+      result.r1 = parseFloat(rendMatch[4].replace(',','.'));
+      result.r3 = parseFloat(rendMatch[5].replace(',','.'));
+      result.r5 = parseFloat(rendMatch[6].replace(',','.'));
+    }
+  } else {
+    result.r1 = parseFloat(rendMatch[1].replace(',','.'));
+    result.r3 = parseFloat(rendMatch[2].replace(',','.'));
+    result.r5 = parseFloat(rendMatch[3].replace(',','.'));
+  }
+
+  // --- Catégorie (revenu fixe vs actions)
+  if(/revenu\s+fixe|obligations|march[ée]\s+mon[ée]taire/i.test(text) && !/actions/i.test(text.substring(0,500))){
+    result.cat = 'RF';
+  }
+
+  return result;
+}
+
+var compPendingList = [];
+function compAddPendingFund(parsed){
+  var idx = compPendingList.length;
+  compPendingList.push(parsed);
+  var zone = document.getElementById('comp-pending-zone');
+  var div = document.createElement('div');
+  div.className = 'card';
+  div.style.cssText = 'border:1.5px solid var(--gold-br);margin-bottom:10px';
+  div.id = 'comp-pending-'+idx;
+  div.innerHTML =
+    '<div class="cb" style="padding:14px">'+
+    '<div style="font-size:11px;font-weight:700;color:var(--gold-br);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">⚠ Vérifiez avant d\'ajouter</div>'+
+    '<div class="field"><label>Nom du fonds</label><input type="text" id="pend-nom-'+idx+'" value="'+parsed.nom.replace(/"/g,'')+'"></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 12px">'+
+    '<div class="field"><label>Catégorie</label><select id="pend-cat-'+idx+'"><option value="Actions"'+(parsed.cat==='Actions'?' selected':'')+'>Actions</option><option value="RF"'+(parsed.cat==='RF'?' selected':'')+'>Revenu fixe</option></select></div>'+
+    '<div class="field"><label>Poids dans le portefeuille (%)</label><input type="number" id="pend-poids-'+idx+'" min="0" max="100" placeholder="Ex. 15"></div>'+
+    '<div class="field"><label>RFG (%)</label><input type="number" step="0.01" id="pend-rfg-'+idx+'" value="'+(parsed.rfg!=null?parsed.rfg:'')+'"></div>'+
+    '<div class="field"><label>Rendement 1 an (%)</label><input type="number" step="0.01" id="pend-r1-'+idx+'" value="'+(parsed.r1!=null?parsed.r1:'')+'"></div>'+
+    '<div class="field"><label>Rendement 3 ans (%)</label><input type="number" step="0.01" id="pend-r3-'+idx+'" value="'+(parsed.r3!=null?parsed.r3:'')+'"></div>'+
+    '<div class="field"><label>Rendement 5 ans (%)</label><input type="number" step="0.01" id="pend-r5-'+idx+'" value="'+(parsed.r5!=null?parsed.r5:'')+'"></div>'+
+    '</div>'+
+    (parsed.rfg==null||parsed.r1==null ? '<div class="note" style="color:#B23">Certaines valeurs n\'ont pas été détectées automatiquement — complétez-les manuellement.</div>' : '')+
+    '<button class="freq-btn on" style="margin-top:8px" onclick="compConfirmPending('+idx+')">✓ Confirmer et ajouter au portefeuille client</button>'+
+    '</div>';
+  zone.appendChild(div);
+}
+
+function compConfirmPending(idx){
+  var nom = document.getElementById('pend-nom-'+idx).value || 'Fonds sans nom';
+  var cat = document.getElementById('pend-cat-'+idx).value;
+  var poids = parseFloat(document.getElementById('pend-poids-'+idx).value) || 0;
+  var rfg = parseFloat(document.getElementById('pend-rfg-'+idx).value) || 0;
+  var r1 = document.getElementById('pend-r1-'+idx).value; r1 = r1===''?null:parseFloat(r1);
+  var r3 = document.getElementById('pend-r3-'+idx).value; r3 = r3===''?null:parseFloat(r3);
+  var r5 = document.getElementById('pend-r5-'+idx).value; r5 = r5===''?null:parseFloat(r5);
+  compState.clientFunds.push({nom:nom, cat:cat, poids:poids, rfg:rfg, r1:r1, r3:r3, r5:r5});
+  var el = document.getElementById('comp-pending-'+idx);
+  if(el) el.remove();
+  compRenderClientTable();
+  compCalc();
+}
+
+function compRemoveFund(i){
+  compState.clientFunds.splice(i,1);
+  compRenderClientTable();
+  compCalc();
+}
+
+function compRenderClientTable(){
+  var el = document.getElementById('comp-client-table');
+  if(!compState.clientFunds.length){ el.innerHTML=''; return; }
+  el.innerHTML = '<div style="overflow-x:auto;margin-top:10px">'+compFundTableHtml(compState.clientFunds, true)+'</div>';
+}
+
+function compGetClientMetrics(){
+  var rows = compState.clientFunds;
+  var totalPoids = rows.reduce(function(s,r){ return s+r.poids; }, 0);
+  var rfg=0, r1=0, r3=0, r3w=0, r5=0, r5w=0, actions=0, rf=0;
+  rows.forEach(function(f){
+    rfg += f.rfg*f.poids/100;
+    r1 += (f.r1||0)*f.poids/100;
+    if(f.r3!=null){ r3 += f.r3*f.poids/100; r3w += f.poids; }
+    if(f.r5!=null){ r5 += f.r5*f.poids/100; r5w += f.poids; }
+    if(f.cat==='Actions') actions += f.poids; else rf += f.poids;
+  });
+  return {
+    rows: rows, rfg: rfg, r1: r1,
+    r3: r3w>0 ? r3*100/r3w : null,
+    r5: r5w>0 ? r5*100/r5w : null,
+    actions: actions, rf: rf, totalPoids: totalPoids
+  };
+}
+
+function compCalc(){
+  var summaryEl = document.getElementById('comp-client-summary');
+  var cm = compGetClientMetrics();
+  if(compState.clientFunds.length){
+    var warn = Math.abs(cm.totalPoids-100)>0.5 ? '<div class="note" style="color:#B23;margin-top:6px">⚠ Le total des poids est de '+cm.totalPoids.toFixed(1)+' % (devrait être 100 %)</div>' : '';
+    summaryEl.innerHTML = '<div style="margin-top:14px">'+
+      compBarHtml(cm.actions, cm.rf)+
+      '<div class="g3" style="margin-top:12px">'+
+      '<div class="kpi"><div class="kl">RFG pondéré</div><div class="kv">'+cm.rfg.toFixed(2)+' %</div></div>'+
+      '<div class="kpi"><div class="kl">Rend. 1 an</div><div class="kv gold">'+cm.r1.toFixed(2)+' %</div></div>'+
+      '<div class="kpi"><div class="kl">Rend. 3 ans</div><div class="kv">'+fmtPct(cm.r3)+'</div></div>'+
+      '</div>'+warn+'</div>';
+  } else {
+    summaryEl.innerHTML = '';
+  }
+
+  var zone = document.getElementById('comp-comparatif-zone');
+  if(!compState.clientFunds.length){
+    zone.innerHTML = '<div class="note">Choisis un portefeuille recommandé à gauche et ajoute au moins un fonds du client à droite pour voir le comparatif.</div>';
+    return;
+  }
+  var rm = compGetPortfolioMetrics(compState.assureur, compState.profil);
+  var valeur = parseFloat(document.getElementById('comp-valeur-totale').value) || 0;
+  var ecartRfg = cm.rfg - rm.rfg;
+  var coutClient = valeur * cm.rfg/100;
+  var coutReco = valeur * rm.rfg/100;
+  var ecartDollars = coutClient - coutReco;
+
+  var html = '<div class="g2">'+
+    '<div><div style="font-weight:700;margin-bottom:8px">Portefeuille actuel du client</div>'+
+    compBarHtml(cm.actions, cm.rf)+
+    '<table class="tbl" style="margin-top:10px"><tbody>'+
+    '<tr><td>RFG pondéré</td><td style="text-align:right;font-weight:700">'+cm.rfg.toFixed(2)+' %</td></tr>'+
+    '<tr><td>Rendement 1 an</td><td style="text-align:right;font-weight:700">'+cm.r1.toFixed(2)+' %</td></tr>'+
+    '<tr><td>Rendement 3 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(cm.r3)+'</td></tr>'+
+    '<tr><td>Rendement 5 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(cm.r5)+'</td></tr>'+
+    '</tbody></table></div>'+
+    '<div><div style="font-weight:700;margin-bottom:8px">Portefeuille recommandé (GFF)</div>'+
+    compBarHtml(rm.actions, rm.rf)+
+    '<table class="tbl" style="margin-top:10px"><tbody>'+
+    '<tr><td>RFG pondéré</td><td style="text-align:right;font-weight:700">'+rm.rfg.toFixed(2)+' %</td></tr>'+
+    '<tr><td>Rendement 1 an</td><td style="text-align:right;font-weight:700">'+rm.r1.toFixed(2)+' %</td></tr>'+
+    '<tr><td>Rendement 3 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(rm.r3)+'</td></tr>'+
+    '<tr><td>Rendement 5 ans</td><td style="text-align:right;font-weight:700">'+fmtPct(rm.r5)+'</td></tr>'+
+    '</tbody></table></div>'+
+    '</div>';
+
+  if(valeur>0){
+    html += '<div class="card" style="margin-top:16px;background:var(--gold-p);box-shadow:none;border:1px solid rgba(191,143,0,.25)"><div class="cb">'+
+      '<div style="font-weight:700;margin-bottom:8px">Impact des frais sur '+valeur.toLocaleString('fr-CA')+' $</div>'+
+      '<table class="tbl"><tbody>'+
+      '<tr><td>Coût annuel estimé — portefeuille actuel</td><td style="text-align:right;font-weight:700">'+coutClient.toLocaleString('fr-CA',{maximumFractionDigits:0})+' $</td></tr>'+
+      '<tr><td>Coût annuel estimé — portefeuille recommandé</td><td style="text-align:right;font-weight:700">'+coutReco.toLocaleString('fr-CA',{maximumFractionDigits:0})+' $</td></tr>'+
+      '<tr style="font-weight:700;background:#fff"><td>'+(ecartDollars>=0?'Économie potentielle par année':'Coût additionnel par année')+'</td><td style="text-align:right">'+Math.abs(ecartDollars).toLocaleString('fr-CA',{maximumFractionDigits:0})+' $</td></tr>'+
+      '</tbody></table>'+
+      '<div class="note" style="margin-top:8px">Estimation basée sur les RFG pondérés appliqués à la valeur marchande totale déclarée. N\'inclut pas l\'effet composé des rendements sur plusieurs années.</div>'+
+      '</div></div>';
+  }
+
+  zone.innerHTML = html;
+}
+
+function printComparateur(){
+  printPane('comp', 'Comparatif de portefeuilles');
+}
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', function(){
+  compRenderReco();
+});
 
 </script>
 </body>
