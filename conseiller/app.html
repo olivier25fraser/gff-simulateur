@@ -2019,7 +2019,8 @@ body.dark #retraite-dec .note{background:#241f0f;color:#ccc}
           <div style="font-size:11px;color:var(--gry)">ou cliquez pour parcourir — plusieurs fichiers à la fois</div>
         </div>
         <input type="file" id="comp-pdf-input" accept="application/pdf" multiple style="display:none" onchange="compHandleFiles(this.files)">
-        <div id="comp-pdf-status" style="font-size:11px;color:var(--gry);margin-bottom:10px"></div>
+        <div id="comp-pdf-status" style="font-size:11px;color:var(--gry);margin-bottom:6px"></div>
+        <button type="button" class="freq-btn" style="margin-bottom:10px" onclick="compAddManualFund()">+ Ajouter un fonds manuellement (sans PDF)</button>
 
         <div id="comp-pending-zone"></div>
 
@@ -8130,6 +8131,9 @@ function compParseFundText(text, filename){
 }
 
 var compPendingList = [];
+function compAddManualFund(){
+  compAddPendingFund({ nom: '', rfg: null, r1: null, r3: null, r5: null, cat: 'Actions' });
+}
 function compAddPendingFund(parsed){
   var idx = compPendingList.length;
   compPendingList.push(parsed);
