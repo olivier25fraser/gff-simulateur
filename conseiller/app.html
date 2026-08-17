@@ -8154,8 +8154,11 @@ function compHandleFiles(fileList){
 function compParseFundText(text, filename){
   var result = { nom: filename.replace(/\.pdf$/i,''), rfg: null, r1: null, r3: null, r5: null, cat: 'Actions' };
 
-  // --- Nom du fonds (heuristique : ligne après "Fonds de placement" ou avant "Au XX")
-  var nameMatch = text.match(/([A-ZÉÈÀÂÎÔÛÇ][a-zà-ÿ0-9()°%\-\/ ]{4,60})\s+Au \d{1,2}\s*(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)/i);
+  // --- Nom du fonds (heuristique : ligne après "Fonds de placement" ou avant "Au XX" (iA/Beneva), ou avant "CATÉGORIE D'ACTIF" (RBC))
+  var nameMatch = text.match(/([A-ZÉÈÀÂÎÔÛÇ][a-zà-ÿ0-9()°%\-\/’' ]{4,80})\s+CAT[ÉE]GORIE D['’]ACTIF/i);
+  if(!nameMatch){
+    nameMatch = text.match(/([A-ZÉÈÀÂÎÔÛÇ][a-zà-ÿ0-9()°%\-\/ ]{4,60})\s+Au \d{1,2}\s*(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)/i);
+  }
   if(nameMatch) result.nom = nameMatch[1].trim();
 
   // --- RFG / RFF (plusieurs libellés possibles selon l'assureur)
@@ -8166,6 +8169,7 @@ function compParseFundText(text, filename){
     /S[ée]rie\s+Classique\s+75\/75\s+([\d,\.]+)/i,
     /75\/100\s+(?:Sans\s+Frais\s+\(SF\)\s+)?F\dR\w{2}\s+([\d,\.]+)/i,
     /Frais\s+total\s+([\d,\.]+)\s*%/i,
+    /RFG\s*\(%\)\s+([\d,\.]+)/i,  // RBC : "RFG (%)  3,05"
   ];
   for(var i=0;i<rfgPatterns.length;i++){
     var m = text.match(rfgPatterns[i]);
@@ -8187,9 +8191,21 @@ function compParseFundText(text, filename){
     result.r3 = parseFloat(rendMatch[2].replace(',','.'));
     result.r5 = parseFloat(rendMatch[3].replace(',','.'));
   }
+  if(result.r1==null){
+    // format RBC : "1 MO  3 MO  AAJ  1 AN  3 ANS  5 ANS  10 ANS  CRÉATION ... Fonds  1,27  3,60  11,18  28,81  19,26  12,45  9,26  6,06" (8 colonnes)
+    var rbcMatch = text.match(/1\s*MO\s+3\s*MO\s+AAJ\s+1\s*AN\s+3\s*ANS\s+5\s*ANS\s+10\s*ANS\s+CR[ÉE]ATION[\s\S]{0,10}?Fonds\s+(-?[\d,\.]+)\s+(-?[\d,\.]+)\s+(-?[\d,\.]+)\s+(-?[\d,\.]+)\s+(-?[\d,\.]+)\s+(-?[\d,\.]+)\s+(-?[\d,\.]+)\s+(-?[\d,\.]+)/i);
+    if(rbcMatch){
+      result.r1 = parseFloat(rbcMatch[4].replace(',','.'));
+      result.r3 = parseFloat(rbcMatch[5].replace(',','.'));
+      result.r5 = parseFloat(rbcMatch[6].replace(',','.'));
+    }
+  }
 
   // --- Catégorie (revenu fixe vs actions)
-  if(/revenu\s+fixe|obligations|march[ée]\s+mon[ée]taire/i.test(text) && !/actions/i.test(text.substring(0,500))){
+  var catMatch = text.match(/CAT[ÉE]GORIE D['’]ACTIF\s*:?\s*([A-Za-zà-ÿ ]{4,40})/i);
+  if(catMatch && /revenu\s+fixe|obligations|march[ée]\s+mon[ée]taire/i.test(catMatch[1])){
+    result.cat = 'RF';
+  } else if(/revenu\s+fixe|obligations|march[ée]\s+mon[ée]taire/i.test(text) && !/actions/i.test(text.substring(0,500))){
     result.cat = 'RF';
   }
 
