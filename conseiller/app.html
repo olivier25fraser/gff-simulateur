@@ -8384,16 +8384,33 @@ function compRenderClientTable(){
   el.innerHTML = '<div style="overflow-x:auto;margin-top:10px">'+compFundTableHtml(compState.clientFunds, true)+'</div>';
 }
 
+function compParseGeoSectString(str){
+  if(!str) return null;
+  var out = {};
+  str.split(',').forEach(function(part){
+    var m = part.trim().match(/^(.+?)\s+(-?\d+[.,]?\d*)\s*%?$/);
+    if(m){
+      var name = m[1].trim();
+      var val = parseFloat(m[2].replace(',','.'));
+      if(name && !isNaN(val)) out[name] = val;
+    }
+  });
+  return Object.keys(out).length ? out : null;
+}
+
 function compGetClientMetrics(){
   var rows = compState.clientFunds;
   var totalPoids = rows.reduce(function(s,r){ return s+r.poids; }, 0);
   var rfg=0, rfgw=0, r1=0, r1w=0, r3=0, r3w=0, r5=0, r5w=0, actions=0, rf=0;
+  var geoItems = [], sectItems = [];
   rows.forEach(function(f){
     if(f.rfg!=null){ rfg += f.rfg*f.poids; rfgw += f.poids; }
     if(f.r1!=null){ r1 += f.r1*f.poids; r1w += f.poids; }
     if(f.r3!=null){ r3 += f.r3*f.poids; r3w += f.poids; }
     if(f.r5!=null){ r5 += f.r5*f.poids; r5w += f.poids; }
     if(f.cat==='Actions') actions += f.poids; else rf += f.poids;
+    geoItems.push({val: compParseGeoSectString(f.geoNote), poids: f.poids});
+    sectItems.push({val: compParseGeoSectString(f.sectNote), poids: f.poids});
   });
   return {
     rows: rows,
@@ -8401,7 +8418,9 @@ function compGetClientMetrics(){
     r1: r1w>0 ? r1/r1w : 0,
     r3: r3w>0 ? r3/r3w : null,
     r5: r5w>0 ? r5/r5w : null,
-    actions: actions, rf: rf, totalPoids: totalPoids
+    actions: actions, rf: rf, totalPoids: totalPoids,
+    geo: compAggregateGeoSect(geoItems),
+    sect: compAggregateGeoSect(sectItems)
   };
 }
 
@@ -8461,20 +8480,13 @@ function compCalc(){
     '</tbody></table></div>'+
     '</div>';
 
-  // Géographie / secteurs (disponible pour le portefeuille recommandé ; notes libres pour le client si fournies)
-  var clientGeoNotes = compState.clientFunds.filter(function(f){return f.geoNote;}).map(function(f){return f.nom+' : '+f.geoNote;});
-  var clientSectNotes = compState.clientFunds.filter(function(f){return f.sectNote;}).map(function(f){return f.nom+' : '+f.sectNote;});
+  // Géographie / secteurs — barres agrégées pour les deux côtés (client pondéré à partir des notes saisies)
   html += '<div class="g2" style="margin-top:18px">'+
     '<div><div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Géographie — '+recoTitre+'</div>'+compGeoSectBarsHtml(rm.geo,5)+
     '<div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin:12px 0 8px">Secteurs — '+recoTitre+'</div>'+compGeoSectBarsHtml(rm.sect,5)+
     '</div>'+
-    '<div><div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Géographie / secteurs — '+clientTitre+'</div>'+
-    (clientGeoNotes.length || clientSectNotes.length ?
-      ('<div style="font-size:11.5px;line-height:1.7">'+
-       (clientGeoNotes.length? '<strong>Région :</strong> '+clientGeoNotes.join(' · ')+'<br>' : '')+
-       (clientSectNotes.length? '<strong>Secteur :</strong> '+clientSectNotes.join(' · ') : '')+
-       '</div>')
-      : '<div class="note">Non fourni pour ce portefeuille.</div>')+
+    '<div><div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Géographie — '+clientTitre+'</div>'+compGeoSectBarsHtml(cm.geo,5)+
+    '<div style="font-size:11px;font-weight:700;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;margin:12px 0 8px">Secteurs — '+clientTitre+'</div>'+compGeoSectBarsHtml(cm.sect,5)+
     '</div>'+
     '</div>';
 
