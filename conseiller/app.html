@@ -8227,7 +8227,82 @@ function compParseFundText(text, filename){
     result.cat = 'RF';
   }
 
+  // --- Répartition géographique et sectorielle (quand le PDF les présente sous forme lisible)
+  result.geoDetected = compExtractGeo(text);
+  result.sectDetected = compExtractSector(text);
+
   return result;
+}
+
+var COMP_SECTOR_VOCAB = [
+  "Technologies de l'information","Information Technology",
+  "Services financiers","Financials","Finance",
+  "Soins de santé","Health Care","Santé",
+  "Consommation discrétionnaire","Consumer Discretionary",
+  "Consommation de base","Consumer Staples","Biens de consommation de base",
+  "Produits industriels","Industrials","Industrie",
+  "Énergie","Energy",
+  "Matériaux","Materials",
+  "Services de communication","Communication Services","Communication",
+  "Services publics","Utilities","Services aux Collectivités",
+  "Immobilier","Real Estate"
+];
+
+var COMP_COUNTRY_VOCAB = [
+  "États-Unis","United States","Canada","France","Royaume-Uni","United Kingdom",
+  "Allemagne","Germany","Japon","Japan","Chine","China","Suisse","Switzerland",
+  "Irlande","Ireland","Singapour","Singapore","Bermudes","Bermuda","Australie","Australia",
+  "Danemark","Denmark","Pays-Bas","Netherlands","Corée du Sud","South Korea",
+  "Taïwan","Taiwan","Inde","India","Brésil","Brazil","Mexique","Mexico",
+  "Îles Caïmans","Cayman Islands","Luxembourg","Israël","Israel","Espagne","Spain",
+  "Italie","Italy","Suède","Sweden","Norvège","Norway","Belgique","Belgium",
+  "Autriche","Austria","Hong Kong"
+];
+
+function compExtractSector(text){
+  var headM = text.match(/(?:R[ée]partitions?\s+sectorielles?|Sector Allocation)[\s\S]{0,20}?(?:du fonds sous-jacent|of the Underlying Fund)?\s*(?:au|as of)?\s*[\d\-\/]*\s*/i);
+  if(!headM) return null;
+  var startIdx = headM.index + headM[0].length;
+  var block = text.substring(startIdx, startIdx + 500);
+  var labels = [];
+  COMP_SECTOR_VOCAB.forEach(function(v){
+    var idx = block.indexOf(v);
+    if(idx !== -1 && idx < 300){ labels.push({name:v, idx:idx}); }
+  });
+  labels.sort(function(a,b){ return a.idx-b.idx; });
+  var filtered = [];
+  labels.forEach(function(l){
+    var overlaps = filtered.some(function(f){ return Math.abs(f.idx-l.idx) < 5; });
+    if(!overlaps) filtered.push(l);
+  });
+  if(!filtered.length) return null;
+  var afterLabels = block.substring(filtered[filtered.length-1].idx);
+  var nums = afterLabels.match(/-?\d+[.,]\d+/g);
+  if(!nums) return null;
+  var out = [];
+  for(var i=0;i<Math.min(filtered.length, nums.length, 6);i++){
+    out.push(filtered[i].name + ' ' + nums[i].replace(',','.') + '%');
+  }
+  return out.join(', ');
+}
+
+function compExtractGeo(text){
+  var headM = text.match(/(?:Affectations? g[ée]ographiques?|Geographic Allocation)[\s\S]{0,20}?(?:du fonds sous-jacent|of the Underlying Fund)?\s*(?:au|as of)?\s*[\d\-\/]*\s*/i);
+  if(!headM) return null;
+  var startIdx = headM.index + headM[0].length;
+  var block = text.substring(startIdx, startIdx + 400);
+  var found = [];
+  COMP_COUNTRY_VOCAB.forEach(function(c){
+    var re = new RegExp(c.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s+(-?\\d+[.,]\\d+)');
+    var m = block.match(re);
+    if(m){
+      var idx = block.indexOf(m[0]);
+      found.push({name:c, val: m[1].replace(',','.'), idx: idx});
+    }
+  });
+  found.sort(function(a,b){ return a.idx-b.idx; });
+  if(!found.length) return null;
+  return found.slice(0,5).map(function(f){ return f.name+' '+f.val+'%'; }).join(', ');
 }
 
 var compPendingList = [];
@@ -8253,8 +8328,8 @@ function compAddPendingFund(parsed){
     '<div class="field"><label>Rendement 1 an (%)</label><input type="number" step="0.01" id="pend-r1-'+idx+'" value="'+(parsed.r1!=null?parsed.r1:'')+'"></div>'+
     '<div class="field"><label>Rendement 3 ans (%)</label><input type="number" step="0.01" id="pend-r3-'+idx+'" value="'+(parsed.r3!=null?parsed.r3:'')+'"></div>'+
     '<div class="field"><label>Rendement 5 ans (%)</label><input type="number" step="0.01" id="pend-r5-'+idx+'" value="'+(parsed.r5!=null?parsed.r5:'')+'"></div>'+
-    '<div class="field"><label>Région principale (optionnel)</label><input type="text" id="pend-geo-'+idx+'" placeholder="Ex. Canada 80%, É-U 20%"></div>'+
-    '<div class="field"><label>Secteur principal (optionnel)</label><input type="text" id="pend-sect-'+idx+'" placeholder="Ex. Services financiers"></div>'+
+    '<div class="field"><label>Région (détectée automatiquement — vérifiez)</label><input type="text" id="pend-geo-'+idx+'" value="'+(parsed.geoDetected?parsed.geoDetected.replace(/"/g,''):'')+'" placeholder="Ex. Canada 80%, É-U 20%"></div>'+
+    '<div class="field"><label>Secteurs (détectés automatiquement — vérifiez)</label><input type="text" id="pend-sect-'+idx+'" value="'+(parsed.sectDetected?parsed.sectDetected.replace(/"/g,''):'')+'" placeholder="Ex. Services financiers"></div>'+
     '</div>'+
     (parsed.rfg==null||parsed.r1==null ? '<div class="note" style="color:#B23">Certaines valeurs n\'ont pas été détectées automatiquement — complétez-les manuellement.</div>' : '')+
     '<button class="freq-btn on" style="margin-top:8px" onclick="compConfirmPending('+idx+')">✓ Confirmer et ajouter au portefeuille client</button>'+
