@@ -8,10 +8,6 @@
   node_bundler = "esbuild"
 
 [[scheduled_functions]]
-  name = "rappel-mise-a-jour"
-  cron = "0 14 1 * *"
-
-[[scheduled_functions]]
   name = "marches-update"
   cron = "0 14 * * 1-5"
 
