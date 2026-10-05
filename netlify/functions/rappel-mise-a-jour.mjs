@@ -12,10 +12,8 @@
  *  • Variable d'environnement EMAIL_DESTINATAIRE (ex: olivier@groupefinancierformule.com)
  */
 
-export const config = {
-  // Tourne le 1er de chaque mois à 9h00 (heure UTC = 5h00 EST / 6h00 EDT)
-  schedule: "0 14 1 * *",
-};
+// Programmation automatique desactivee (etait: "0 14 1 * *", 1er de chaque mois)
+// export const config = { schedule: "0 14 1 * *" };
 
 // Date de la dernière mise à jour des portefeuilles (à mettre à jour manuellement)
 const PORTEFEUILLES_MAJ = "2026-04-30";
