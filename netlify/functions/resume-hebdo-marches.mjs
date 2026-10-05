@@ -19,7 +19,8 @@
 import { getStore } from "@netlify/blobs";
 import { alerterEchec } from "./_shared/alerte-erreur.mjs";
 
-export const config = { schedule: "0 12 * * 1" }; // Lundi 7h00 EST
+// Programmation automatique desactivee (etait: "0 12 * * 1", lundi 7h00 EST)
+// export const config = { schedule: "0 12 * * 1" };
 
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
