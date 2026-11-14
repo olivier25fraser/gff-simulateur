@@ -944,6 +944,12 @@ body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
 #pane-retraite .rt-cmp-d{font-size:11px;font-weight:700}
 #pane-retraite .rt-cmp-d.g{color:#15803d}#pane-retraite .rt-cmp-d.b{color:#c2410c}
 #pane-retraite .rt-cmp-note{font-size:11.5px;color:#64748B;margin-top:10px}
+
+/* Mise en page homogène : tous les onglets dans la même colonne centrée */
+#pane-achat,#pane-budget,#pane-pret,#pane-succession{max-width:1160px;margin:0 auto;padding:20px 24px;box-sizing:border-box}
+/* Champs de saisie : fond blanc, bordure douce (comme Planification retraite) */
+.pane:not(#pane-retraite) .field input,.pane:not(#pane-retraite) .field select,.pane:not(#pane-retraite) .field textarea{background:#fff;border:1.5px solid #ddd5bd;transition:border-color .15s,box-shadow .15s}
+.pane:not(#pane-retraite) .field input:focus,.pane:not(#pane-retraite) .field select:focus{outline:none;border-color:#BF8F00;box-shadow:0 0 0 3px rgba(191,143,0,.15)}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>if(typeof pdfjsLib!=="undefined"){pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";}</script>
@@ -1128,6 +1134,7 @@ body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
       <div class="card">
         <div class="ch nv">Profil personnel</div>
         <div class="cb">
+          <div class="hint" style="margin:0 0 14px;padding:9px 12px;background:#FFF8E1;border-left:3px solid #BF8F00;border-radius:6px;font-size:12px">Ces renseignements alimentent automatiquement les autres onglets (REER, CELI, retraite, succession…). Un champ modifié à la main ailleurs n'est plus écrasé.</div>
           <div class="field"><label>Situation familiale</label>
             <select id="p-sit" onchange="calc()">
               <option>Personne seule</option><option>Couple (2 revenus)</option>
@@ -1246,7 +1253,7 @@ body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
         <div class="cb">
           <div class="field">
             <label>Cotisation par période ($)</label>
-            <input type="number" id="r-cot-input" value="1167" min="0" oninput="updateFreqEquiv('r');calcReer()" style="margin-bottom:4px">
+            <input type="number" id="r-cot-input" value="1000" min="0" oninput="updateFreqEquiv('r');calcReer()" style="margin-bottom:4px">
             <input type="hidden" id="r-freq-val" value="12">
             <div class="freq-group"><button type="button" class="freq-btn" data-freq-group="r" onclick="setFreq('r',1,this)">Annuel</button><button type="button" class="freq-btn on" data-freq-group="r" onclick="setFreq('r',12,this)">Mensuel</button><button type="button" class="freq-btn" data-freq-group="r" onclick="setFreq('r',26,this)">Aux 2 sem.</button><button type="button" class="freq-btn" data-freq-group="r" onclick="setFreq('r',52,this)">Hebdo</button></div>
             <div class="freq-equiv" id="r-freq-equiv">= 14 004 $ / an</div>
@@ -3715,7 +3722,7 @@ function calcReer(){
   const plaf=Math.min(rev*.18,FISCAL.reer_plafond);
   const cot=getAnnualCot('r'),rend=g('r-rend')/100,sol=g('r-sol'),dro=g('r-dro'),rpd=g('r-rpd');
   const plafD=Math.max(0,Math.min(rev*.18,FISCAL.reer_plafond)+dro-rpd);
-  const remb=cot*tm,rembFed=cot*getP(rev).tf,rembQc=cot*getP(rev).tq;
+  const remb=economieImpot(rev,cot),rembFed=remb*getP(rev).tf/getP(rev).t,rembQc=remb*getP(rev).tq/getP(rev).t;
   const cout=Math.max(0,cot-remb);
   const st=cot<=plafD?`<span class="ok">✓ Dans le plafond</span>`:`<span class="warn-txt">⚠ Dépasse le plafond</span>`;
   let val=sol; for(let i=0;i<yrs;i++) val=(val+cot)*(1+rend);
@@ -3729,7 +3736,7 @@ function calcReer(){
   const cotVerdictEl = document.getElementById('rr-cot-verdict');
   if (cotVerdictEl && document.activeElement !== cotVerdictEl) cotVerdictEl.value = Math.round(cot);
 
-  const tm2=marg(rev2), plaf2=Math.min(rev2*.18,FISCAL.reer_plafond), remb2=getAnnualCot('r-cot2')*tm2;
+  const tm2=marg(rev2), plaf2=Math.min(rev2*.18,FISCAL.reer_plafond), remb2=economieImpot(rev2,getAnnualCot('r-cot2'));
   $('conj-res').innerHTML=rr('Taux marginal conjoint(e)',fp(tm2))+rr('Plafond REER conjoint(e)',fmt(plaf2))+rr('Remboursement conjoint(e)',`<span class="ok">${fmt(remb2)}</span>`,'hi')+rr('Total remboursements couple',`<span class="ok">${fmt(remb+remb2)}</span>`,'hi');
 
   const enfAges = getEnfantsAges();
@@ -4563,6 +4570,11 @@ function impotAnnuel(rev, idx, age) {
   return Math.max(0, tax - credits) * idx;
 }
 
+// Impôt supplémentaire (fédéral + Québec) quand `extra` s'ajoute à un revenu `base` : barème progressif, pas le seul taux marginal.
+function impotSur(base, extra) { return Math.max(0, impotAnnuel(base + extra) - impotAnnuel(base)); }
+// Économie d'impôt d'une déduction (ex. cotisation REER / CELIAPP) sur un revenu `rev`.
+function economieImpot(rev, deduction) { return Math.max(0, impotAnnuel(rev) - impotAnnuel(Math.max(0, rev - deduction))); }
+
 // Fiscalité totale d'une personne au décaissement = impôt + récupération fiscale de la PSV (15 % du revenu
 // au-delà du seuil, plafonnée à la PSV reçue ; la récupération est déductible du revenu imposable).
 function chargeFiscale(imposable, psv, idx, age) {
@@ -5171,19 +5183,19 @@ function calcSucc() {
 
   // ── IMPACT FISCAL AU DÉCÈS ──
   // REER: entièrement imposable
-  const impotReer = Math.round(reer * tm);
+  const impotReer = Math.round(impotSur(rev, reer));
 
   // Placements non enregistrés: 50% des gains en capital
   const gainNonreg = nonreg * 0.50;
-  const impotNonreg = Math.round(gainNonreg * tm);
+  const impotNonreg = Math.round(impotSur(rev + reer, gainNonreg));
 
   // Immeuble locatif: 50% du gain (valeur - coût)
   const gainImmLoc = Math.max(0, (immLocVal - immLocCout) * 0.50);
-  const impotImmLoc = Math.round(gainImmLoc * tm);
+  const impotImmLoc = Math.round(impotSur(rev + reer + gainNonreg, gainImmLoc));
 
   // Chalet / résidence secondaire: 50% du gain
   const gainChalet = Math.max(0, (chaletVal - chaletCout) * 0.50);
-  const impotChalet = Math.round(gainChalet * tm);
+  const impotChalet = Math.round(impotSur(rev + reer + gainNonreg + gainImmLoc, gainChalet));
 
   // Entreprise: gain = valeur - PBR
   const gainCie = Math.max(0, cieVal - ciePBR);
@@ -5198,7 +5210,7 @@ function calcSucc() {
     exoPMEUtilisee = Math.min(gainCie, exoPMEDisponible);
     gainCieImposable = Math.max(0, gainCie - exoPMEUtilisee);
   }
-  const impotCie = Math.round(gainCieImposable * 0.50 * tm);
+  const impotCie = Math.round(impotSur(rev + reer + gainNonreg + gainImmLoc + gainChalet, gainCieImposable * 0.50));
 
   // Frais de succession
   const assietteFrais = reer+celi+nonreg+immLocVal+chaletVal+cieVal+autresActifs;
@@ -5282,7 +5294,7 @@ function calcSucc() {
   // ── FISCAL ──
   const fiscal = document.getElementById('succ-fiscal-seul');
   if(fiscal) fiscal.innerHTML =
-    rr('REER imposable au décès (taux '+Math.round(tm*100)+'%)', fmt(impotReer),'warn') +
+    rr('REER imposable au décès (taux effectif '+(reer>0?Math.round(impotReer/reer*100):0)+'%)', fmt(impotReer),'warn') +
     rr('Imp\u00f4t gains en capital (placements)', fmt(impotNonreg),'warn') +
     (immLocVal>0?rr('Imp\u00f4t immeuble locatif (50% du gain)', fmt(impotImmLoc),'warn'):'') +
     (chaletVal>0?rr('Imp\u00f4t chalet / r\u00e9sidence secondaire', fmt(impotChalet),'warn'):'') +
@@ -5333,11 +5345,11 @@ function calcSuccCouple() {
   const tm1=marg(rev1), tm2=marg(rev2);
 
   // Scénario décès C1
-  const impotReer1=Math.round(reer1*tm1);
+  const impotReer1=Math.round(impotSur(rev1,reer1));
   const besoinC1=rev1*ans+hypo+15000+enf*40000;
   const manqueC1=Math.max(0,besoinC1-av1-reer1*0.5-celi1);
   // Scénario décès C2
-  const impotReer2=Math.round(reer2*tm2);
+  const impotReer2=Math.round(impotSur(rev2,reer2));
   const besoinC2=rev2*ans+hypo+15000+enf*40000;
   const manqueC2=Math.max(0,besoinC2-av2-reer2*0.5-celi2);
 
@@ -5352,7 +5364,7 @@ function calcSuccCouple() {
         <div class="ch ${manqueC1>0?'nv':'gn'}">Si Client 1 décède en premier</div>
         <div class="cb">
           ${rr('Besoins totaux estimés', fmt(Math.round(besoinC1)))}
-          ${rr("Impôt REER au décès (taux "+Math.round(tm1*100)+"%)", fmt(impotReer1),'warn')}
+          ${rr("Impôt REER au décès (taux effectif "+(reer1>0?Math.round(impotReer1/reer1*100):0)+"%)", fmt(impotReer1),'warn')}
           ${rr('Assurance vie disponible (Client 1)', fmt(av1),'hi')}
           ${rr(manqueC1>0?'MANQUE DE COUVERTURE':'COUVERTURE SUFFISANTE',
             manqueC1>0
@@ -5364,7 +5376,7 @@ function calcSuccCouple() {
         <div class="ch ${manqueC2>0?'nv':'gn'}">Si Client 2 décède en premier</div>
         <div class="cb">
           ${rr('Besoins totaux estimés', fmt(Math.round(besoinC2)))}
-          ${rr("Impôt REER au décès (taux "+Math.round(tm2*100)+"%)", fmt(impotReer2),'warn')}
+          ${rr("Impôt REER au décès (taux effectif "+(reer2>0?Math.round(impotReer2/reer2*100):0)+"%)", fmt(impotReer2),'warn')}
           ${rr('Assurance vie disponible (Client 2)', fmt(av2),'hi')}
           ${rr(manqueC2>0?'MANQUE DE COUVERTURE':'COUVERTURE SUFFISANTE',
             manqueC2>0
@@ -5411,7 +5423,7 @@ function calcAchatCouple() {
     }
     const celiDispo=Math.min(celF,celMax);
     const tm=marg(rev);
-    const rembCel=celTot*tm;
+    const rembCel=economieImpot(rev,celTot);
     let rF=reerSol, rTot=0;
     for(let i=0;i<horizon;i++){
       const plaf=Math.min(rev*0.18,FISCAL.reer_plafond);
@@ -5419,7 +5431,7 @@ function calcAchatCouple() {
       rF=(rF+a)*(1+mRendNet); rTot+=a;
     }
     const rapDispo=Math.min(rF,60000);
-    const rembReer=rTot*tm;
+    const rembReer=economieImpot(rev,rTot);
     const rapRembAn=rapDispo/15;
     return {celiDispo,celTot,rembCel,rapDispo,rTot,rembReer,rapRembAn,tm};
   };
@@ -5558,7 +5570,7 @@ function calcAchat() {
   }
   celFutur = Math.min(celFutur, celMax * (1 + rend * horizon));
   // Remboursement impôt CELIAPP (déductible comme REER)
-  const rembCeliapp = celCotTotale * tm;
+  const rembCeliapp = economieImpot(rev, celCotTotale);
   // Retrait: 100% libre d'impôt, pas de remboursement requis
   const celiappDispo = Math.min(celFutur, celMax);
 
@@ -5574,10 +5586,10 @@ function calcAchat() {
     reerCotTotale += cotAn;
   }
   const rapDispo = Math.min(reerFutur, rapMax);
-  const rembRap = reerCotTotale * tm; // remb impôt sur cotisations REER
+  const rembRap = economieImpot(rev, reerCotTotale); // remb impôt sur cotisations REER
   // Remboursement obligatoire RAP: 1/15 par an pendant 15 ans
   const rapRembAnnuel = rapDispo / 15;
-  const rapRembImpactAnnuel = rapRembAnnuel * tm; // impôt perdu si pas remboursé
+  const rapRembImpactAnnuel = impotSur(rev, rapRembAnnuel); // impôt perdu si pas remboursé
 
   // ── Combiné (CELIAPP + RAP) ──
   const totalCombine = celiappDispo + rapDispo;
@@ -9417,6 +9429,48 @@ function rtPrint() { rtPrintClient(); }
   rtInitNumberFields();
   rtInitOverrides();
   rtBuildWhatIf();
+})();
+
+// ───────── Dossier client partagé : le Bilan patrimonial alimente les autres onglets ─────────
+// Âge, âge de retraite, revenu(s) et enfants sont saisis une seule fois (onglet Bilan patrimonial).
+// Un champ modifié à la main dans un autre onglet n'est plus écrasé.
+var SYNC_MAP = {
+  'p-age': ['rr-age', 'c-age', 'abf-age', 'ob-age', 'ac-age', 'ss-age'],
+  'p-ret': ['rr-ret', 'ob-ret'],
+  'p-rev': ['rr-rev', 'ob-revenu', 'ac-rev', 'ss-rev'],
+  'p-rev2': ['rr-rev2'],
+  'p-enf': ['rr-enf', 'abf-enf', 'ss-enf']
+};
+function syncDossier(srcId, quiet) {
+  const src = document.getElementById(srcId); if (!src) return;
+  (SYNC_MAP[srcId] || []).forEach(id => {
+    const el = document.getElementById(id);
+    if (!el || el.dataset.touched === '1' || el.value === src.value) return;
+    el.value = src.value;
+    if (!quiet) el.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+}
+(function syncDossierInit() {
+  Object.keys(SYNC_MAP).forEach(srcId => {
+    const src = document.getElementById(srcId); if (!src) return;
+    src.addEventListener('input', () => syncDossier(srcId));
+    SYNC_MAP[srcId].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', e => { if (e.isTrusted) el.dataset.touched = '1'; });
+    });
+  });
+  // Au chargement : tous les onglets partent des mêmes valeurs de base
+  Object.keys(SYNC_MAP).forEach(srcId => syncDossier(srcId, true));
+  setTimeout(() => { try { if (typeof calcReer === 'function') calcReer(); if (typeof rtRecalc === 'function') rtRecalc(); } catch (e) {} }, 100);
+})();
+// Un client chargé depuis « Clients » garde ses propres valeurs
+(function () {
+  const orig = window.chargerClientRetraite;
+  if (typeof orig === 'function') window.chargerClientRetraite = function () {
+    const r = orig.apply(this, arguments);
+    ['ob-age', 'ob-ret', 'ob-revenu'].forEach(id => { const el = document.getElementById(id); if (el) el.dataset.touched = '1'; });
+    return r;
+  };
 })();
 
 </script>
