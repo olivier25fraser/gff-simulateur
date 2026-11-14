@@ -4523,6 +4523,19 @@ function impotAnnuel(rev) {
   return Math.max(0, rev * tm - 4716);
 }
 
+// Revenu imposable total T qui livre exactement « net » après impôt (résolution exacte, remplace
+// l'ancienne approximation 1 / (1 − 70 % × taux marginal), qui sous-estimait l'impôt).
+// nPers = 2 : revenu réparti également entre deux déclarants (fractionnement).
+function grossUpNet(net, nPers) {
+  nPers = nPers || 1;
+  if (net <= 0) return 0;
+  const netDe = T => T - nPers * impotAnnuel(T / nPers);
+  let lo = net, hi = Math.max(net * 3, 100000);
+  while (netDe(hi) < net && hi < 1e9) hi *= 2;
+  for (let k = 0; k < 60; k++) { const mid = (lo + hi) / 2; if (netDe(mid) >= net) hi = mid; else lo = mid; }
+  return hi;
+}
+
 // Retenue à la source FERR (fédéral)
 function retenueSource(retrait) {
   if (retrait <= 5000) return retrait * 0.10;
@@ -6010,7 +6023,7 @@ function calcObjSeul() {
 
   const besoinInflation = besoin * Math.pow(1 + inf, yrsAcc);
   const gouvFuturs = (rrq + psv + rpa) * Math.pow(1 + inf, yrsAcc);
-  const besoinBrut = besoinInflation / (1 - marg(besoinInflation + gouvFuturs) * 0.7);
+  const besoinBrut = grossUpNet(besoinInflation, 1);
   const manqueParAn = Math.max(0, besoinBrut - gouvFuturs);
 
   let capitalNecessaire;
@@ -6189,7 +6202,7 @@ function calcObjCouple() {
 
   const besoinInflation = besoin * Math.pow(1 + inf, yrsAccRef);
   const gouvFuturs = gouvActuel * Math.pow(1 + inf, yrsAccRef);
-  const besoinBrut = besoinInflation / (1 - marg(besoinInflation + gouvFuturs) * 0.7);
+  const besoinBrut = grossUpNet(besoinInflation, 2);
   const manqueParAn = Math.max(0, besoinBrut - gouvFuturs);
 
   let capitalNecessaire;
@@ -6554,48 +6567,57 @@ function simulerDecaissement(p) {
     immoInjections.forEach(inj => { if (inj.ageVente === age) venteImmoAn += inj.montant; });
     if (venteImmoAn > 0) nr += venteImmoAn;
 
-    const besoinBrut = p.besoin / (1 - marg(p.besoin + gouvTotal) * 0.7);
-    const manque = Math.max(0, besoinBrut - gouvTotal);
-
-    // Ordre : 1. FERR minimum obligatoire, 2. Non enregistré, 3. Reste réparti CELI/FERR selon le ratio
-    const ferrMinAn = ferr * ferrMin(age);
-    let retraitFerr = Math.min(ferr, ferrMinAn);
-    ferr = Math.max(0, ferr - retraitFerr);
-
-    let reste = Math.max(0, manque - retraitFerr);
-    let retraitNr = 0;
-    if (reste > 0 && nr > 0) {
-      retraitNr = Math.min(nr, reste);
-      nr = Math.max(0, nr - retraitNr);
-      reste -= retraitNr;
-    }
-
-    let retraitCeli = 0;
-    if (reste > 0) {
-      const venantCeli = reste * ratioCeli;
-      const venantFerrSupp = reste - venantCeli;
-
-      const celiRetire = Math.min(celi, venantCeli);
-      celi = Math.max(0, celi - celiRetire);
-      retraitCeli += celiRetire;
-      const manqueDeCeli = venantCeli - celiRetire;
-
-      const ferrSuppVoulu = venantFerrSupp + manqueDeCeli;
-      const ferrSuppRetire = Math.min(ferr, ferrSuppVoulu);
-      ferr = Math.max(0, ferr - ferrSuppRetire);
-      retraitFerr += ferrSuppRetire;
-      const manqueDeFerr = ferrSuppVoulu - ferrSuppRetire;
-
-      if (manqueDeFerr > 0 && celi > 0) {
-        const celiExtra = Math.min(celi, manqueDeFerr);
-        celi = Math.max(0, celi - celiExtra);
-        retraitCeli += celiExtra;
+    // Retrait additionnel brut (au-delà des revenus garantis) qui livre EXACTEMENT le revenu net désiré :
+    // recherche par dichotomie, en simulant l'ordre FERR minimum → non enregistré → CELI/FERR.
+    const f0 = ferr, c0 = celi, n0 = nr;
+    const sim = (manque) => {
+      let f = f0, c = c0, n = n0;
+      let retraitFerr = Math.min(f, f * ferrMin(age));
+      f = Math.max(0, f - retraitFerr);
+      let reste = Math.max(0, manque - retraitFerr);
+      let retraitNr = 0;
+      if (reste > 0 && n > 0) {
+        retraitNr = Math.min(n, reste);
+        n = Math.max(0, n - retraitNr);
+        reste -= retraitNr;
+      }
+      let retraitCeli = 0;
+      if (reste > 0) {
+        const venantCeli = reste * ratioCeli;
+        const venantFerrSupp = reste - venantCeli;
+        const celiRetire = Math.min(c, venantCeli);
+        c = Math.max(0, c - celiRetire);
+        retraitCeli += celiRetire;
+        const manqueDeCeli = venantCeli - celiRetire;
+        const ferrSuppVoulu = venantFerrSupp + manqueDeCeli;
+        const ferrSuppRetire = Math.min(f, ferrSuppVoulu);
+        f = Math.max(0, f - ferrSuppRetire);
+        retraitFerr += ferrSuppRetire;
+        const manqueDeFerr = ferrSuppVoulu - ferrSuppRetire;
+        if (manqueDeFerr > 0 && c > 0) {
+          const celiExtra = Math.min(c, manqueDeFerr);
+          c = Math.max(0, c - celiExtra);
+          retraitCeli += celiExtra;
+        }
+      }
+      const revBrut = gouvTotal + retraitFerr + retraitNr;
+      const impot = Math.round(impotAnnuel(revBrut));
+      const revNet = Math.round(revBrut - impot + retraitCeli);
+      return { f, c, n, retraitFerr, retraitCeli, retraitNr, revBrut, impot, revNet };
+    };
+    let res = sim(0);
+    if (res.revNet < p.besoin) {
+      let lo = 0, hi = f0 + c0 + n0;
+      res = sim(hi);
+      if (res.revNet >= p.besoin) {
+        for (let k = 0; k < 45; k++) {
+          const mid = (lo + hi) / 2, r = sim(mid);
+          if (r.revNet >= p.besoin) { hi = mid; res = r; } else lo = mid;
+        }
       }
     }
-
-    const revBrut = gouvTotal + retraitFerr + retraitNr;
-    const impot = Math.round(impotAnnuel(revBrut));
-    const revNet = Math.round(revBrut - impot + retraitCeli);
+    ferr = res.f; celi = res.c; nr = res.n;
+    const { retraitFerr, retraitCeli, retraitNr, revBrut, impot, revNet } = res;
 
     results.push({ age, an: 2026 + i, rrq, psv, srg, rente, retraitFerr, retraitCeli, retraitNr,
       ferr, celi, nr, capitalTotal: ferr + celi + nr, revBrut, impot, revNet, venteImmoAn });
@@ -6831,51 +6853,55 @@ function calcDecCouple() {
     const govC1 = rrqA1 + psvA1 + rente1, govC2 = rrqA2 + psvA2 + rente2;
     const govTotal = govC1 + govC2;
 
-    // 1. FERR minimum obligatoire, pour chacun
-    const min1 = f1 > 0 ? f1 * ferrMin(Math.min(a1, 95)) : 0;
-    const min2 = f2 > 0 ? f2 * ferrMin(Math.min(a2, 95)) : 0;
-    let ret1 = Math.min(f1, min1), ret2 = Math.min(f2, min2);
-    f1 = Math.max(0, f1 - ret1); f2 = Math.max(0, f2 - ret2);
-
-    const besoinBrut = besoin / (1 - marg(besoin + govTotal) * 0.7);
-    let manque = Math.max(0, besoinBrut - govTotal - ret1 - ret2);
-
-    // 2. Non enregistré du couple
-    let retraitNr = 0;
-    if (manque > 0 && nr > 0) {
-      retraitNr = Math.min(nr, manque);
-      nr = Math.max(0, nr - retraitNr);
-      manque -= retraitNr;
-    }
-
-    // 3. Le reste réparti entre CELI (des deux) et FERR additionnel (des deux) selon le ratio
-    let retraitCeliTotal = 0;
-    if (manque > 0) {
-      const venantCeli = manque * ratioCeli;
-      const venantFerrSupp = manque - venantCeli;
-
-      const [c1Retire, c2Retire] = splitProportionnel(venantCeli, c1, c2);
-      c1 = Math.max(0, c1 - c1Retire); c2 = Math.max(0, c2 - c2Retire);
-      retraitCeliTotal += c1Retire + c2Retire;
-      const manqueDeCeli = venantCeli - (c1Retire + c2Retire);
-
-      const ferrSuppVoulu = venantFerrSupp + manqueDeCeli;
-      const [f1Retire, f2Retire] = splitProportionnel(ferrSuppVoulu, f1, f2);
-      f1 = Math.max(0, f1 - f1Retire); f2 = Math.max(0, f2 - f2Retire);
-      ret1 += f1Retire; ret2 += f2Retire;
-      const manqueDeFerr = ferrSuppVoulu - (f1Retire + f2Retire);
-
-      if (manqueDeFerr > 0 && (c1 + c2) > 0) {
-        const [c1Extra, c2Extra] = splitProportionnel(manqueDeFerr, c1, c2);
-        c1 = Math.max(0, c1 - c1Extra); c2 = Math.max(0, c2 - c2Extra);
-        retraitCeliTotal += c1Extra + c2Extra;
+    // Retrait additionnel brut du couple qui livre EXACTEMENT le revenu net désiré (dichotomie) ;
+    // ordre : FERR minimum de chacun → non enregistré → CELI / FERR additionnel selon le ratio.
+    const g0 = { f1, f2, c1, c2, nr };
+    const simC = (W) => {
+      let F1 = g0.f1, F2 = g0.f2, C1 = g0.c1, C2 = g0.c2, N = g0.nr;
+      const min1 = F1 > 0 ? F1 * ferrMin(Math.min(a1, 95)) : 0;
+      const min2 = F2 > 0 ? F2 * ferrMin(Math.min(a2, 95)) : 0;
+      let r1 = Math.min(F1, min1), r2 = Math.min(F2, min2);
+      F1 = Math.max(0, F1 - r1); F2 = Math.max(0, F2 - r2);
+      let manque = Math.max(0, W - r1 - r2);
+      let rNr = 0;
+      if (manque > 0 && N > 0) { rNr = Math.min(N, manque); N = Math.max(0, N - rNr); manque -= rNr; }
+      let rCeli = 0;
+      if (manque > 0) {
+        const venantCeli = manque * ratioCeli;
+        const venantFerrSupp = manque - venantCeli;
+        const [c1R, c2R] = splitProportionnel(venantCeli, C1, C2);
+        C1 = Math.max(0, C1 - c1R); C2 = Math.max(0, C2 - c2R);
+        rCeli += c1R + c2R;
+        const manqueDeCeli = venantCeli - (c1R + c2R);
+        const ferrSuppVoulu = venantFerrSupp + manqueDeCeli;
+        const [f1R, f2R] = splitProportionnel(ferrSuppVoulu, F1, F2);
+        F1 = Math.max(0, F1 - f1R); F2 = Math.max(0, F2 - f2R);
+        r1 += f1R; r2 += f2R;
+        const manqueDeFerr = ferrSuppVoulu - (f1R + f2R);
+        if (manqueDeFerr > 0 && (C1 + C2) > 0) {
+          const [c1X, c2X] = splitProportionnel(manqueDeFerr, C1, C2);
+          C1 = Math.max(0, C1 - c1X); C2 = Math.max(0, C2 - c2X);
+          rCeli += c1X + c2X;
+        }
+      }
+      const brut = govTotal + r1 + r2 + rNr;
+      const imp = Math.round(impotAnnuel(govC1 + r1) + impotAnnuel(govC2 + r2));
+      return { F1, F2, C1, C2, N, r1, r2, rNr, rCeli, brut, imp, net: Math.round(brut - imp + rCeli) };
+    };
+    let resC = simC(0);
+    if (resC.net < besoin) {
+      let lo = 0, hi = g0.f1 + g0.f2 + g0.c1 + g0.c2 + g0.nr;
+      resC = simC(hi);
+      if (resC.net >= besoin) {
+        for (let k = 0; k < 45; k++) {
+          const mid = (lo + hi) / 2, r = simC(mid);
+          if (r.net >= besoin) { hi = mid; resC = r; } else lo = mid;
+        }
       }
     }
-
-    const revBrut = govTotal + ret1 + ret2 + retraitNr;
-    const rev1 = govC1 + ret1, rev2 = govC2 + ret2;
-    const impot = Math.round(impotAnnuel(rev1) + impotAnnuel(rev2));
-    const revNet = Math.round(revBrut - impot + retraitCeliTotal);
+    f1 = resC.F1; f2 = resC.F2; c1 = resC.C1; c2 = resC.C2; nr = resC.N;
+    const ret1 = resC.r1, ret2 = resC.r2, retraitNr = resC.rNr, retraitCeliTotal = resC.rCeli;
+    const revBrut = resC.brut, impot = resC.imp, revNet = resC.net;
     totalImpot += impot; totalNet += revNet;
     if (revNet >= besoin * 0.9) _rtOk++; else if (_rtFail === null) _rtFail = a1;
     _rtCap = f1 + f2 + c1 + c2 + nr;
