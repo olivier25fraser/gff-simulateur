@@ -946,10 +946,48 @@ body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
 #pane-retraite .rt-cmp-note{font-size:11.5px;color:#64748B;margin-top:10px}
 
 /* Mise en page homogène : tous les onglets dans la même colonne centrée */
-#pane-achat,#pane-budget,#pane-pret,#pane-succession{max-width:1160px;margin:0 auto;padding:20px 24px;box-sizing:border-box}
+#pane-achat,#pane-budget,#pane-pret,#pane-succession{max-width:1160px;margin:0 auto;padding:0 24px 20px;box-sizing:border-box}
 /* Champs de saisie : fond blanc, bordure douce (comme Planification retraite) */
 .pane:not(#pane-retraite) .field input,.pane:not(#pane-retraite) .field select,.pane:not(#pane-retraite) .field textarea{background:#fff;border:1.5px solid #ddd5bd;transition:border-color .15s,box-shadow .15s}
 .pane:not(#pane-retraite) .field input:focus,.pane:not(#pane-retraite) .field select:focus{outline:none;border-color:#BF8F00;box-shadow:0 0 0 3px rgba(191,143,0,.15)}
+
+/* ═══ Design v2 — même langage visuel que « Planification retraite » ═══ */
+.pane:not(#pane-retraite){--v2-line:rgba(191,143,0,.12)}
+.pane:not(#pane-retraite) .card{border-radius:20px;border:1px solid var(--v2-line);box-shadow:0 2px 14px rgba(15,15,15,.06);margin-bottom:20px}
+.pane:not(#pane-retraite) .ch{padding:15px 22px;font-size:11.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;background:var(--ink);color:#fff;border-bottom:0;border-left:6px solid var(--gold-br);gap:10px}
+.pane:not(#pane-retraite) .ch.bl{border-left-color:#5aa0dc}
+.pane:not(#pane-retraite) .ch.gn{border-left-color:#4ade80}
+.pane:not(#pane-retraite) .ch.or{border-left-color:#f59e0b}
+.pane:not(#pane-retraite) .ch.gd{background:linear-gradient(120deg,#BF8F00,#d4a800);border-left-color:var(--ink)}
+.pane:not(#pane-retraite) .cb{padding:20px 22px}
+.pane:not(#pane-retraite) .g2{gap:22px}
+.pane:not(#pane-retraite) .field label{font-size:10.5px;letter-spacing:.07em}
+.pane:not(#pane-retraite) .field input,.pane:not(#pane-retraite) .field select{height:40px;border-radius:10px;font-size:14.5px}
+.pane:not(#pane-retraite) .rrow{padding:11px 0;min-height:40px}
+.pane:not(#pane-retraite) .rl{font-size:12.5px}
+.pane:not(#pane-retraite) .rv{font-size:14px;font-variant-numeric:tabular-nums}
+.pane:not(#pane-retraite) .rrow.tot{background:linear-gradient(125deg,#0F0F0F,#262620);margin:10px -22px -20px;padding:16px 22px;border-radius:0}
+.pane:not(#pane-retraite) .rrow.tot .rv{font-family:'DM Serif Display',serif;font-weight:400;font-size:24px}
+.pane:not(#pane-retraite) .kpis{gap:14px}
+.pane:not(#pane-retraite) .kpi{border-radius:16px;border:1px solid var(--v2-line);border-left:5px solid var(--navy);box-shadow:0 2px 14px rgba(15,15,15,.06);padding:16px 18px}
+.pane:not(#pane-retraite) .kpi.gd{border-left-color:var(--gold-br)}
+.pane:not(#pane-retraite) .kv{font-family:'DM Serif Display',serif;font-weight:400;font-size:26px}
+.pane:not(#pane-retraite) .kl{letter-spacing:.07em}
+.pane:not(#pane-retraite) .tbl{border-radius:14px;overflow:hidden}
+.pane:not(#pane-retraite) .tbl th{background:#f6f3ea;color:var(--ink);font-size:10px;letter-spacing:.07em;text-transform:uppercase;font-weight:800;padding:11px 12px;border-bottom:2px solid var(--gold-br)}
+.pane:not(#pane-retraite) .tbl td{padding:9px 12px;font-variant-numeric:tabular-nums}
+.pane:not(#pane-retraite) .tbl tbody tr:nth-child(even) td{background:#fcfaf4}
+.pane:not(#pane-retraite) .note{border-radius:12px;border-left-width:4px;font-size:11.5px;padding:12px 16px}
+.pane:not(#pane-retraite) .stitle{font-size:11px;color:var(--gold);letter-spacing:.09em}
+.pane .print-btn{border-radius:99px!important;padding:9px 18px!important;border:1.5px solid var(--gry-m)!important;background:#fff!important;color:var(--ink)!important;font-weight:700;font-size:12.5px;box-shadow:none!important}
+.pane .print-btn:hover{border-color:var(--ink)!important}
+.pane:not(#pane-retraite)>.print-btn,.pane:not(#pane-retraite)>div>.print-btn{margin-bottom:6px}
+.tab{padding:14px 17px;transition:color .15s,background .15s}
+.tab:hover{color:#fff;background:rgba(255,255,255,.05)}
+.tab.on{color:var(--gold-br)}
+/* Bandeau de résumé (même composant que le verdict de Planification retraite) */
+.v2-hero{margin:4px 0 20px}
+.v2-hero .rt-verdict{margin-bottom:0}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>if(typeof pdfjsLib!=="undefined"){pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";}</script>
@@ -9462,6 +9500,94 @@ function syncDossier(srcId, quiet) {
   // Au chargement : tous les onglets partent des mêmes valeurs de base
   Object.keys(SYNC_MAP).forEach(srcId => syncDossier(srcId, true));
   setTimeout(() => { try { if (typeof calcReer === 'function') calcReer(); if (typeof rtRecalc === 'function') rtRecalc(); } catch (e) {} }, 100);
+})();
+
+// ───────── Bandeaux de résumé (même composant que le verdict de Planification retraite) ─────────
+function v2Num(t) { const m = String(t == null ? '' : t).replace(/[\s  ]/g, '').replace(',', '.').match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : 0; }
+function v2Row(containerSel, re) {
+  const c = typeof containerSel === 'string' ? document.querySelector(containerSel) : containerSel; if (!c) return '';
+  const rows = c.querySelectorAll('.rrow');
+  for (const r of rows) { const l = r.querySelector('.rl'), v = r.querySelector('.rv'); if (l && v && re.test(l.textContent)) return v.textContent.trim(); }
+  return '';
+}
+function v2Hero(paneId, h) {
+  const pane = document.getElementById('pane-' + paneId); if (!pane) return;
+  let el = document.getElementById('hero-' + paneId);
+  if (!el) {
+    el = document.createElement('div'); el.id = 'hero-' + paneId; el.className = 'v2-hero';
+    const btn = pane.querySelector('.print-btn');
+    if (btn) btn.insertAdjacentElement('afterend', el); else pane.insertBefore(el, pane.firstChild);
+  }
+  if (!h) { el.innerHTML = ''; return; }
+  el.innerHTML = '<div class="rt-verdict ' + (h.cls || 'ok') + '"><div class="rv-icon">' + (h.icon || '✓') + '</div>'
+    + '<div class="rv-title">' + h.title + '</div><div class="rv-sub">' + (h.sub || '') + '</div>'
+    + '<div class="rv-stats">' + (h.stats || []).map(x => '<div><span>' + x[0] + '</span><b class="' + (x[2] || '') + '">' + x[1] + '</b></div>').join('') + '</div></div>';
+}
+function v2Wrap(fn, build) {
+  const o = window[fn]; if (typeof o !== 'function') return;
+  window[fn] = function () { const r = o.apply(this, arguments); try { build(); } catch (e) { console.error('hero ' + fn, e); } return r; };
+}
+var V2F = n => fmt(Math.round(n));
+(function v2Heroes() {
+  v2Wrap('calcReer', function () {
+    const st = v2Row('#r-res', /statut/i), over = /dépasse/i.test(st);
+    const remb = v2Num(v2Row('#r-res', /remboursement total/i)), cout = v2Row('#r-res', /coût réel/i), tm = v2Row('#r-res', /taux marginal/i);
+    const val = v2Row('#r-proj', /valeur à la retraite/i), cot = v2Num(v2Row('#r-proj', /cotisation annuelle/i));
+    v2Hero('reer', over
+      ? { cls: 'warn', icon: '!', title: 'La cotisation dépasse le plafond REER', sub: 'Une cotisation de ' + V2F(cot) + ' par an dépasse les droits disponibles : l\'excédent n\'est pas déductible et peut entraîner une pénalité de 1 % par mois.', stats: [['Plafond disponible', v2Row('#r-res', /plafond disponible/i)], ['Taux marginal', tm], ['Valeur à la retraite', val]] }
+      : { cls: 'ok', icon: '✓', title: 'Vous récupérez ' + V2F(remb) + ' d\'impôt', sub: 'Cotisation de ' + V2F(cot) + ' par an : le coût réel après remboursement est de ' + cout + '. Valeur projetée à la retraite : ' + val + '.', stats: [['Remboursement d\'impôt', V2F(remb)], ['Coût réel', cout], ['Taux marginal', tm], ['Valeur à la retraite', val, 'good']] });
+  });
+  v2Wrap('calcCeli', function () {
+    const over = /dépasse/i.test(v2Row('#c-res', /statut/i));
+    const solde = v2Row('#c-res', /solde/i), tot = v2Row('#c-res', /total cotisations/i), rend = v2Row('#c-res', /rendements/i), duree = v2Row('#c-res', /durée/i), mens = v2Row('#c-res', /cotisation mensuelle/i);
+    v2Hero('celi', over
+      ? { cls: 'warn', icon: '!', title: 'La cotisation dépasse les droits disponibles', sub: 'Un excédent au CELI est pénalisé de 1 % par mois. Ajustez la cotisation ou la fréquence.', stats: [['Cotisation mensuelle', mens], ['Droits disponibles', v2Row('#c-res', /droits cumulés/i)]] }
+      : { cls: 'ok', icon: '✓', title: 'Un CELI de ' + solde + ' libre d\'impôt', sub: 'Sur ' + duree + ', les rendements de ' + rend + ' ne seront jamais imposés et les retraits n\'affectent ni la PSV ni le SRG.', stats: [['Cotisation mensuelle', mens], ['Total cotisé', tot], ['Rendements libres d\'impôt', rend, 'good'], ['Solde à l\'horizon', solde, 'good']] });
+  });
+  v2Wrap('calcReee', function () {
+    const cot = v2Row('#ee-res', /cotisations totales/i), sub = v2Row('#ee-res', /total subventions/i), fin = v2Row('#ee-res', /solde final/i);
+    const pct = v2Num(cot) > 0 ? Math.round(v2Num(sub) / v2Num(cot) * 100) : 0;
+    v2Hero('reee', { cls: 'ok', icon: '✓', title: 'Le gouvernement ajoute ' + sub + ' au REEE', sub: 'Pour ' + cot + ' cotisés, les subventions représentent ' + pct + ' % de ce que vous versez. Solde final estimé : ' + fin + '.',
+      stats: [['Cotisations', cot], ['SCEE (fédéral)', v2Row('#ee-res', /scee/i)], ['IQEE (Québec)', v2Row('#ee-res', /iqee/i)], ['Solde final estimé', fin, 'good']] });
+  });
+  v2Wrap('calcReei', function () {
+    const cot = v2Row('#ei-res', /cotisations totales/i), sub = v2Row('#ei-res', /total subventions/i), fin = v2Row('#ei-res', /solde final/i);
+    const pct = v2Num(cot) > 0 ? Math.round(v2Num(sub) / v2Num(cot) * 100) : 0;
+    v2Hero('reei', { cls: 'ok', icon: '✓', title: 'Les subventions ajoutent ' + sub, sub: 'Pour ' + cot + ' cotisés, les bons et subventions représentent ' + pct + ' % des cotisations. Solde final estimé : ' + fin + '.',
+      stats: [['Cotisations', cot], ['SCEI cumulée', v2Row('#ei-res', /scei/i)], ['BCEI cumulé', v2Row('#ei-res', /bcei/i)], ['Solde final estimé', fin, 'good']] });
+  });
+  v2Wrap('calcAchat', function () {
+    const first = document.querySelector('#ac-strategie > div');
+    if (!first) return;
+    const inner = first.querySelector(':scope > div') || first;
+    const t = inner.children[0], d = inner.children[1];
+    const ok = /✓/.test((first.querySelector('span') || {}).textContent || '');
+    v2Hero('achat', { cls: ok ? 'ok' : 'warn', icon: ok ? '✓' : '!', title: t ? t.textContent : 'Stratégie d\'achat', sub: d ? d.textContent.replace(/ /g, ' ') : '', stats: [] });
+  });
+
+  v2Wrap('calcSucc', function () {
+    const sc = '#succ-res-seul';
+    const manque = v2Num(v2Row(sc, /manque de couverture/i)), bes = v2Row(sc, /besoins totaux/i), av = v2Row(sc, /assurance vie disponible/i), prime = v2Row(sc, /prime estimée/i), net = v2Row(sc, /actif net transmis/i);
+    if (!bes) { v2Hero('succession', null); return; }
+    v2Hero('succession', manque > 0
+      ? { cls: 'bad', icon: '!', title: 'Il manque ' + V2F(manque) + ' de couverture', sub: 'Les besoins de la succession (' + bes + ') dépassent l\'assurance vie disponible (' + av + '). Les héritiers recevraient environ ' + net + '. Prime estimée pour combler l\'écart : ' + prime + '.', stats: [['Besoins estimés', bes], ['Assurance disponible', av, 'good'], ['Manque', V2F(manque), 'bad'], ['Prime estimée', prime]] }
+      : { cls: 'ok', icon: '✓', title: 'La couverture suffit', sub: 'L\'assurance vie disponible (' + av + ') couvre les besoins estimés (' + bes + '). Les héritiers recevraient environ ' + net + '.', stats: [['Besoins estimés', bes], ['Assurance disponible', av, 'good'], ['Héritage net', net, 'good']] });
+  });
+  v2Wrap('calcPret', function () {
+    const w = document.querySelector('#pv-winner .pw-title'), d = document.querySelector('#pv-winner .pw-desc');
+    if (!w) { v2Hero('pret', null); return; }
+    const hero = document.getElementById('pv-hero');
+    const stats = [];
+    if (hero) hero.querySelectorAll('.pvi-card, .pvh-col, [class*="col"]').forEach(() => {});
+    v2Hero('pret', { cls: /investir/i.test(w.textContent) ? 'warn' : 'ok', icon: '★', title: w.textContent, sub: d ? d.textContent.replace(/ /g, ' ') : '', stats: stats });
+    const old = document.getElementById('pv-winner'); if (old) old.style.display = 'none';
+  });
+  v2Wrap('calcBudget', function () {
+    const sp = document.querySelector('#bud-results-col .bud-surplus'); if (!sp) { v2Hero('budget', null); return; }
+    const ok = sp.classList.contains('ok'), val = (sp.querySelector('.bs-val') || {}).textContent || '', lbl = (sp.querySelector('.bs-label') || {}).textContent || '';
+    const sub = (sp.querySelector('.bs-label') ? sp.querySelector('.bs-label').nextElementSibling : null);
+    v2Hero('budget', { cls: ok ? 'ok' : 'bad', icon: ok ? '✓' : '!', title: lbl + ' : ' + val.replace(/\s+/g, ' ').trim() + ' par mois', sub: sub ? sub.textContent.replace(/ /g, ' ') : '', stats: [] });
+  });
 })();
 // Un client chargé depuis « Clients » garde ses propres valeurs
 (function () {
