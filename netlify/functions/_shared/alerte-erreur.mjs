@@ -1,6 +1,6 @@
 /**
  * Utilitaire partagé — Envoie un courriel d'alerte quand une automatisation échoue.
- * Réutilisé par marches-update, news-update et fonds-update.
+ * Réutilisé par fonds-update.
  * Groupe Financier Formule
  *
  * Ce fichier ne commence pas par un verbe HTTP standard donc Netlify ne le traite

@@ -8,16 +8,13 @@
   node_bundler = "esbuild"
 
 [[scheduled_functions]]
-  name = "marches-update"
-  cron = "0 14 * * 1-5"
-
-[[scheduled_functions]]
-  name = "news-update"
-  cron = "0 13 * * 1,3,5"
-
-[[scheduled_functions]]
   name = "fonds-update"
   cron = "0 13 5 * *"
+
+[[redirects]]
+  from = "/marches"
+  to = "/"
+  status = 301
 
 [[redirects]]
   from = "/simulateur"
