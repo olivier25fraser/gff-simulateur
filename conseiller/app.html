@@ -4517,23 +4517,47 @@ const FERR_MIN = {
 };
 function ferrMin(age) { return (FERR_MIN[Math.min(age,95)] || 20.00) / 100; }
 
-// Impôt simplifié QC (sur revenu brut imposable)
-function impotAnnuel(rev) {
-  const tm = marg(rev);
-  return Math.max(0, rev * tm - 4716);
+// Impôt QC + fédéral combiné sur le revenu imposable : barème PROGRESSIF (somme par tranche),
+// moins les crédits personnels de base. idx = facteur d'indexation des tranches et des crédits
+// (inflation cumulée depuis aujourd'hui) : les barèmes sont indexés chaque année, donc un revenu
+// de 100 000 $ dans 25 ans est traité comme ~60 000 $ d'aujourd'hui, pas comme une tranche supérieure.
+const CREDITS_BASE = 4716;
+function impotAnnuel(rev, idx) {
+  idx = idx > 0 ? idx : 1;
+  const r = rev / idx;
+  if (r <= 0) return 0;
+  let tax = 0;
+  for (const p of PAL) {
+    if (r <= p.min) break;
+    tax += (Math.min(r, p.max) - p.min) * p.t;
+  }
+  return Math.max(0, tax - CREDITS_BASE) * idx;
 }
 
-// Revenu imposable total T qui livre exactement « net » après impôt (résolution exacte, remplace
-// l'ancienne approximation 1 / (1 − 70 % × taux marginal), qui sous-estimait l'impôt).
+// Contexte d'inflation de l'onglet Planification retraite : taux et facteur d'indexation à la retraite
+function rtInfCtx() {
+  const a = (typeof rtMode !== 'undefined' && rtMode === 'couple') ? window._rtAccC : window._rtAccS;
+  if (!a || !(a.inf >= 0)) return { inf: 0, idx: 1 };
+  return { inf: a.inf, idx: Math.pow(1 + a.inf, a.yrsAcc || 0) };
+}
+
+// Revenu imposable total T qui livre exactement « net » après impôt (résolution exacte).
 // nPers = 2 : revenu réparti également entre deux déclarants (fractionnement).
-function grossUpNet(net, nPers) {
+function grossUpNet(net, nPers, idx) {
   nPers = nPers || 1;
   if (net <= 0) return 0;
-  const netDe = T => T - nPers * impotAnnuel(T / nPers);
+  const netDe = T => T - nPers * impotAnnuel(T / nPers, idx);
   let lo = net, hi = Math.max(net * 3, 100000);
   while (netDe(hi) < net && hi < 1e9) hi *= 2;
   for (let k = 0; k < 60; k++) { const mid = (lo + hi) / 2; if (netDe(mid) >= net) hi = mid; else lo = mid; }
   return hi;
+}
+
+// Valeur actuelle, au début de la retraite, de retraits annuels indexés à l'inflation (1er retrait après 1 an
+// de rendement). Équivaut à une annuité à rendement RÉEL : (1+r)/(1+i) − 1.
+function capitalRetraiteIndexe(premier, rend, inf, n) {
+  const rr = (1 + rend) / (1 + inf) - 1;
+  return Math.abs(rr) < 1e-9 ? premier * n : premier * (1 - Math.pow(1 + rr, -n)) / rr;
 }
 
 // Retenue à la source FERR (fédéral)
@@ -6023,16 +6047,12 @@ function calcObjSeul() {
 
   const besoinInflation = besoin * Math.pow(1 + inf, yrsAcc);
   const gouvFuturs = (rrq + psv + rpa) * Math.pow(1 + inf, yrsAcc);
-  const besoinBrut = grossUpNet(besoinInflation, 1);
+  const besoinBrut = grossUpNet(besoinInflation, 1, Math.pow(1 + inf, yrsAcc));
   const manqueParAn = Math.max(0, besoinBrut - gouvFuturs);
 
   let capitalNecessaire;
-  if (rendRet > 0) {
-    capitalNecessaire = manqueParAn * (1 - Math.pow(1 + rendRet, -yrsRet)) / rendRet;
-    capitalNecessaire += legs / Math.pow(1 + rendRet, yrsRet);
-  } else {
-    capitalNecessaire = manqueParAn * yrsRet + legs;
-  }
+  // Retraits indexés à l'inflation pendant toute la retraite (comme les logiciels de planification)
+  capitalNecessaire = capitalRetraiteIndexe(manqueParAn, rendRet, inf, yrsRet) + legs / Math.pow(1 + rendRet, yrsRet);
 
   const capitalManquant = Math.max(0, capitalNecessaire - capitalActuelFuturAvecImmo);
 
@@ -6202,16 +6222,12 @@ function calcObjCouple() {
 
   const besoinInflation = besoin * Math.pow(1 + inf, yrsAccRef);
   const gouvFuturs = gouvActuel * Math.pow(1 + inf, yrsAccRef);
-  const besoinBrut = grossUpNet(besoinInflation, 2);
+  const besoinBrut = grossUpNet(besoinInflation, 2, Math.pow(1 + inf, yrsAccRef));
   const manqueParAn = Math.max(0, besoinBrut - gouvFuturs);
 
   let capitalNecessaire;
-  if (rendRet > 0) {
-    capitalNecessaire = manqueParAn * (1 - Math.pow(1 + rendRet, -yrsRet)) / rendRet;
-    capitalNecessaire += legs / Math.pow(1 + rendRet, yrsRet);
-  } else {
-    capitalNecessaire = manqueParAn * yrsRet + legs;
-  }
+  // Retraits indexés à l'inflation pendant toute la retraite (comme les logiciels de planification)
+  capitalNecessaire = capitalRetraiteIndexe(manqueParAn, rendRet, inf, yrsRet) + legs / Math.pow(1 + rendRet, yrsRet);
 
   const capitalManquant = Math.max(0, capitalNecessaire - capitalActuelFuturAvecImmo);
   let cotisAnnuelleAdd = 0;
@@ -6221,7 +6237,7 @@ function calcObjCouple() {
   const pctAtteint = Math.min(100, (capitalActuelFuturAvecImmo / capitalNecessaire) * 100);
 
   window._rtAccC = {
-    dejaRetraite, ageRet, ageDeces, capitalNecessaire, capitalProj: capitalActuelFuturAvecImmo, manque: capitalManquant,
+    dejaRetraite, ageRet, ageDeces, inf, yrsAcc: yrsAccRef, capitalNecessaire, capitalProj: capitalActuelFuturAvecImmo, manque: capitalManquant,
     pct: capitalNecessaire > 0 ? (capitalActuelFuturAvecImmo / capitalNecessaire) * 100 : 100,
     cotAdd: cotisAnnuelleAdd, cotMens: cotisAnnuelleActuelle / 12
   };
@@ -6355,7 +6371,7 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
     decResults = simulerDecaissement({
       ferr: decParams.ferr, celi: decParams.celi, nr: decParams.nr, rente: decParams.rente,
       rrqAn: decParams.rrqAn, rrqAge: decParams.rrqAge, psvAn: decParams.psvAn, psvAge: decParams.psvAge,
-      srgAn: 0, rend: rendRet, besoin: decParams.besoin, ratioCeli: decParams.ratioCeli,
+      srgAn: 0, rend: rendRet, inf: inf, taxIdx: Math.pow(1 + inf, yrsAccLocal), besoin: decParams.besoin, ratioCeli: decParams.ratioCeli,
       ageRet, ageDeces, immoInjections: decImmoInjections
     });
   }
@@ -6550,6 +6566,10 @@ function simulerDecaissement(p) {
   const ratioCeli = Math.min(1, Math.max(0, p.ratioCeli));
   const immoInjections = p.immoInjections || [];
   const results = [];
+  // Simulation en $ de l'année de retraite (constants) : rendement RÉEL, barèmes d'impôt indexés
+  // (équivalent à tout indexer à l'inflation : besoin, RRQ, PSV, tranches).
+  const infP = p.inf > 0 ? p.inf : 0, taxIdx = p.taxIdx > 0 ? p.taxIdx : 1;
+  const rendEff = (1 + p.rend) / (1 + infP) - 1;
 
   for (let i = 0; i < annees; i++) {
     const age = p.ageRet + i;
@@ -6559,12 +6579,12 @@ function simulerDecaissement(p) {
     const rente = p.rente || 0;
     const gouvTotal = rrq + psv + srg + rente;
 
-    ferr = Math.max(0, ferr * (1 + p.rend));
-    celi = Math.max(0, celi * (1 + p.rend));
-    nr   = Math.max(0, nr   * (1 + p.rend));
+    ferr = Math.max(0, ferr * (1 + rendEff));
+    celi = Math.max(0, celi * (1 + rendEff));
+    nr   = Math.max(0, nr   * (1 + rendEff));
 
     let venteImmoAn = 0;
-    immoInjections.forEach(inj => { if (inj.ageVente === age) venteImmoAn += inj.montant; });
+    immoInjections.forEach(inj => { if (inj.ageVente === age) venteImmoAn += inj.montant / Math.pow(1 + infP, i); });
     if (venteImmoAn > 0) nr += venteImmoAn;
 
     // Retrait additionnel brut (au-delà des revenus garantis) qui livre EXACTEMENT le revenu net désiré :
@@ -6601,7 +6621,7 @@ function simulerDecaissement(p) {
         }
       }
       const revBrut = gouvTotal + retraitFerr + retraitNr;
-      const impot = Math.round(impotAnnuel(revBrut));
+      const impot = Math.round(impotAnnuel(revBrut, taxIdx));
       const revNet = Math.round(revBrut - impot + retraitCeli);
       return { f, c, n, retraitFerr, retraitCeli, retraitNr, revBrut, impot, revNet };
     };
@@ -6667,7 +6687,7 @@ function calcDec() {
   const results = simulerDecaissement({
     ferr: ferrSol, celi: celiSol, nr: nonreg, rente,
     rrqAn, rrqAge, psvAn, psvAge, srgAn, rend, besoin, ratioCeli,
-    ageRet, ageDeces, immoInjections
+    ageRet, ageDeces, immoInjections, inf: rtInfCtx().inf, taxIdx: rtInfCtx().idx
   });
 
   let rows = '', totalImpot = 0, totalNet = 0, totalFerr = 0, anneesOk = 0, premierEpuise = '';
@@ -6803,6 +6823,7 @@ function calcDecCouple() {
   const rrq2 = g('dc2-rrq'), psv2 = g('dc2-psv');
   const rend = g('dc-rend') / 100, besoin = g('dc-besoin'), ageDeces = g('dc-deces');
   const ratioCeli = Math.min(1, Math.max(0, g('dc-ratio-celi') / 100));
+  const _ic = rtInfCtx(), taxIdxC = _ic.idx, rendEffC = (1 + rend) / (1 + _ic.inf) - 1;
 
   // Projection des soldes de l'âge actuel à l'âge de retraite de chacun (et du non enregistré au plus proche des deux)
   let growthNote = '';
@@ -6840,9 +6861,9 @@ function calcDecCouple() {
     const a1 = age1Ret + i, a2 = age2Ret + i;
     const an = 2026 + i;
 
-    f1 = Math.max(0, f1 * (1 + rend)); f2 = Math.max(0, f2 * (1 + rend));
-    c1 = Math.max(0, c1 * (1 + rend)); c2 = Math.max(0, c2 * (1 + rend));
-    nr = Math.max(0, nr * (1 + rend));
+    f1 = Math.max(0, f1 * (1 + rendEffC)); f2 = Math.max(0, f2 * (1 + rendEffC));
+    c1 = Math.max(0, c1 * (1 + rendEffC)); c2 = Math.max(0, c2 * (1 + rendEffC));
+    nr = Math.max(0, nr * (1 + rendEffC));
 
     let venteAn = 0;
     immoInjections.forEach(inj => { if (inj.anneeIdx === i) venteAn += inj.montant; });
@@ -6885,7 +6906,7 @@ function calcDecCouple() {
         }
       }
       const brut = govTotal + r1 + r2 + rNr;
-      const imp = Math.round(impotAnnuel(govC1 + r1) + impotAnnuel(govC2 + r2));
+      const imp = Math.round(impotAnnuel(govC1 + r1, taxIdxC) + impotAnnuel(govC2 + r2, taxIdxC));
       return { F1, F2, C1, C2, N, r1, r2, rNr, rCeli, brut, imp, net: Math.round(brut - imp + rCeli) };
     };
     let resC = simC(0);
@@ -6929,9 +6950,9 @@ function calcDecCouple() {
 
   // Avantage fractionnement (sur le premier retrait FERR minimum de l'année 1, à titre illustratif)
   const revGouv1 = rrq1 + psv1, revGouv2 = rrq2 + psv2;
-  const sansFract = impotAnnuel(revGouv1 + revGouv2 + ferr1Sol * ferrMin(age1Ret) + ferr2Sol * ferrMin(age2Ret));
-  const avecFract = impotAnnuel(revGouv1 + ferr1Sol * ferrMin(age1Ret)) +
-                    impotAnnuel(revGouv2 + ferr2Sol * ferrMin(age2Ret));
+  const sansFract = impotAnnuel(revGouv1 + revGouv2 + ferr1Sol * ferrMin(age1Ret) + ferr2Sol * ferrMin(age2Ret), taxIdxC);
+  const avecFract = impotAnnuel(revGouv1 + ferr1Sol * ferrMin(age1Ret), taxIdxC) +
+                    impotAnnuel(revGouv2 + ferr2Sol * ferrMin(age2Ret), taxIdxC);
   const economie = Math.max(0, sansFract - avecFract);
 
   document.getElementById('dec-fract').innerHTML =
