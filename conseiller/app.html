@@ -6806,12 +6806,12 @@ function calcDec() {
     <div class="kpi gd"><div class="kl">Retrait FERR minimum</div><div class="kv">${fmt(Math.round(ferrSol*ferrMin(ageRet)))}</div><div class="ks">Obligatoire à ${ageRet} ans (${(ferrMin(ageRet)*100).toFixed(2)}%)</div></div>
     <div class="kpi bl"><div class="kl">Taux marginal retraite</div><div class="kv">${fp(tauxEff)}</div><div class="ks">Palier ${PAL.findIndex(p=>(revGouv+ferrSol*ferrMin(ageRet))>=p.min&&(revGouv+ferrSol*ferrMin(ageRet))<p.max)+1}</div></div>
     <div class="kpi gn"><div class="kl">Années planifiées</div><div class="kv">${annees}</div><div class="ks">${ageRet} à ${ageDeces} ans</div></div>
-    <div class="kpi or"><div class="kl">Impôt total estimé</div><div class="kv">${fmt(totalImpot)}</div><div class="ks">Sur ${annees} ans</div></div>
+    <div class="kpi or"><div class="kl">Impôt et récup. PSV (total)</div><div class="kv">${fmt(totalImpot)}</div><div class="ks">Sur ${annees} ans</div></div>
   `;
 
   document.getElementById('dec-note-seul').textContent =
     (growthNote ? growthNote + ' ' : '') +
-    'Taux de retrait minimum FERR selon les règles ARC 2026. Impôt calculé sur le revenu imposable (FERR + gouvernement). Retraits CELI non imposables. Les lignes en jaune indiquent le début de la PSV. Les rendements passés ne garantissent pas les résultats futurs.';
+    'Taux de retrait minimum FERR selon les règles ARC 2026. Impôt calculé sur le revenu imposable (FERR + gouvernement + part de gains du non enregistré), crédits 65+ estimés, récupération de la PSV incluse. Retraits CELI non imposables. Les lignes en jaune indiquent le début de la PSV. Les rendements passés ne garantissent pas les résultats futurs.';
   const _rtFail = results.find(r => r.revNet < besoin * 0.9);
   window._rtDecS = {
     results, besoin, ok: results.filter(r => r.revNet >= besoin * 0.9).length, annees,
@@ -8855,7 +8855,7 @@ function rtAnnualTable(title, sub, kpis, headFirst, rowsHtml, totalHtml) {
   return '<div class="rt-an"><div class="rt-an-h"><div><b>' + title + '</b><span>' + sub + '</span></div>'
     + '<button type="button" class="rt-btn rt-tech" onclick="rtToggleAll(this)">Tout déplier</button></div>'
     + '<div class="rt-an-kpis">' + kpis.map(k => '<div><span>' + k[0] + '</span><b>' + k[1] + '</b></div>').join('') + '</div>'
-    + '<div class="rt-an-wrap"><table class="rt-an-t"><thead><tr><th>' + headFirst + '</th><th>Revenus garantis</th><th>Retraits</th><th>Impôt</th><th>Revenu net</th><th>Capital restant</th></tr></thead>'
+    + '<div class="rt-an-wrap"><table class="rt-an-t"><thead><tr><th>' + headFirst + '</th><th>Revenus garantis</th><th>Retraits</th><th title="Impôt sur le revenu (fédéral + Québec) et récupération fiscale de la PSV">Impôt et récup. PSV</th><th>Revenu net</th><th>Capital restant</th></tr></thead>'
     + '<tbody>' + rowsHtml + '</tbody><tfoot>' + totalHtml + '</tfoot></table></div>'
     + '<div class="rt-an-note">Cliquez sur une ligne pour voir le détail (RRQ, PSV, retraits par compte, soldes). Montants en dollars de l\'année de retraite.</div></div>';
 }
@@ -8881,7 +8881,7 @@ function rtRenderAnnual() {
     });
     const n = R.length || 1;
     el.innerHTML = rtAnnualTable('Projection annuelle du décaissement', 'De ' + R[0].age + ' à ' + (R[R.length - 1].age + 1) + ' ans · ' + n + ' ans',
-      [['Revenu net moyen / an', fmt(Math.round(tNet / n))], ['Retraits totaux', fmt(Math.round(tRet))], ['Impôt total estimé', fmt(Math.round(tImp))], ['Capital restant', fmt(Math.round(d.capFin))]],
+      [['Revenu net moyen / an', fmt(Math.round(tNet / n))], ['Retraits totaux', fmt(Math.round(tRet))], ['Impôt et récup. PSV (total)', fmt(Math.round(tImp))], ['Capital restant', fmt(Math.round(d.capFin))]],
       'Âge', rows, '<tr><td>Total</td><td></td><td>' + fmt(Math.round(tRet)) + '</td><td>' + fmt(Math.round(tImp)) + '</td><td>' + fmt(Math.round(tNet)) + '</td><td></td></tr>');
   } else {
     const el = $('rt-an-couple'), d = window._rtDecC; if (!el || !d || !d.rows) return;
@@ -8900,7 +8900,7 @@ function rtRenderAnnual() {
     });
     const n = R.length || 1;
     el.innerHTML = rtAnnualTable('Projection annuelle du décaissement — couple', 'Client 1 : ' + R[0].a1 + ' ans · Client 2 : ' + R[0].a2 + ' ans · ' + n + ' ans',
-      [['Revenu net moyen / an', fmt(Math.round(tNet / n))], ['Retraits totaux', fmt(Math.round(tRet))], ['Impôt total estimé', fmt(Math.round(tImp))], ['Capital restant', fmt(Math.round(d.capFin))]],
+      [['Revenu net moyen / an', fmt(Math.round(tNet / n))], ['Retraits totaux', fmt(Math.round(tRet))], ['Impôt et récup. PSV (total)', fmt(Math.round(tImp))], ['Capital restant', fmt(Math.round(d.capFin))]],
       'Âge (C1 / C2)', rows, '<tr><td>Total</td><td></td><td>' + fmt(Math.round(tRet)) + '</td><td>' + fmt(Math.round(tImp)) + '</td><td>' + fmt(Math.round(tNet)) + '</td><td></td></tr>');
   }
 }
