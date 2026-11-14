@@ -867,6 +867,65 @@ body.dark .rt-ovr{background:#2a2000!important}
 /* impression : le verdict et les curseurs restent propres */
 @media print{.rt-whatif,.rt-vtabs,.rt-top,.rt-inputs{display:none!important}}
 
+/* ═══ En-têtes unifiés (noir + filet or) ═══ */
+#pane-retraite .ch.gd,#pane-retraite .ch.bl,#pane-retraite .ch.gn,#pane-retraite .ch.nv,#pane-retraite .ch.or{background:var(--ink)!important;color:#fff!important;border-bottom:2px solid var(--rt-gold)}
+.rt-cot h3{border-bottom:2px solid var(--rt-gold)}
+#obj-scenarios-zone.rt-hide{display:none}
+
+/* ═══ Tableau de scénarios ═══ */
+.rt-scen th{vertical-align:bottom;line-height:1.3;text-align:center}
+.rt-scen th:first-child{text-align:left}
+.rt-scen td{text-align:center}
+.rt-scen td:first-child{text-align:left;font-weight:600;color:var(--gry)}
+.rt-scen td.em{font-weight:800;font-size:15px;color:var(--ink);background:var(--gold-p)}
+.rt-scen td.ok{color:var(--grn);font-weight:800}
+.rt-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.rt-th-sub{font-weight:600;letter-spacing:0;text-transform:none;color:var(--gry);font-size:11px}
+
+/* ═══ Tableau annuel compact ═══ */
+.rt-an{background:#fff;border-radius:20px;box-shadow:0 2px 14px rgba(15,15,15,.06);border:1px solid rgba(191,143,0,.10);overflow:hidden;margin-bottom:18px}
+.rt-an-h{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--ink);color:#fff;padding:14px 22px;border-bottom:2px solid var(--rt-gold)}
+.rt-an-h b{display:block;font-size:12.5px;letter-spacing:.6px;text-transform:uppercase}
+.rt-an-h span{font-size:11.5px;color:rgba(255,255,255,.65)}
+.rt-an-h .rt-btn{background:transparent;color:#fff;border-color:rgba(255,255,255,.35);padding:7px 14px;font-size:12px}
+.rt-an-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--gry-l);border-bottom:1px solid var(--gry-l)}
+.rt-an-kpis div{background:#fff;padding:12px 16px}
+.rt-an-kpis span{display:block;font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--gry);margin-bottom:2px}
+.rt-an-kpis b{font-family:'DM Serif Display',serif;font-weight:400;font-size:19px;color:var(--ink)}
+.rt-an-wrap{max-height:540px;overflow:auto}
+.rt-an-t{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px}
+.rt-tags{margin:3px 0 0 14px;white-space:normal}.rt-tags .rt-tag{margin:0 4px 0 0}
+.rt-an-t th{position:sticky;top:0;z-index:2;background:#f6f3ea;color:var(--ink);font-size:10px;letter-spacing:.6px;text-transform:uppercase;font-weight:800;padding:11px 10px;text-align:right;border-bottom:2px solid var(--rt-gold);white-space:nowrap}
+.rt-an-t th:first-child,.rt-an-t td:first-child{text-align:left}
+.rt-an-t td{padding:10px 10px;text-align:right;border-bottom:1px solid var(--gry-l);white-space:nowrap;font-variant-numeric:tabular-nums}
+.rt-an-t tr.main{cursor:pointer;transition:background .12s}
+.rt-an-t tr.main:hover td{background:var(--gold-p)}
+.rt-an-t tr.main td:first-child{font-weight:700;color:var(--ink)}
+.rt-an-t td small{font-weight:500;color:var(--gry);margin-left:6px;font-size:11px}
+.rt-an-t td.net{font-weight:800;color:var(--grn)}
+.rt-an-t td.net.low,.rt-an-t .low{color:var(--org);font-weight:800}
+.rt-an-t .chev{display:inline-block;width:14px;color:var(--gry);transition:transform .15s;font-size:11px}
+.rt-an-t tr.open .chev{transform:rotate(90deg)}
+.rt-tag{font-style:normal;font-size:9.5px;font-weight:800;letter-spacing:.4px;background:var(--gold-l);color:#7a5a00;border-radius:99px;padding:2px 8px;margin-left:6px;vertical-align:middle}
+.rt-tag.home{background:var(--blue-p);color:var(--blue)}
+.rt-an-t tr.det{display:none}
+.rt-an-t tr.det.show{display:table-row}
+.rt-an-t tr.det td{background:#faf8f2;padding:12px 18px 14px 30px;text-align:left;white-space:normal}
+.rt-det-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px 18px}
+.rt-det-grid span{display:block;font-size:10px;color:var(--gry);text-transform:uppercase;letter-spacing:.4px;font-weight:700}
+.rt-det-grid b{font-size:13px;color:var(--ink)}
+.rt-an-t tfoot td{position:sticky;bottom:0;background:var(--ink);color:#fff;font-weight:800;border-bottom:none;padding:12px 10px}
+.rt-an-t tfoot td:first-child{color:var(--rt-gold-br)}
+.rt-an-note{font-size:11px;color:var(--gry);padding:10px 22px 14px}
+body.dark #pane-retraite .rt-an,body.dark #pane-retraite .rt-an-kpis div{background:#1a1a1a}
+body.dark #pane-retraite .rt-an-kpis{background:#333}
+body.dark #pane-retraite .rt-an-kpis b,body.dark #pane-retraite .rt-an-t td,body.dark #pane-retraite .rt-det-grid b,body.dark #pane-retraite .rt-an-t tr.main td:first-child{color:#eee}
+body.dark #pane-retraite .rt-an-t th{background:#2a2a2a;color:#eee}
+body.dark #pane-retraite .rt-an-t td{border-color:#333}
+body.dark #pane-retraite .rt-an-t tr.det td{background:#222}
+body.dark #pane-retraite .rt-an-t tr.main:hover td{background:#2a2000}
+body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>if(typeof pdfjsLib!=="undefined"){pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";}</script>
@@ -2563,6 +2622,7 @@ body.dark .rt-ovr{background:#2a2000!important}
       <!-- Cotisations -->
       <div class="rt-v rt-v-cot">
         <div id="rt-cot-advice"></div>
+        <div id="rt-scen"></div>
         <div class="rt-only-seul"><div id="obj-scenarios-zone"></div></div>
       </div>
 
@@ -2584,27 +2644,18 @@ body.dark .rt-ovr{background:#2a2000!important}
       <!-- Détail -->
       <div class="rt-v rt-v-det">
         <div class="rt-only-seul">
-          <div class="card">
-            <div class="ch bl">Projection annuelle — Décaissement jusqu'à <span id="dec-age-fin-lbl">90</span> ans</div>
-            <div class="cb" style="padding:0;overflow-x:auto">
-              <table class="proj-tbl"><thead><tr>
-                <th style="text-align:left">Année / Âge</th><th>RRQ ($)</th><th>PSV ($)</th><th>Rente ($)</th><th>Retrait FERR ($)</th><th>Retrait CELI ($)</th>
-                <th>Solde FERR ($)</th><th>Solde CELI ($)</th><th>Rev. brut ($)</th><th>Impôt ($)</th><th>Rev. net ($)</th>
-              </tr></thead><tbody id="dec-tbody-seul"></tbody></table>
-            </div>
+          <div id="rt-an-seul"></div>
+          <div class="rt-legacy" style="display:none">
+            <span id="dec-age-fin-lbl">90</span>
+            <table class="proj-tbl"><tbody id="dec-tbody-seul"></tbody></table>
           </div>
           <div class="note rt-tech" id="dec-note-seul"></div>
           <div class="note rt-tech" id="obj-note"></div>
         </div>
         <div class="rt-only-couple">
-          <div class="card">
-            <div class="ch nv">Projection annuelle — Couple</div>
-            <div class="cb" style="padding:0;overflow-x:auto">
-              <table class="proj-tbl"><thead><tr>
-                <th style="text-align:left">Année</th><th>RRQ total ($)</th><th>PSV total ($)</th><th>FERR C1 ($)</th><th>FERR C2 ($)</th><th>CELI retiré ($)</th>
-                <th>Solde FERR total ($)</th><th>Solde CELI total ($)</th><th>Rev. brut total ($)</th><th>Impôt estimé ($)</th><th>Rev. net ($)</th>
-              </tr></thead><tbody id="dec-tbody-couple"></tbody></table>
-            </div>
+          <div id="rt-an-couple"></div>
+          <div class="rt-legacy" style="display:none">
+            <table class="proj-tbl"><tbody id="dec-tbody-couple"></tbody></table>
           </div>
           <div class="note rt-tech" id="dec-note-couple"></div>
           <div class="note rt-tech" id="objc-note"></div>
@@ -3372,7 +3423,7 @@ function celiD(age){
 function g(id){
   const e=document.getElementById(id);
   if(!e) return 0;
-  return e.tagName==='SELECT'?e.value:parseFloat(e.value)||0;
+  return e.tagName==='SELECT'?e.value:parseFloat(String(e.value).replace(/[\s\u00a0\u202f]/g,'').replace(',','.'))||0;
 }
 const $ = id=>document.getElementById(id);
 
@@ -6017,6 +6068,7 @@ function calcObjSeul() {
   `;
 
   let scenHtml = '';
+  let scenData = null;
   if (dejaRetraite) {
     const suffisant = capitalManquant <= 0;
     scenHtml = `
@@ -6033,6 +6085,7 @@ function calcObjSeul() {
              </div>`}
       </div>`;
   } else {
+    scenData = [];
     const scenarios = [
       { label: 'Scénario conservateur', rend: Math.max(0.01, rendAcc - 0.01), color: '#2E75B6' },
       { label: 'Scénario de base',      rend: rendAcc,                         color: '#BF8F00' },
@@ -6047,6 +6100,7 @@ function calcObjSeul() {
       let capGap = Math.max(0, capitalNecessaire - capFV2);
       let ann = sc.rend > 0 ? capGap * sc.rend / (Math.pow(1 + sc.rend, yrsAcc) - 1) : capGap / yrsAcc;
       const suffisant = capGap <= 0;
+      scenData.push({ label: sc.label, rend: sc.rend, color: sc.color, suffisant, ann });
       scenHtml += `
         <div class="scenario-card" style="border-left-color:${sc.color};margin-bottom:12px">
           <h3><span class="dot" style="background:${sc.color}"></span>${sc.label} — ${(sc.rend*100).toFixed(1)}% / an</h3>
@@ -6060,6 +6114,7 @@ function calcObjSeul() {
     });
   }
   document.getElementById('obj-scenarios-zone').innerHTML = scenHtml;
+  window._rtScen = scenData;
 
   const immoInjections = immoResultats.filter(r => r.produitNet > 0).map(r => ({ annee: r.annees, montant: r.produitNet }));
   const ageRrqObj = g('ob-age-rrq');
@@ -6691,7 +6746,9 @@ function calcDec() {
     'Taux de retrait minimum FERR selon les règles ARC 2026. Impôt calculé sur le revenu imposable (FERR + gouvernement). Retraits CELI non imposables. Les lignes en jaune indiquent le début de la PSV. Les rendements passés ne garantissent pas les résultats futurs.';
   const _rtFail = results.find(r => r.revNet < besoin * 0.9);
   window._rtDecS = {
-    ok: results.filter(r => r.revNet >= besoin * 0.9).length, annees,
+    results, besoin, ok: results.filter(r => r.revNet >= besoin * 0.9).length, annees,
+    epuise: (results.find(r => r.capitalTotal <= 0.5) || {}).age || null,
+    netMoyen: results.length ? results.reduce((s, r) => s + r.revNet, 0) / results.length : 0,
     premierEchec: _rtFail ? _rtFail.age : null,
     capFin: results.length ? results[results.length - 1].capitalTotal : 0
   };
@@ -6755,7 +6812,7 @@ function calcDecCouple() {
   const annees = Math.max(1, ageDeces - Math.min(age1Ret, age2Ret));
   let f1 = ferr1Sol, f2 = ferr2Sol, c1 = celi1Sol, c2 = celi2Sol, nr = nrSol;
   let rows = '', totalImpot = 0, totalNet = 0;
-  let _rtOk = 0, _rtFail = null, _rtCap = 0;
+  let _rtOk = 0, _rtFail = null, _rtCap = 0, _rtRowsC = [], _rtEpuise = null, _rtNetSum = 0;
 
   for (let i = 0; i < annees; i++) {
     const a1 = age1Ret + i, a2 = age2Ret + i;
@@ -6822,6 +6879,9 @@ function calcDecCouple() {
     totalImpot += impot; totalNet += revNet;
     if (revNet >= besoin * 0.9) _rtOk++; else if (_rtFail === null) _rtFail = a1;
     _rtCap = f1 + f2 + c1 + c2 + nr;
+    if (_rtCap <= 0.5 && _rtEpuise === null) _rtEpuise = a1;
+    _rtNetSum += revNet;
+    _rtRowsC.push({ an, a1, a2, rrq: rrqA1 + rrqA2, psv: psvA1 + psvA2, ret1, ret2, celi: retraitCeliTotal, nr: retraitNr, brut: revBrut, impot, net: revNet, cap: _rtCap, vente: venteAn });
 
     const cls = venteAn > 0 ? 'age-psv' : '';
     rows += `<tr class="${cls}">
@@ -6867,7 +6927,7 @@ function calcDecCouple() {
     noteEl.textContent = (growthNote ? growthNote + ' ' : '') +
       'Taux de retrait minimum FERR selon les règles ARC 2026. Impôt calculé séparément pour chaque conjoint (fractionnement). Retraits CELI non imposables. Les rendements passés ne garantissent pas les résultats futurs.';
   }
-  window._rtDecC = { ok: _rtOk, annees, premierEchec: _rtFail, capFin: _rtCap };
+  window._rtDecC = { ok: _rtOk, annees, premierEchec: _rtFail, capFin: _rtCap, rows: _rtRowsC, epuise: _rtEpuise, netMoyen: annees ? _rtNetSum / annees : 0, besoin };
   if (typeof rtAfterDec === 'function') rtAfterDec();
 }
 
@@ -6991,6 +7051,18 @@ function printPane(paneId, title) {
     '.rt-cot td{padding:6px;border-top:1px solid #f2ede0;text-align:right;font-weight:600}.rt-cot td.add{color:#2E7D32;font-weight:700}.rt-cot tr.tot td{border-top:2px solid #BF8F00;font-weight:700}',
     '.rt-cot .pri{margin-left:6px;font-size:8px;background:#FFF2CC;color:#7a5a00;border-radius:99px;padding:1px 6px}',
     '.rt-cot-tip{margin-top:10px;font-size:10px;line-height:1.6;color:#666;background:#FBF8F2;border-left:3px solid #BF8F00;padding:8px 12px}',
+    '.rt-doc .ch.gd,.rt-doc .ch.bl,.rt-doc .ch.gn,.rt-doc .ch.or{background:#0F0F0F;border-bottom:2px solid #BF8F00}',
+    '.rt-an{border:1px solid #e5e0d5;border-radius:10px;overflow:hidden;margin-bottom:14px;font-family:Arial,sans-serif}',
+    '.rt-an-h{background:#0F0F0F;color:#fff;padding:10px 16px;border-bottom:2px solid #BF8F00;-webkit-print-color-adjust:exact;print-color-adjust:exact}.rt-an-h b{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px}.rt-an-h span{font-size:9px;color:#ccc}',
+    '.rt-an-kpis{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #e5e0d5}.rt-an-kpis div{padding:8px 12px}.rt-an-kpis span{display:block;font-size:7.5px;text-transform:uppercase;color:#999}.rt-an-kpis b{font-family:Georgia,serif;font-size:13px}',
+    '.rt-an-wrap{max-height:none!important;overflow:visible!important}.rt-an-t{width:100%;border-collapse:collapse;font-size:9.5px}',
+    '.rt-an-t th{background:#f6f3ea;font-size:8px;text-transform:uppercase;text-align:right;padding:6px 8px;border-bottom:2px solid #BF8F00;-webkit-print-color-adjust:exact;print-color-adjust:exact}.rt-an-t th:first-child,.rt-an-t td:first-child{text-align:left}',
+    '.rt-an-t td{padding:4px 8px;text-align:right;border-bottom:1px solid #f2ede0}.rt-an-t td.net{font-weight:700;color:#2E7D32}.rt-an-t td.low,.rt-an-t .low{color:#C55A11;font-weight:700}',
+    '.rt-an-t tr.det,.rt-an-t .chev,.rt-an-note{display:none!important}.rt-an-t td small{color:#999;margin-left:5px}.rt-tag{font-style:normal;font-size:7px;background:#FFF2CC;color:#7a5a00;border-radius:8px;padding:1px 5px;margin-left:4px}',
+    '.rt-an-t tfoot td{background:#0F0F0F;color:#fff;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact}',
+    '.ordre-step{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid #f2ede0;font-family:Arial,sans-serif}.ordre-num{flex:none;width:20px;height:20px;border-radius:50%;background:#BF8F00;color:#fff;text-align:center;font-size:10px;line-height:20px;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact}.ordre-body .titre{font-weight:700;font-size:10.5px}.ordre-body .desc{font-size:9.5px;color:#666}.ordre-body .raison{font-size:8.5px;color:#BF8F00;font-style:italic}',
+    '.rt-scen th{text-align:center;vertical-align:bottom}.rt-scen td{text-align:center}.rt-scen td:first-child,.rt-scen th:first-child{text-align:left}.rt-scen td.ok{color:#2E7D32;font-weight:700}.rt-scen td.em{font-weight:700;background:#FFFAED}',
+    '.rt-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px}.rt-th-sub{font-size:8px;color:#999;text-transform:none}',
     '.proj-tbl{width:100%;border-collapse:collapse;font-size:8.5px;font-family:Arial,sans-serif}.proj-tbl th{background:#0F0F0F;color:#fff;padding:5px 6px;text-align:right;-webkit-print-color-adjust:exact;print-color-adjust:exact}.proj-tbl th:first-child,.proj-tbl td:first-child{text-align:left}.proj-tbl td{padding:4px 6px;border-bottom:1px solid #f2ede0;text-align:right}',
     '.card[id$="-card"]{page-break-inside:avoid}',
     '.print-footer{margin-top:30px;padding-top:14px;border-top:1px solid #e5e0d5;font-size:8.5px;color:#aaa;text-align:center;font-family:Arial,sans-serif}',
@@ -8511,6 +8583,8 @@ function rtUpdateAll() {
   try {
     rtRenderVerdict();
     rtRenderCotAdvice();
+    rtRenderScen();
+    rtRenderAnnual();
     rtSyncSliders();
     rtUpdateSummaries();
     const dn = $(rtMode === 'seul' ? 'dec-note-seul' : 'dec-note-couple');
@@ -8521,6 +8595,7 @@ function rtUpdateAll() {
       dn.textContent = 'Montants du décaissement exprimés en dollars de l\'année de retraite (revenu désiré, RRQ, PSV et pensions indexés à l\'inflation estimée). ' + dn.textContent;
     }
   } catch (e) { console.error('rtUpdateAll:', e); }
+  try { rtFormatAll(); } catch (e) { console.error('rtFormatAll:', e); }
 }
 
 // ───────── Verdict ─────────
@@ -8540,12 +8615,12 @@ function rtRenderVerdict() {
     ? 'Capital actuel' + qui + ' : ' + fmt(Math.round(a.capitalProj)) + ' pour un besoin de ' + fmt(Math.round(a.capitalNecessaire)) + '.'
     : 'Capital projeté' + qui + ' à ' + a.ageRet + ' ans : ' + fmt(Math.round(a.capitalProj)) + ' pour un objectif de ' + fmt(Math.round(a.capitalNecessaire)) + '.';
   if (a.manque > 0 && !a.dejaRetraite) sub += ' Il manque ' + fmt(Math.round(a.manque)) + ', soit environ ' + fmt(Math.round(a.cotAdd / 12)) + ' de plus par mois.';
-  let capFin = null, finOk = true;
+  let capFin = null;
   if (d) {
-    finOk = d.ok >= d.annees;
-    sub += finOk
-      ? ' Le revenu désiré est soutenu jusqu\'à ' + a.ageDeces + ' ans.'
-      : ' Les fonds ne suffisent plus à partir de ' + d.premierEchec + ' ans' + (rtMode === 'couple' ? ' (Client 1)' : '') + '.';
+    const qui2 = rtMode === 'couple' ? ' (Client 1)' : '';
+    if (d.epuise) sub += ' Les fonds sont épuisés à ' + d.epuise + ' ans' + qui2 + '.';
+    else if (d.ok < d.annees) sub += ' Le capital dure jusqu\'à ' + a.ageDeces + ' ans, mais le revenu net projeté (≈ ' + fmt(Math.round(d.netMoyen)) + '/an) est sous le revenu désiré (' + fmt(Math.round(d.besoin)) + ') : l\'impôt à la retraite réduit le revenu net.';
+    else sub += ' Le revenu désiré est soutenu jusqu\'à ' + a.ageDeces + ' ans.';
     capFin = d.capFin;
   }
   const stats = [
@@ -8638,7 +8713,7 @@ function rtSyncSliders() {
   RT_SLIDERS[rtMode].forEach(d => {
     const el = $(d[0]), sl = $('rt-sl-' + d[0]), out = $('rt-so-' + d[0]);
     if (!el || !sl || !out) return;
-    const v = parseFloat(el.value) || 0;
+    const v = g(d[0]);
     if (v > parseFloat(sl.max)) sl.max = v;
     if (v < parseFloat(sl.min)) sl.min = v;
     sl.value = v;
@@ -8668,7 +8743,144 @@ function rtUpdateSummaries() {
   }
 }
 
+
+// ───────── Comparaison des scénarios de rendement ─────────
+function rtRenderScen() {
+  const el = $('rt-scen'), legacy = $('obj-scenarios-zone');
+  if (!el) return;
+  const sc = window._rtScen;
+  if (rtMode !== 'seul' || !sc || !sc.length) { el.innerHTML = ''; if (legacy) legacy.classList.remove('rt-hide'); return; }
+  if (legacy) legacy.classList.add('rt-hide');
+  const a = window._rtAccS;
+  const rows = [['Par semaine', 52], ['Aux deux semaines', 26], ['Par mois', 12], ['Par année', 1]];
+  const pct = v => (v * 100).toFixed(1).replace('.', ',') + ' %';
+  if (sc.every(s => s.suffisant)) {
+    el.innerHTML = '<div class="rt-cot rt-scen"><h3>Selon le rendement</h3><div class="rt-cot-b"><div class="rt-cot-tip" style="margin-top:0">Les cotisations actuelles suffisent dans <b>les trois scénarios</b> (' + sc.map(s => pct(s.rend)).join(', ') + ' par an).</div></div></div>';
+    return;
+  }
+  el.innerHTML = '<div class="rt-cot rt-scen"><h3>Cotisation additionnelle requise selon le rendement</h3><div class="rt-cot-b"><table>'
+    + '<tr><th></th>' + sc.map(s => '<th><span class="rt-dot" style="background:' + s.color + '"></span>' + s.label.replace('Scénario ', '') + '<br><span class="rt-th-sub">' + pct(s.rend) + ' / an</span></th>').join('') + '</tr>'
+    + rows.map(([lbl, div]) => '<tr><td>' + lbl + '</td>' + sc.map(s => s.suffisant
+        ? '<td class="ok">Suffisant ✓</td>'
+        : '<td' + (div === 12 ? ' class="em"' : '') + '>' + fmt(div === 1 ? Math.round(s.ann) : s.ann / div) + '</td>').join('') + '</tr>').join('')
+    + '</table><div class="rt-cot-tip">Montants <b>en plus</b> des ' + fmt(Math.round(a ? a.cotMens : 0)) + '/mois déjà cotisés. Un rendement plus élevé réduit l\'effort requis, mais augmente aussi le risque : le scénario de base est celui retenu dans le verdict.</div></div></div>';
+}
+
+// ───────── Tableau annuel (compact, lignes dépliables) ─────────
+function rtMoney(n) { return (Math.round(n) === 0) ? '—' : fmt(Math.round(n)); }
+function rtDetGrid(items) {
+  return '<div class="rt-det-grid">' + items.filter(i => i[1] !== null).map(i => '<div><span>' + i[0] + '</span><b>' + (i[1] === 0 ? '—' : fmt(Math.round(i[1]))) + '</b></div>').join('') + '</div>';
+}
+function rtToggleRow(tr) { tr.classList.toggle('open'); const d = tr.nextElementSibling; if (d) d.classList.toggle('show'); }
+function rtToggleAll(btn) {
+  const wrap = btn.closest('.rt-an'); const open = btn.dataset.open !== '1';
+  btn.dataset.open = open ? '1' : '0'; btn.textContent = open ? 'Tout replier' : 'Tout déplier';
+  wrap.querySelectorAll('tr.main').forEach(tr => { tr.classList.toggle('open', open); const d = tr.nextElementSibling; if (d) d.classList.toggle('show', open); });
+}
+
+function rtAnnualTable(title, sub, kpis, headFirst, rowsHtml, totalHtml) {
+  return '<div class="rt-an"><div class="rt-an-h"><div><b>' + title + '</b><span>' + sub + '</span></div>'
+    + '<button type="button" class="rt-btn rt-tech" onclick="rtToggleAll(this)">Tout déplier</button></div>'
+    + '<div class="rt-an-kpis">' + kpis.map(k => '<div><span>' + k[0] + '</span><b>' + k[1] + '</b></div>').join('') + '</div>'
+    + '<div class="rt-an-wrap"><table class="rt-an-t"><thead><tr><th>' + headFirst + '</th><th>Revenus garantis</th><th>Retraits</th><th>Impôt</th><th>Revenu net</th><th>Capital restant</th></tr></thead>'
+    + '<tbody>' + rowsHtml + '</tbody><tfoot>' + totalHtml + '</tfoot></table></div>'
+    + '<div class="rt-an-note">Cliquez sur une ligne pour voir le détail (RRQ, PSV, retraits par compte, soldes). Montants en dollars de l\'année de retraite.</div></div>';
+}
+
+function rtRenderAnnual() {
+  if (rtMode === 'seul') {
+    const el = $('rt-an-seul'), d = window._rtDecS; if (!el || !d || !d.results) return;
+    const R = d.results, besoin = d.besoin;
+    let tImp = 0, tNet = 0, tRet = 0, prev = null, rows = '';
+    R.forEach(r => {
+      const gar = r.rrq + r.psv + r.srg + r.rente, ret = r.retraitFerr + r.retraitCeli + r.retraitNr;
+      tImp += r.impot; tNet += r.revNet; tRet += ret;
+      const tags = (r.rrq > 0 && (!prev || prev.rrq === 0) ? '<i class="rt-tag">RRQ</i>' : '') + (r.psv > 0 && (!prev || prev.psv === 0) ? '<i class="rt-tag">PSV</i>' : '')
+        + (r.venteImmoAn > 0 ? '<i class="rt-tag home">Vente immo.</i>' : '');
+      const ok = r.revNet >= besoin * 0.9;
+      rows += '<tr class="main" onclick="rtToggleRow(this)"><td><span class="chev">▸</span>' + r.age + ' ans <small>' + r.an + '</small>' + (tags ? '<div class="rt-tags">' + tags + '</div>' : '') + '</td>'
+        + '<td>' + rtMoney(gar) + '</td><td>' + rtMoney(ret) + '</td><td>' + rtMoney(r.impot) + '</td>'
+        + '<td class="' + (ok ? 'net' : 'net low') + '">' + fmt(r.revNet) + '</td>'
+        + '<td>' + (r.capitalTotal > 0 ? fmt(Math.round(r.capitalTotal)) : '<span class="low">Épuisé</span>') + '</td></tr>'
+        + '<tr class="det"><td colspan="6">' + rtDetGrid([['RRQ', r.rrq], ['PSV', r.psv], ['Rente / pension', r.rente], ['SRG', r.srg], ['Retrait FERR', r.retraitFerr], ['Retrait CELI', r.retraitCeli],
+            ['Retrait non enreg.', r.retraitNr], ['Revenu brut imposable', r.revBrut], ['Solde FERR', r.ferr], ['Solde CELI', r.celi], ['Solde non enreg.', r.nr]]) + '</td></tr>';
+      prev = r;
+    });
+    const n = R.length || 1;
+    el.innerHTML = rtAnnualTable('Projection annuelle du décaissement', 'De ' + R[0].age + ' à ' + (R[R.length - 1].age + 1) + ' ans · ' + n + ' ans',
+      [['Revenu net moyen / an', fmt(Math.round(tNet / n))], ['Retraits totaux', fmt(Math.round(tRet))], ['Impôt total estimé', fmt(Math.round(tImp))], ['Capital restant', fmt(Math.round(d.capFin))]],
+      'Âge', rows, '<tr><td>Total</td><td></td><td>' + fmt(Math.round(tRet)) + '</td><td>' + fmt(Math.round(tImp)) + '</td><td>' + fmt(Math.round(tNet)) + '</td><td></td></tr>');
+  } else {
+    const el = $('rt-an-couple'), d = window._rtDecC; if (!el || !d || !d.rows) return;
+    const R = d.rows, rentes = g('dc1-rente') + g('dc2-rente'), besoin = g('dc-besoin');
+    let tImp = 0, tNet = 0, tRet = 0, rows = '';
+    R.forEach(r => {
+      const gar = r.rrq + r.psv + rentes, ret = r.ret1 + r.ret2 + r.celi + r.nr;
+      tImp += r.impot; tNet += r.net; tRet += ret;
+      const ok = r.net >= besoin * 0.9;
+      rows += '<tr class="main" onclick="rtToggleRow(this)"><td><span class="chev">▸</span>' + r.a1 + ' / ' + r.a2 + ' ans <small>' + r.an + '</small>' + (r.vente > 0 ? '<div class="rt-tags"><i class="rt-tag home">Vente immo.</i></div>' : '') + '</td>'
+        + '<td>' + rtMoney(gar) + '</td><td>' + rtMoney(ret) + '</td><td>' + rtMoney(r.impot) + '</td>'
+        + '<td class="' + (ok ? 'net' : 'net low') + '">' + fmt(r.net) + '</td>'
+        + '<td>' + (r.cap > 0 ? fmt(Math.round(r.cap)) : '<span class="low">Épuisé</span>') + '</td></tr>'
+        + '<tr class="det"><td colspan="6">' + rtDetGrid([['RRQ (total)', r.rrq], ['PSV (total)', r.psv], ['Rentes / pensions', rentes], ['Retrait FERR — Client 1', r.ret1], ['Retrait FERR — Client 2', r.ret2],
+            ['Retrait CELI', r.celi], ['Retrait non enreg.', r.nr], ['Revenu brut total', r.brut]]) + '</td></tr>';
+    });
+    const n = R.length || 1;
+    el.innerHTML = rtAnnualTable('Projection annuelle du décaissement — couple', 'Client 1 : ' + R[0].a1 + ' ans · Client 2 : ' + R[0].a2 + ' ans · ' + n + ' ans',
+      [['Revenu net moyen / an', fmt(Math.round(tNet / n))], ['Retraits totaux', fmt(Math.round(tRet))], ['Impôt total estimé', fmt(Math.round(tImp))], ['Capital restant', fmt(Math.round(d.capFin))]],
+      'Âge (C1 / C2)', rows, '<tr><td>Total</td><td></td><td>' + fmt(Math.round(tRet)) + '</td><td>' + fmt(Math.round(tImp)) + '</td><td>' + fmt(Math.round(tNet)) + '</td><td></td></tr>');
+  }
+}
+
+// ───────── Montants avec séparateurs de milliers ─────────
+var RT_NONMONEY = /(age|ret$|duree|deces|rend|inf$|ans$|taux|ratio)/;
+function rtIsMoneyField(el) {
+  if (!el || el.tagName !== 'INPUT') return false;
+  if (!el.id || RT_NONMONEY.test(el.id)) return false;
+  return !el.closest('#ob-immo-properties');
+}
+function rtFormatField(el) {
+  if (!el || el === document.activeElement) return;
+  const raw = String(el.value).replace(/[\s  ]/g, '').replace(',', '.');
+  if (raw === '' || isNaN(parseFloat(raw))) return;
+  const f = parseFloat(raw).toLocaleString('fr-CA', { maximumFractionDigits: 2 });
+  if (el.value !== f) el.value = f;
+}
+function rtFormatAll() {
+  document.querySelectorAll('#pane-retraite input[data-rtf]').forEach(rtFormatField);
+}
+function rtInitNumberFields() {
+  document.querySelectorAll('#pane-retraite input[type=number]').forEach(el => {
+    if (!rtIsMoneyField(el)) return;
+    el.type = 'text'; el.inputMode = 'decimal'; el.autocomplete = 'off';
+    el.dataset.rtf = '1';
+    el.addEventListener('focus', () => { el.value = String(el.value).replace(/[\s  ]/g, ''); setTimeout(() => { try { el.select(); } catch (e) {} }, 0); });
+    el.addEventListener('blur', () => rtFormatField(el));
+    el.addEventListener('keydown', ev => { if (ev.key === 'Enter') el.blur(); });
+  });
+  rtFormatAll();
+}
+
 // ───────── Impression ─────────
+function rtPrintHyp() {
+  const row = (l, v) => '<div class="hyp"><div class="hl">' + l + '</div><div class="hv">' + v + '</div></div>';
+  let h;
+  if (rtMode === 'seul') {
+    const bal = g('ob-reer') + g('ob-celi') + g('ob-celiapp') + g('ob-ne');
+    const cot = g('ob-reer-cot') + g('ob-celi-cot') + g('ob-celiapp-cot') + g('ob-ne-cot');
+    h = row('Âge actuel / retraite', g('ob-age') + ' ans → ' + g('ob-ret') + ' ans') + row('Revenu net désiré', fmt(g('ob-besoin')) + '/an (en $ d\'aujourd\'hui)')
+      + row('Épargne actuelle', fmt(bal)) + row('Cotisations actuelles', fmt(cot) + '/mois')
+      + row('Revenus garantis (RRQ, PSV, pension)', fmt(g('ob-rrq') + g('ob-psv') + g('ob-rpa')) + '/an dès ' + g('ob-age-rrq') + ' ans')
+      + row('Rendement accumulation / retraite', g('ob-rend-acc') + ' % / ' + g('ob-rend-ret') + ' %') + row('Inflation estimée', g('ob-inf') + ' %') + row('Planifié jusqu\'à', g('ob-duree') + ' ans');
+  } else {
+    const t = n => fmt(g('oc' + n + '-reer') + g('oc' + n + '-celi') + g('oc' + n + '-ne'));
+    h = row('Client 1 / Client 2 (âge)', g('oc1-age') + ' ans / ' + g('oc2-age') + ' ans') + row('Âge de retraite', g('oc-ret') + ' ans')
+      + row('Épargne actuelle (C1 / C2)', t(1) + ' / ' + t(2)) + row('Revenu net désiré du couple', fmt(g('oc-besoin')) + '/an')
+      + row('Rendement accumulation / retraite', g('oc-rend-acc') + ' % / ' + g('oc-rend-ret') + ' %') + row('Inflation estimée', g('oc-inf') + ' %');
+  }
+  return '<div class="card"><div class="ch nv">Hypothèses retenues</div><div class="cb"><div class="hypothesis-grid" style="margin-top:0">' + h + '</div></div></div>';
+}
+
 function rtPrint() {
   const p = rtPane(); if (!p) return;
   rtRecalc();
@@ -8679,9 +8891,11 @@ function rtPrint() {
   const bits = [];
   if (nom) bits.push('<div class="card"><div class="ch nv">Client</div><div class="cb"><b>' + nom.replace(/</g, '&lt;') + '</b></div></div>');
   bits.push($('rt-verdict').outerHTML);
+  bits.push(rtPrintHyp());
   ['ov', 'cot', 'dec', 'det'].forEach(v => { const b = p.querySelector('.rt-v-' + v); if (b) bits.push(b.outerHTML); });
-  tmp.innerHTML = bits.join('');
+  tmp.innerHTML = '<div class="rt-doc">' + bits.join('') + '</div>';
   tmp.querySelectorAll(rtMode === 'seul' ? '.rt-only-couple' : '.rt-only-seul').forEach(n => n.remove());
+  tmp.querySelectorAll('.rt-legacy, .rt-hide, .rt-tech').forEach(n => n.remove());
   tmp.querySelectorAll('[id]').forEach(n => n.removeAttribute('id'));
   document.body.appendChild(tmp);
   try {
@@ -8693,6 +8907,7 @@ function rtPrint() {
 
 // ───────── Initialisation ─────────
 (function rtInit() {
+  rtInitNumberFields();
   rtInitOverrides();
   rtBuildWhatIf();
 })();
