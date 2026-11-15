@@ -470,6 +470,16 @@ body.dark .fp svg text{fill:#ddd}
 body.dark .bp-dot,body.dark .bp-btn.ghost{background:#1b1b1b;color:#eee;border-color:#3a3a3a}
 body.dark .bp-qhead h2,body.dark .bp-resbar h2{color:#fff}
 @media(max-width:640px){.sgrid{grid-template-columns:1fr}.bp-qhead,.bp-qbody,.bp-nav{padding-left:18px;padding-right:18px}.bp-hint{margin:6px 18px 0}.bp-dot span{display:none}.bp-dot{padding:4px}}
+.bp-list{display:flex;flex-direction:column;gap:8px;margin:2px 0 8px}
+.bp-row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 36px;gap:10px;align-items:center}
+.bp-row input{height:42px;font-size:15px;border-radius:10px;padding:0 12px;border:1px solid #e3dcc4;background:#fff;width:100%;box-sizing:border-box;font-family:inherit}
+.bp-row input:focus{outline:2px solid #BF8F00;outline-offset:-1px}
+.bp-x{width:36px;height:36px;border-radius:50%;border:1px solid #e3dcc4;background:#fff;color:#8C8C8C;font-size:18px;line-height:1;cursor:pointer}
+.bp-x:hover{color:#C55A11;border-color:#C55A11}
+.bp-add{display:inline-flex;align-items:center;gap:8px;border:1.5px dashed #BF8F00;background:#FFF8E1;color:#6b5a1e;border-radius:10px;padding:9px 16px;font:700 13px 'DM Sans',sans-serif;cursor:pointer;margin-bottom:6px}
+.bp-add b{font-size:18px;line-height:1;color:#BF8F00}
+.bp-add:hover{background:#ffefb8}
+body.dark .bp-row input,body.dark .bp-x{background:#1b1b1b;color:#eee;border-color:#3a3a3a}
 body.dark .bp-hint{background:#2e2a1c;color:#d9c98a}
 @media(max-width:1180px){.bp-grid{grid-template-columns:1fr}.bp-side{position:static}.cmp{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:860px){#pane-profil.pane .field label{white-space:normal}.bp-cols{grid-template-columns:1fr}.cmp{grid-template-columns:repeat(2,minmax(0,1fr))}.bp-low{grid-template-columns:1fr}}
@@ -1277,8 +1287,20 @@ body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
       <div class="bp-qbody"><div class="sgrid"><div class="field"><label for="an-liquide">Comptes bancaires ($)</label><input type="number" id="an-liquide" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-reer-val">REER / FERR ($)</label><input type="number" id="an-reer-val" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-celi-val">CELI ($)</label><input type="number" id="an-celi-val" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-reee-val">REEE ($)</label><input type="number" id="an-reee-val" value="0" min="0" oninput="calcActifNet()"></div><div class="field" title="Régime de retraite de l'employeur : valeur estimée"><label for="an-rpa">Régime d'employeur ($)</label><input type="number" id="an-rpa" value="0" min="0" oninput="calcActifNet()"></div><div class="field" title="Placements non enregistrés"><label for="an-nonreg">Non enregistrés ($)</label><input type="number" id="an-nonreg" value="0" min="0" oninput="calcActifNet()"></div><div class="field" title="Valeur de rachat de l'assurance vie permanente"><label for="an-rachat">Valeur de rachat assurance ($)</label><input type="number" id="an-rachat" value="0" min="0" oninput="calcActifNet()"></div><div class="field" title="Véhicule, entreprise, etc."><label for="an-autres-actif">Autres actifs ($)</label><input type="number" id="an-autres-actif" value="0" min="0" oninput="calcActifNet()"></div></div></div>
     </section>
     <section class="bp-step" data-step="3">
-      <div class="bp-qhead"><div class="bp-qnum">Étape 3 sur 5</div><h2>Propriétés et dettes</h2><p>Ce que le client possède en immobilier et ce quImmobilier à gauche, ce qui reste à payer à droite.#39;il doit encore.</p></div>
-      <div class="bp-qbody"><div class=""><div class="actif-section">Immobilier</div><div class="sgrid"><div class="field"><label for="an-maison">Résidence principale ($)</label><input type="number" id="an-maison" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-immo">Autres propriétés ($)</label><input type="number" id="an-immo" value="0" min="0" oninput="calcActifNet()"></div></div><div class="actif-section">Dettes</div><div class="sgrid"><div class="field"><label for="an-hypo">Solde hypothécaire ($)</label><input type="number" id="an-hypo" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-auto">Prêts auto ($)</label><input type="number" id="an-auto" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-cc">Cartes / marges de crédit ($)</label><input type="number" id="an-cc" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-autres-dette">Prêts étudiants / autres ($)</label><input type="number" id="an-autres-dette" value="0" min="0" oninput="calcActifNet()"></div></div></div></div>
+      <div class="bp-qhead"><div class="bp-qnum">Étape 3 sur 5</div><h2>Propriétés et dettes</h2><p>Ce que le client possède en immobilier et ce qu'il doit encore. Ajoute autant de lignes que nécessaire.</p></div>
+      <div class="bp-qbody"><div class="">
+<div class="actif-section">Immobilier</div>
+<div class="sgrid"><div class="field"><label for="an-maison">Résidence principale ($)</label><input type="number" id="an-maison" value="0" min="0" oninput="calcActifNet()"></div></div>
+<div class="bp-list" id="bp-immo-list"></div>
+<button type="button" class="bp-add" onclick="bpAdd('immo')"><b>+</b> Ajouter une propriété</button>
+<div class="actif-section">Dettes</div>
+<div class="sgrid"><div class="field"><label for="an-hypo">Solde hypothécaire ($)</label><input type="number" id="an-hypo" value="0" min="0" oninput="calcActifNet()"></div></div>
+<div class="bp-list" id="bp-dette-list"></div>
+<button type="button" class="bp-add" onclick="bpAdd('dette')"><b>+</b> Ajouter une dette</button>
+<input type="hidden" id="an-immo" value="0"><input type="hidden" id="an-autres-dette" value="0"><input type="hidden" id="an-auto" value="0"><input type="hidden" id="an-cc" value="0">
+<datalist id="bp-dl-immo"><option value="Chalet"><option value="Immeuble à revenus"><option value="Terrain"><option value="Condo"></datalist>
+<datalist id="bp-dl-dette"><option value="Prêt auto"><option value="Carte de crédit"><option value="Marge de crédit"><option value="Prêt étudiant"><option value="Prêt personnel"></datalist>
+</div></div>
     </section>
     <section class="bp-step" data-step="4">
       <div class="bp-qhead"><div class="bp-qnum">Étape 4 sur 5</div><h2>Assurance en vigueur</h2><p>Les protections que le client détient déjà.</p></div>
@@ -4404,7 +4426,7 @@ function retenueSource(retrait) {
 function bilanData() {
   const v = id => g(id);
   const d = {
-    liquide: v('an-liquide'), maison: v('an-maison'), immo: v('an-immo'),
+    liquide: v('an-liquide'), maison: v('an-maison'), immo: v('an-immo'), immoL: bpRows('immo'), detteL: bpRows('dette'),
     reer: v('an-reer-val'), celi: v('an-celi-val'), reee: v('an-reee-val'), rpa: v('an-rpa'),
     nonreg: v('an-nonreg'), rachat: v('an-rachat'), autres: v('an-autres-actif'),
     hypo: v('an-hypo'), auto: v('an-auto'), cc: v('an-cc'), autresD: v('an-autres-dette'),
@@ -4425,7 +4447,7 @@ function bilanData() {
   d.pctPlac = d.actif > 0 ? (d.reer + d.celi + d.reee + d.rpa + d.nonreg) / d.actif * 100 : 0;
   d.lignesActif = [
     ['Liquidités', [['Comptes bancaires / liquidités', d.liquide]]],
-    ['Immobilier', [['Résidence principale', d.maison], ['Autres propriétés', d.immo]]],
+    ['Immobilier', [['Résidence principale', d.maison]].concat(d.immoL.map(r => [r.n || 'Autre propriété', r.v]))],
     ['Épargne-retraite et études', [['REER / FERR', d.reer], ['CELI', d.celi], ['REEE', d.reee], ["Régime de retraite de l'employeur", d.rpa]]],
     ['Placements non enregistrés', [['Placements non enregistrés', d.nonreg]]],
     ['Autres actifs', [['Valeur de rachat (assurance vie)', d.rachat], ['Autres actifs', d.autres]]]
@@ -4433,7 +4455,7 @@ function bilanData() {
   d.assVie = d.assVieT + d.assVieP;
   const dureeTxt = d.assVieDuree > 0 ? ' (' + d.assVieDuree + (d.assVieDuree > 1 ? ' ans' : ' an') + ' restant' + (d.assVieDuree > 1 ? 's' : '') + ')' : '';
   d.lignesAss = [['Assurance vie temporaire' + dureeTxt, d.assVieT, 'cap'], ['Assurance vie permanente', d.assVieP, 'cap'], ['Assurance invalidité', d.assInv, 'mois'], ['Assurance maladies graves : capital', d.assMg, 'cap']].filter(x => x[1] > 0);
-  d.lignesPassif = [['Hypothèque', d.hypo], ['Prêts auto', d.auto], ['Cartes de crédit / marges', d.cc], ['Prêts étudiants / autres dettes', d.autresD]];
+  d.lignesPassif = [['Hypothèque', d.hypo]].concat(d.detteL.map(r => [r.n || 'Autre dette', r.v]));
   return d;
 }
 
@@ -9467,6 +9489,7 @@ function bpGo(n){
     document.getElementById('bp-restitle').textContent = nm ? 'Bilan patrimonial \u2014 '+nm : 'Bilan patrimonial';
     try{calc();}catch(e){} try{calcActifNet();}catch(e){}
   }
+  if(typeof bpLive==='function') bpLive();
   window.scrollTo({top:0});
 }
 document.addEventListener('input',function(e){
@@ -9475,6 +9498,27 @@ document.addEventListener('input',function(e){
   if(v&&l) l.textContent='Actif net : '+v.textContent;
 });
 document.addEventListener('DOMContentLoaded',function(){bpGo(1);});
+
+function bpRows(t){
+  var out=[]; document.querySelectorAll('#bp-'+t+'-list .bp-row').forEach(function(r){
+    var n=r.querySelector('.bp-dn').value.trim(), v=parseFloat(r.querySelector('.bp-da').value)||0;
+    if(n||v) out.push({n:n,v:v});
+  }); return out;
+}
+function bpSync(){
+  var si=0,sd=0; bpRows('immo').forEach(function(r){si+=r.v;}); bpRows('dette').forEach(function(r){sd+=r.v;});
+  document.getElementById('an-immo').value=si; document.getElementById('an-autres-dette').value=sd;
+  document.getElementById('an-auto').value=0; document.getElementById('an-cc').value=0;
+  calcActifNet(); bpLive();
+}
+function bpLive(){var v=document.querySelector('#actif-net-zone .ant-value'),l=document.getElementById('bp-live');if(v&&l)l.textContent='Actif net : '+v.textContent;}
+function bpAdd(t){
+  var l=document.getElementById('bp-'+t+'-list'), r=document.createElement('div'); r.className='bp-row';
+  r.innerHTML='<input type="text" class="bp-dn" list="bp-dl-'+t+'" maxlength="40" placeholder="'+(t==='immo'?'Nom (ex. Chalet)':'Nom (ex. Prêt auto)')+'" oninput="bpSync()">'+
+   '<input type="number" class="bp-da" min="0" placeholder="Montant ($)" oninput="bpSync()">'+
+   '<button type="button" class="bp-x" title="Retirer" aria-label="Retirer" onclick="this.parentNode.remove();bpSync()">\u00d7</button>';
+  l.appendChild(r); r.querySelector('.bp-dn').focus();
+}
 </script>
 <div hidden><input type="hidden" id="ds-bes2-age"><input type="hidden" id="ds-bes2"><input type="hidden" id="ds-bes3-age"><input type="hidden" id="ds-bes3"><input type="hidden" id="dc-bes2-age"><input type="hidden" id="dc-bes2"><input type="hidden" id="dc-bes3-age"><input type="hidden" id="dc-bes3"></div>
 </body>
