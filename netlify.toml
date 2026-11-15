@@ -30,3 +30,4 @@
   for = "/conseiller/*"
   [headers.values]
     Cache-Control = "no-store, no-cache"
+    X-Robots-Tag = "noindex, nofollow"

@@ -3,6 +3,7 @@
  * Groupe Financier Formule
  */
 import { getStore } from "@netlify/blobs";
+import { sessionValide } from "./_shared/session.mjs";
 
 export default async function handler(req) {
   if (req.method === 'OPTIONS') {
@@ -11,14 +12,12 @@ export default async function handler(req) {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'x-gff-auth, Content-Type'
+        'Access-Control-Allow-Headers': 'Content-Type'
       }
     });
   }
 
-  const auth = req.headers.get('x-gff-auth');
-  const HASH = "d781ec969b160c2beb25b3e01a3c059a213009d03b07f5c188ed1285ef647575";
-  if (auth !== HASH) {
+  if (!sessionValide(req)) {
     return new Response(JSON.stringify({ error: 'Non autorisé' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
