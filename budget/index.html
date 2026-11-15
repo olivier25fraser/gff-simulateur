@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Mon budget | Groupe Financier Formule</title>
+<link rel="canonical" href="https://gfformule.ca/budget/">
+<link rel="icon" href="/assets/logo_gff.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --noir:#0F0F0F;--gold:#BF8F00;--gold-l:#D4A017;--gold-p:#FFF8E1;
+  --gry:#6B6B6B;--gry-m:#DADADA;--gry-l:#F5F5F5;--blanc:#fff;
+  --ok:#375623;--ok-bg:#E8F1DF;--warn:#A4500F;--warn-bg:#FBE9DC;
+  --r:8px;--r-lg:16px;--shadow:0 4px 24px rgba(0,0,0,.07);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Public Sans',sans-serif;color:var(--noir);background:var(--gold-p);line-height:1.55;-webkit-text-size-adjust:100%}
+button,input,select{font-family:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* ── Haut de page ── */
+.topbar{background:var(--noir);padding:0 5%;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(191,143,0,.45)}
+.topbar img{height:34px;width:auto;display:block}
+.topbar a{color:rgba(255,255,255,.7);text-decoration:none;font-size:13.5px;font-weight:500}
+.topbar a:hover{color:#fff}
+.hero{background:var(--noir);position:relative;overflow:hidden;padding:52px 5% 60px}
+.hero svg{position:absolute;top:0;right:0;width:62%;height:100%;pointer-events:none;
+  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 40%);mask-image:linear-gradient(to right,transparent 0,#000 40%)}
+.hero-in{max-width:1160px;margin:0 auto;position:relative}
+.rule{width:56px;height:2px;background:var(--gold);margin-bottom:22px}
+.hero h1{font-family:'Fraunces',serif;font-weight:500;color:#fff;font-size:clamp(34px,5vw,54px);line-height:1.08;margin-bottom:14px}
+.hero p{color:rgba(255,255,255,.7);font-size:16px;max-width:36em}
+.etapes{display:flex;flex-wrap:wrap;gap:10px 34px;margin-top:28px;list-style:none;counter-reset:e}
+.etapes li{color:rgba(255,255,255,.85);font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;counter-increment:e}
+.etapes li::before{content:counter(e);width:24px;height:24px;border-radius:50%;border:1.5px solid var(--gold);color:var(--gold-l);font-size:12px;font-weight:700;display:grid;place-items:center}
+
+/* ── Mise en page ── */
+.wrap{max-width:1160px;margin:0 auto;padding:36px 20px 120px;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:28px;align-items:start}
+.identite{grid-column:1/-1;background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow);padding:18px 22px;display:flex;flex-wrap:wrap;gap:16px 28px;align-items:end}
+.identite label{display:block;font-size:12.5px;font-weight:600;color:var(--gry);margin-bottom:4px}
+.identite input{height:42px;border:1.5px solid var(--gry-m);border-radius:var(--r);padding:0 12px;font-size:15px;min-width:260px;background:#fff}
+.identite input:focus{border-color:var(--gold);outline:none}
+.identite .note{flex:1;min-width:240px;font-size:13px;color:var(--gry)}
+
+.sect{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow);margin-bottom:22px;overflow:hidden}
+.sect-h{display:flex;justify-content:space-between;align-items:baseline;padding:16px 22px;border-bottom:1px solid var(--gry-m);border-top:3px solid var(--gold)}
+.sect-h h2{font-family:'Fraunces',serif;font-weight:500;font-size:22px}
+.sect-h small{display:block;font-family:'Public Sans',sans-serif;font-size:12.5px;color:var(--gry);font-weight:400;margin-top:1px}
+.sect-t{font-family:'Fraunces',serif;font-size:21px;font-weight:600;color:var(--gold);white-space:nowrap}
+.row{display:grid;grid-template-columns:minmax(0,1fr) 138px 132px;gap:10px;align-items:center;padding:10px 22px;border-bottom:1px solid #F0F0F0}
+.row:last-child{border-bottom:0}
+.row label{font-size:14.5px;font-weight:500}
+.row .eq{display:block;font-size:12px;color:var(--gry);font-weight:400;min-height:0}
+.amt{position:relative}
+.amt input{width:100%;height:42px;border:1.5px solid var(--gry-m);border-radius:var(--r);padding:0 28px 0 12px;font-size:15.5px;font-weight:600;text-align:right;background:#fff;-moz-appearance:textfield}
+.amt input::-webkit-outer-spin-button,.amt input::-webkit-inner-spin-button{-webkit-appearance:none}
+.amt input:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 3px rgba(191,143,0,.15)}
+.amt span{position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--gry);font-size:14px;pointer-events:none}
+.row select{height:42px;border:1.5px solid var(--gry-m);border-radius:var(--r);padding:0 8px;font-size:13.5px;color:#333;background:#fff;cursor:pointer}
+.row select:focus{border-color:var(--gold);outline:none}
+.row.rempli .amt input{border-color:var(--gold);background:#FFFCF2}
+
+/* ── Bilan ── */
+.bilan{position:sticky;top:16px}
+.carte{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden}
+.carte-h{background:var(--noir);color:#fff;font-family:'Fraunces',serif;font-size:18px;font-weight:500;padding:13px 20px;border-bottom:2px solid var(--gold)}
+.carte-b{padding:18px 20px}
+.solde{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 20px;border-radius:var(--r-lg);margin-bottom:18px}
+.solde.ok{background:var(--ok-bg);color:var(--ok)}.solde.warn{background:var(--warn-bg);color:var(--warn)}.solde.vide{background:#fff;color:var(--gry);box-shadow:var(--shadow)}
+.solde b{font-family:'Fraunces',serif;font-size:32px;font-weight:600;line-height:1}
+.solde .l{font-size:12.5px;font-weight:700;letter-spacing:.2px}
+.solde .s{font-size:12.5px;margin-top:3px;opacity:.85}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:6px}
+.kpi{background:var(--gry-l);border-radius:var(--r);padding:11px 14px}
+.kpi .k{font-size:11.5px;color:var(--gry);font-weight:600}
+.kpi .v{font-family:'Fraunces',serif;font-size:21px;font-weight:600}
+.donut-wrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.leg{flex:1;min-width:150px;font-size:13px}
+.leg div{display:flex;justify-content:space-between;gap:8px;padding:3px 0}
+.leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px}
+.regle{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.regle div{text-align:center;padding:10px 6px;border-radius:var(--r);font-size:12px}
+.regle b{display:block;font-family:'Fraunces',serif;font-size:21px}
+.regle .ok{background:var(--ok-bg);color:var(--ok)}.regle .warn{background:var(--warn-bg);color:var(--warn)}
+.petit{font-size:12.5px;color:var(--gry);margin-bottom:10px}
+.obs{margin:0 0 0 18px;font-size:13.5px}.obs li{margin-bottom:7px}
+.vide-msg{font-size:14px;color:var(--gry)}
+
+.actions{display:grid;gap:10px}
+.btn{height:46px;border-radius:var(--r);border:1.5px solid var(--noir);background:#fff;color:var(--noir);font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:background .15s,color .15s}
+.btn:hover{background:var(--noir);color:#fff}
+.btn.or{background:var(--gold);border-color:var(--gold);color:#fff}.btn.or:hover{background:var(--gold-l);border-color:var(--gold-l)}
+.btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.lien-link{background:none;border:0;color:var(--gry);font-size:12.5px;text-decoration:underline;cursor:pointer;justify-self:center}
+.confid{font-size:12px;color:var(--gry);line-height:1.5;margin-top:4px}
+.toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%) translateY(20px);background:var(--noir);color:#fff;padding:11px 20px;border-radius:30px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:all .25s;z-index:99;border:1px solid var(--gold)}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.pied{max-width:1160px;margin:0 auto;padding:0 20px 40px;font-size:12px;color:var(--gry);grid-column:1/-1}
+
+.barre{display:none}
+@media(max-width:960px){
+  .wrap{grid-template-columns:1fr;padding-bottom:110px}
+  .bilan{position:static}
+  .barre{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--noir);color:#fff;padding:10px 16px;justify-content:space-between;align-items:center;border-top:2px solid var(--gold)}
+  .barre span{font-size:12px;color:rgba(255,255,255,.7)}.barre b{font-family:'Fraunces',serif;font-size:22px;font-weight:600}
+  .barre a{background:var(--gold);color:#fff;text-decoration:none;font-weight:700;font-size:13.5px;padding:9px 16px;border-radius:var(--r)}
+  .toast{bottom:84px}
+}
+@media(max-width:560px){
+  .row{grid-template-columns:1fr 1fr;padding:12px 16px}
+  .row>div:first-child{grid-column:1/-1}
+  .sect-h{padding:14px 16px}.identite{padding:16px}.identite input{min-width:0;width:100%}
+  .identite>div{flex:1 1 100%}
+  .hero{padding:40px 6% 44px}.hero svg{width:100%;opacity:.35}
+}
+
+/* ── Rapport (impression / PDF) ── */
+#rapport{display:none}
+@media print{
+  @page{size:Letter;margin:14mm 14mm 16mm}
+  body{background:#fff}
+  .topbar,.hero,.wrap,.barre,.toast{display:none!important}
+  #rapport{display:block;font-size:11pt;color:#111}
+  .r-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2.5pt solid var(--gold);padding-bottom:10pt;margin-bottom:14pt}
+  .r-head img{height:44pt}
+  .r-head h1{font-family:'Fraunces',serif;font-weight:500;font-size:22pt;text-align:right;line-height:1.1}
+  .r-head p{font-size:9.5pt;color:#555;text-align:right;margin-top:3pt}
+  .r-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8pt;margin-bottom:14pt}
+  .r-sum div{border:1pt solid #CFCFCF;border-radius:6pt;padding:8pt 10pt}
+  .r-sum small{display:block;font-size:8.5pt;color:#666;font-weight:600}
+  .r-sum b{font-family:'Fraunces',serif;font-size:17pt}
+  .r-sum .ok{background:#E8F1DF;border-color:#B7D3A0}.r-sum .warn{background:#FBE9DC;border-color:#EBC3A4}
+  .r-sec{break-inside:avoid;margin-bottom:11pt}
+  .r-sec h2{font-family:'Fraunces',serif;font-weight:500;font-size:13pt;display:flex;justify-content:space-between;border-bottom:1.2pt solid var(--gold);padding-bottom:2pt;margin-bottom:3pt}
+  .r-sec h2 span{color:var(--gold)}
+  .r-sec table{width:100%;border-collapse:collapse;font-size:10pt}
+  .r-sec td{padding:2.5pt 0;border-bottom:.5pt solid #E6E6E6}
+  .r-sec td:nth-child(2){text-align:right;color:#666;width:30%}
+  .r-sec td:nth-child(3){text-align:right;font-weight:700;width:18%}
+  .r-two{display:grid;grid-template-columns:1fr 1fr;gap:16pt;break-inside:avoid;margin-bottom:11pt}
+  .r-two h2{font-family:'Fraunces',serif;font-weight:500;font-size:13pt;border-bottom:1.2pt solid var(--gold);padding-bottom:2pt;margin-bottom:6pt}
+  .r-leg div{display:flex;justify-content:space-between;font-size:9.5pt;padding:1.5pt 0}
+  .r-leg i{display:inline-block;width:8pt;height:8pt;border-radius:50%;margin-right:5pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .r-obs{font-size:10pt;margin:0 0 0 14pt}.r-obs li{margin-bottom:3pt}
+  .r-regle{display:grid;grid-template-columns:repeat(3,1fr);gap:6pt}
+  .r-regle div{text-align:center;border:1pt solid #CFCFCF;border-radius:5pt;padding:6pt 3pt;font-size:8.5pt}
+  .r-regle b{display:block;font-family:'Fraunces',serif;font-size:14pt}
+  .r-foot{margin-top:12pt;padding-top:7pt;border-top:1pt solid #CFCFCF;font-size:8pt;color:#666;line-height:1.45}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a href="/" aria-label="Groupe Financier Formule — accueil"><img src="/assets/logo_gff_white.png" alt="Groupe Financier Formule"></a>
+  <a href="/">gfformule.ca</a>
+</header>
+
+<section class="hero">
+  <svg id="lignes" viewBox="0 0 760 360" preserveAspectRatio="xMaxYMid slice" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg>
+  <div class="hero-in">
+    <div class="rule" aria-hidden="true"></div>
+    <h1>Mon budget</h1>
+    <p>Un portrait clair de vos revenus et de vos dépenses, à remplir à votre rythme. Les totaux se calculent au fur et à mesure.</p>
+    <ol class="etapes">
+      <li>Remplissez vos montants</li>
+      <li>Consultez votre bilan</li>
+      <li>Imprimez-le ou envoyez-le à votre conseiller</li>
+    </ol>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="identite">
+    <div>
+      <label for="nom">Votre nom (facultatif, il apparaîtra sur le rapport)</label>
+      <input id="nom" type="text" autocomplete="name" placeholder="Prénom Nom" maxlength="80">
+    </div>
+    <p class="note">Entrez chaque montant selon la fréquence qui vous convient : par semaine, aux 2 semaines, par mois ou par année. Tout est converti en montant mensuel. Laissez vide ce qui ne s'applique pas.</p>
+  </div>
+
+  <div id="form"></div>
+
+  <aside class="bilan" aria-live="polite">
+    <div id="solde" class="solde vide"></div>
+    <div class="carte" id="c-kpis"></div>
+    <div class="carte" id="c-donut"></div>
+    <div class="carte" id="c-regle"></div>
+    <div class="carte" id="c-obs"></div>
+    <div class="actions">
+      <button class="btn or" id="b-print" type="button"><svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimer ou enregistrer en PDF</button>
+      <button class="btn" id="b-mail" type="button"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg>Envoyer à mon conseiller</button>
+      <button class="btn" id="b-copy" type="button"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>Copier le lien de mon budget</button>
+      <button class="lien-link" id="b-reset" type="button">Tout effacer</button>
+    </div>
+    <p class="confid">Vos montants restent sur votre appareil. Rien n'est transmis à Groupe Financier Formule tant que vous n'envoyez pas vous-même le lien ou le PDF.</p>
+  </aside>
+
+  <p class="pied">Outil informatif. Il illustre vos renseignements et ne constitue pas un conseil financier, fiscal ou juridique. Les repères affichés sont indicatifs et se discutent avec votre conseiller.</p>
+</main>
+
+<div class="barre" id="barre"><div><span id="barre-l">Solde mensuel</span><br><b id="barre-v">0 $</b></div><a href="#solde" id="barre-a">Voir le bilan</a></div>
+<div class="toast" id="toast" role="status"></div>
+
+<div id="rapport"></div>
+
+<script>
+(function(){
+'use strict';
+var FREQ=[[12,'par mois',1],[52,'par semaine',52/12],[26,'aux 2 semaines',26/12],[1,'par année',1/12]];
+var FACT={12:1,52:52/12,26:26/12,1:1/12};
+var SECT=[
+ {k:'rev',t:'Revenus',s:'Montants nets, après impôt',f:[['salaire','Salaire net (après impôt)'],['salaire2','Salaire conjoint(e)'],['rrq','RRQ / pension'],['psv','PSV / SRG'],['loc','Loyers / revenus locatifs'],['ace','Assurance-emploi / allocations'],['rev-autre','Autres revenus']]},
+ {k:'log',t:'Logement',s:'Là où vous habitez',f:[['hypo','Hypothèque / loyer'],['taxes','Taxes municipales et scolaires'],['ass-hab','Assurance habitation'],['elec','Électricité / chauffage'],['internet','Internet / téléphone'],['entretien','Entretien / réparations']]},
+ {k:'trans',t:'Transport',s:'Vos déplacements',f:[['auto','Paiement auto / leasing'],['ass-auto','Assurance auto'],['essence','Essence / transport en commun'],['entretien-auto','Entretien du véhicule']]},
+ {k:'vie',t:'Vie courante',s:'Le quotidien et les loisirs',f:[['epic','Épicerie / alimentation'],['resto','Restaurants / sorties'],['vete','Vêtements / soins personnels'],['sante','Santé / médicaments'],['loisir','Loisirs / abonnements'],['enf-dep','Garderie / éducation des enfants'],['vac','Vacances / voyages']]},
+ {k:'ep',t:'Dettes et épargne',s:'Ce que vous remboursez ou mettez de côté',f:[['reer-m','REER (cotisation)'],['celi-m','CELI (cotisation)'],['reee-m','REEE (cotisation)'],['dettes','Remboursement de dettes / cartes'],['assurance','Assurance vie / invalidité'],['urgence','Fonds d’urgence (épargne liquide)']]}
+];
+var COUL={log:'#0F0F0F',trans:'#BF8F00',vie:'#2E75B6',ep:'#538135',sur:'#BFD9A8'};
+var NOMS={log:'Logement',trans:'Transport',vie:'Vie courante',ep:'Dettes et épargne',sur:'Surplus'};
+var $=function(i){return document.getElementById(i)};
+var fmt=function(n){return new Intl.NumberFormat('fr-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0}).format(Math.round(n))};
+var KEY='gff-budget-v1';
+
+/* lignes décoratives du haut */
+(function(){var s='',i,j;for(i=0;i<16;i++){var d='';for(j=0;j<=76;j++){var x=j*10,y=230-i*7+Math.sin(j/11+i*.22)*34+j*1.1*(1-i/22)*-0.9;d+=(j?'L':'M')+x+','+y.toFixed(1)}s+='<path d="'+d+'" fill="none" stroke="#BF8F00" stroke-width="1" opacity="'+(0.12+i*0.04).toFixed(2)+'"/>'}$('lignes').innerHTML=s})();
+
+/* formulaire */
+var html='';
+SECT.forEach(function(S){
+  html+='<section class="sect" id="s-'+S.k+'"><div class="sect-h"><div><h2>'+S.t+'</h2><small>'+S.s+'</small></div><div class="sect-t" id="t-'+S.k+'">0 $</div></div>';
+  S.f.forEach(function(f){
+    html+='<div class="row" data-id="'+f[0]+'"><div><label for="b-'+f[0]+'">'+f[1]+'</label><span class="eq" id="e-'+f[0]+'"></span></div>'
+      +'<div class="amt"><input id="b-'+f[0]+'" type="number" inputmode="decimal" min="0" step="any" placeholder="0"><span>$</span></div>'
+      +'<select id="f-'+f[0]+'" aria-label="Fréquence : '+f[1]+'">'+FREQ.map(function(q){return '<option value="'+q[0]+'">'+q[1]+'</option>'}).join('')+'</select></div>';
+  });
+  html+='</section>';
+});
+$('form').innerHTML=html;
+
+function gm(id){var v=parseFloat($('b-'+id).value);if(!(v>0))return 0;return v*(FACT[$('f-'+id).value]||1)}
+var tot={};
+function calc(){
+  var rev=0,dep=0,lg={};
+  SECT.forEach(function(S){var t=0;S.f.forEach(function(f){var m=gm(f[0]);t+=m;lg[f[0]]=m;
+    var row=document.querySelector('.row[data-id="'+f[0]+'"]');var inp=$('b-'+f[0]);row.classList.toggle('rempli',m>0);
+    var e=$('e-'+f[0]);e.textContent=m>0?(($('f-'+f[0]).value!=='12'?'= '+fmt(m)+' par mois':'')+(S.k!=='rev'&&false?'':'')):'';});
+    tot[S.k]=t;$('t-'+S.k).textContent=fmt(t)});
+  rev=tot.rev;dep=tot.log+tot.trans+tot.vie+tot.ep;
+  /* pourcentages des revenus */
+  SECT.forEach(function(S){S.f.forEach(function(f){var m=lg[f[0]],e=$('e-'+f[0]);if(m>0&&rev>0&&S.k!=='rev'){var p=Math.round(m/rev*100);e.textContent=($('f-'+f[0]).value!=='12'?'= '+fmt(m)+' par mois · ':'')+p+' % de vos revenus'}})});
+  var sur=rev-dep,vide=rev===0&&dep===0;
+  var sd=$('solde');sd.className='solde '+(vide?'vide':sur>=0?'ok':'warn');
+  sd.innerHTML=vide?'<div><div class="l">Votre bilan mensuel</div><div class="s">Il apparaîtra ici dès que vous aurez entré des montants.</div></div>'
+    :'<div><div class="l">'+(sur>=0?'Surplus mensuel':'Déficit mensuel')+'</div><div class="s">Revenus '+fmt(rev)+' − dépenses '+fmt(dep)+'</div></div><b>'+(sur>=0?'+':'−')+fmt(Math.abs(sur)).replace('-','')+'</b>';
+  $('barre-l').textContent=vide?'Solde mensuel':(sur>=0?'Surplus mensuel':'Déficit mensuel');
+  $('barre-v').textContent=vide?'—':(sur>=0?'+':'−')+fmt(Math.abs(sur)).replace('-','');
+  var epg=lg['reer-m']+lg['celi-m']+lg['reee-m']+lg['urgence'];
+  var taux=rev>0?Math.round(epg/rev*100):0;
+  $('c-kpis').innerHTML=vide?'':'<div class="carte-b"><div class="kpis"><div class="kpi"><div class="k">Revenus par année</div><div class="v">'+fmt(rev*12)+'</div></div><div class="kpi"><div class="k">Dépenses par année</div><div class="v">'+fmt(dep*12)+'</div></div><div class="kpi"><div class="k">Épargne</div><div class="v">'+taux+' %</div></div><div class="kpi"><div class="k">Solde par année</div><div class="v">'+(sur>=0?'+':'−')+fmt(Math.abs(sur*12)).replace('-','')+'</div></div></div></div>';
+  var cats=[['log',tot.log],['trans',tot.trans],['vie',tot.vie],['ep',tot.ep],['sur',Math.max(0,sur)]].filter(function(c){return c[1]>0});
+  var base=rev>0?rev:dep;
+  var dn=donut(cats,base);
+  $('c-donut').innerHTML=vide||!base?'':'<div class="carte-h">Où va votre argent</div><div class="carte-b"><div class="donut-wrap">'+dn.svg+'<div class="leg">'+cats.map(function(c){return '<div><span><i style="background:'+COUL[c[0]]+'"></i>'+NOMS[c[0]]+'</span><b>'+fmt(c[1])+'</b></div>'}).join('')+'</div></div></div>';
+  var n50=lg.hypo+lg.taxes+lg['ass-hab']+lg.elec+lg.internet+lg.entretien+lg.auto+lg['ass-auto']+lg.essence+lg['entretien-auto']+lg.epic+lg.sante;
+  var n30=lg.resto+lg.loisir+lg.vete+lg.vac;
+  var rg=[['50 %','Besoins',n50,50],['30 %','Désirs',n30,30],['20 %','Épargne et dettes',tot.ep,20]].map(function(r){var p=rev>0?Math.round(r[2]/rev*100):0;return {c:r[0],t:r[1],p:p,ok:Math.abs(p-r[3])<=10}});
+  $('c-regle').innerHTML=vide||rev===0?'':'<div class="carte-h">Repère 50 / 30 / 20</div><div class="carte-b"><p class="petit">Un repère souvent utilisé : environ 50 % pour les besoins, 30 % pour les désirs et 20 % pour l’épargne.</p><div class="regle">'+rg.map(function(r){return '<div class="'+(r.ok?'ok':'warn')+'"><b>'+r.p+' %</b>'+r.t+'<br>repère '+r.c+'</div>'}).join('')+'</div></div>';
+  var ob=[];
+  if(rev>0&&tot.log/rev>0.35)ob.push('Le logement représente '+Math.round(tot.log/rev*100)+' % de vos revenus. Un repère souvent cité est de 35 % ou moins.');
+  if(rev>0&&tot.trans/rev>0.15)ob.push('Le transport représente '+Math.round(tot.trans/rev*100)+' % de vos revenus. Un repère souvent cité est de 15 % ou moins.');
+  if(rev>0&&taux<10)ob.push('Votre épargne représente '+taux+' % de vos revenus. Un repère souvent cité est de 10 à 15 %.');
+  if(sur<0)ob.push('Vos dépenses dépassent vos revenus de '+fmt(Math.abs(sur))+' par mois.');
+  if(sur>0&&rev>0)ob.push('Il vous reste '+fmt(sur)+' par mois après toutes vos dépenses. Vous pouvez en discuter avec votre conseiller.');
+  if(rev>0&&lg.urgence===0)ob.push('Aucun montant n’est prévu pour un fonds d’urgence. Un repère courant est de 3 à 6 mois de dépenses.');
+  if(rev>0&&!ob.length)ob.push('Votre budget semble équilibré selon ces repères.');
+  window.__ob=ob;
+  $('c-obs').innerHTML=vide||rev===0?'':'<div class="carte-h">À retenir</div><div class="carte-b"><ul class="obs">'+ob.map(function(o){return '<li>'+o+'</li>'}).join('')+'</ul></div>';
+  window.__d={rev:rev,dep:dep,sur:sur,taux:taux,cats:cats,base:base,rg:rg,lg:lg,vide:vide};
+  save();
+}
+function donut(cats,base){
+  var R=62,r=40,cx=70,cy=70,a=-Math.PI/2,p='';
+  cats.forEach(function(c){var sl=c[1]/base*Math.PI*2;if(sl<.005)return;if(sl>=Math.PI*2-.001)sl=Math.PI*2-.001;
+    var x1=cx+R*Math.cos(a),y1=cy+R*Math.sin(a),x2=cx+R*Math.cos(a+sl),y2=cy+R*Math.sin(a+sl),
+        ix1=cx+r*Math.cos(a),iy1=cy+r*Math.sin(a),ix2=cx+r*Math.cos(a+sl),iy2=cy+r*Math.sin(a+sl),lg=sl>Math.PI?1:0;
+    p+='<path d="M'+x1.toFixed(1)+','+y1.toFixed(1)+' A'+R+','+R+' 0 '+lg+' 1 '+x2.toFixed(1)+','+y2.toFixed(1)+' L'+ix2.toFixed(1)+','+iy2.toFixed(1)+' A'+r+','+r+' 0 '+lg+' 0 '+ix1.toFixed(1)+','+iy1.toFixed(1)+' Z" fill="'+COUL[c[0]]+'"/>';a+=sl});
+  return {svg:'<svg viewBox="0 0 140 140" width="130" height="130" role="img" aria-label="Répartition de vos dépenses">'+p+'</svg>'};
+}
+
+/* rapport imprimable */
+function rapport(){
+  var d=window.__d,nom=$('nom').value.trim(),dt=new Date().toLocaleDateString('fr-CA',{year:'numeric',month:'long',day:'numeric'});
+  var h='<div class="r-head"><img src="/assets/logo_gff.png" alt="Groupe Financier Formule"><div><h1>Budget mensuel</h1><p>'+(nom?esc(nom)+' · ':'')+dt+'</p></div></div>';
+  h+='<div class="r-sum"><div><small>Revenus par mois</small><b>'+fmt(d.rev)+'</b></div><div><small>Dépenses par mois</small><b>'+fmt(d.dep)+'</b></div><div class="'+(d.sur>=0?'ok':'warn')+'"><small>'+(d.sur>=0?'Surplus':'Déficit')+' par mois</small><b>'+(d.sur>=0?'+':'−')+fmt(Math.abs(d.sur)).replace('-','')+'</b></div></div>';
+  SECT.forEach(function(S){
+    var rows=S.f.filter(function(f){return d.lg[f[0]]>0}).map(function(f){var fr=$('f-'+f[0]).value,v=parseFloat($('b-'+f[0]).value),q=FREQ.filter(function(x){return String(x[0])===fr})[0];
+      return '<tr><td>'+f[1]+'</td><td>'+(fr==='12'?'':fmt(v)+' '+q[1])+'</td><td>'+fmt(d.lg[f[0]])+'</td></tr>'}).join('');
+    if(rows)h+='<div class="r-sec"><h2>'+S.t+'<span>'+fmt(tot[S.k])+' / mois</span></h2><table>'+rows+'</table></div>';
+  });
+  if(d.base){h+='<div class="r-two"><div><h2>Répartition</h2><div style="display:flex;gap:10pt;align-items:center">'+donut(d.cats,d.base).svg.replace('width="130" height="130"','width="92" height="92"')+'<div class="r-leg" style="flex:1">'+d.cats.map(function(c){return '<div><span><i style="background:'+COUL[c[0]]+'"></i>'+NOMS[c[0]]+'</span><b>'+fmt(c[1])+'</b></div>'}).join('')+'</div></div></div>'
+    +'<div><h2>Repère 50 / 30 / 20</h2><div class="r-regle">'+d.rg.map(function(r){return '<div><b>'+r.p+' %</b>'+r.t+'<br>repère '+r.c+'</div>'}).join('')+'</div></div></div>';}
+  if(window.__ob&&window.__ob.length&&d.rev>0)h+='<div class="r-sec"><h2>À retenir</h2><ul class="r-obs">'+window.__ob.map(function(o){return '<li>'+o+'</li>'}).join('')+'</ul></div>';
+  h+='<div class="r-foot">Document informatif préparé à partir des renseignements fournis par le client. Il ne constitue pas un conseil financier, fiscal ou juridique; les repères présentés sont indicatifs. Montants convertis en équivalent mensuel.<br><b>Groupe Financier Formule</b> · Cabinet de services financiers · gfformule.ca · ofraser@gfformule.ca · 418-516-9553</div>';
+  $('rapport').innerHTML=h;
+}
+function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+/* état, sauvegarde, partage */
+function etat(){var v={};SECT.forEach(function(S){S.f.forEach(function(f){var x=parseFloat($('b-'+f[0]).value);if(x>0)v[f[0]]=[x,parseInt($('f-'+f[0]).value)]})});return {n:$('nom').value.trim(),v:v}}
+function charge(o){if(!o)return;if(o.n!=null)$('nom').value=o.n;SECT.forEach(function(S){S.f.forEach(function(f){var x=o.v&&o.v[f[0]];$('b-'+f[0]).value=x?x[0]:'';$('f-'+f[0]).value=x?x[1]:12})})}
+function enc(o){var b=new TextEncoder().encode(JSON.stringify(o)),s='';b.forEach(function(c){s+=String.fromCharCode(c)});return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function dec(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';var s=atob(t),a=new Uint8Array(s.length);for(var i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return JSON.parse(new TextDecoder().decode(a))}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(etat()))}catch(e){}}
+function lien(){return location.origin+location.pathname+'#d='+enc(etat())}
+function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove('on')},2400)}
+function copie(txt,msg){
+  function fb(){var a=document.createElement('textarea');a.value=txt;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy');toast(msg)}catch(e){prompt('Copiez ce lien :',txt)}a.remove()}
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(txt).then(function(){toast(msg)},fb);else fb();
+}
+
+document.addEventListener('input',function(e){if(e.target.closest&&e.target.closest('#form')||e.target.id==='nom')calc()});
+document.addEventListener('change',function(e){if(e.target.closest&&e.target.closest('#form'))calc()});
+$('b-print').onclick=function(){calc();rapport();window.print()};
+window.addEventListener('beforeprint',function(){rapport()});
+$('b-copy').onclick=function(){copie(lien(),'Lien copié')};
+$('b-mail').onclick=function(){
+  var d=window.__d,nom=$('nom').value.trim();
+  var corps='Bonjour,\n\nVoici mon budget'+(nom?' ('+nom+')':'')+' : '+(d.vide?'':'revenus '+fmt(d.rev)+', dépenses '+fmt(d.dep)+' par mois.\n')+'\nLien vers mon budget rempli :\n'+lien()+'\n\nMerci!';
+  location.href='mailto:ofraser@gfformule.ca?subject='+encodeURIComponent('Mon budget'+(nom?' — '+nom:''))+'&body='+encodeURIComponent(corps);
+};
+$('b-reset').onclick=function(){if(!confirm('Effacer tous les montants?'))return;charge({n:'',v:{}});history.replaceState(null,'',location.pathname+location.search);calc()};
+
+/* démarrage : lien partagé > sauvegarde locale > ?nom= */
+var q=new URLSearchParams(location.search),h=location.hash.match(/d=([A-Za-z0-9_-]+)/),done=false;
+if(h){try{charge(dec(h[1]));done=true}catch(e){}}
+if(!done){try{var sv=JSON.parse(localStorage.getItem(KEY)||'null');if(sv){charge(sv);done=true}}catch(e){}}
+if(q.get('nom')&&!$('nom').value)$('nom').value=q.get('nom').slice(0,80);
+calc();
+})();
+</script>
+</body>
+</html>
