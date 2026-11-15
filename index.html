@@ -96,24 +96,21 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
 .hero.hero-v2::before{background:repeating-linear-gradient(to bottom,transparent 0,transparent 71px,rgba(255,255,255,.045) 71px,rgba(255,255,255,.045) 72px);
   -webkit-mask-image:linear-gradient(to right,transparent 0,#000 35%);mask-image:linear-gradient(to right,transparent 0,#000 35%)}
 .hv{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
-  gap:clamp(40px,7vw,96px);align-items:end;position:relative;z-index:1}
+  gap:clamp(32px,5vw,72px);align-items:stretch;position:relative;z-index:1}
 .hv .hero-badge-rule{width:44px;margin-bottom:28px}
 .hero.hero-v2 h1{font-size:clamp(40px,5.6vw,72px);line-height:1.06;margin-bottom:26px}
 .hero.hero-v2 p{max-width:30em}
-.hv-piliers{border-top:1px solid rgba(255,255,255,.22)}
-.pilier{padding:22px 0 24px;border-bottom:1px solid rgba(255,255,255,.14)}
-.pilier h2{font-family:'Fraunces',serif;font-weight:500;font-size:27px;color:#fff;margin-bottom:8px;line-height:1.2}
-.pilier p,.hero.hero-v2 .pilier p{font-size:16px;line-height:1.7;margin:0;color:rgba(255,255,255,.62);max-width:none}
-.pilier a{color:rgba(255,255,255,.88);text-decoration:none;border-bottom:1px solid rgba(191,143,0,.65)}
-.pilier a:hover{color:#fff;border-bottom-color:var(--gold-l)}
-.hero.hero-v2 .hero-btns{align-items:center}
+.hv-logo{display:flex;align-items:center;justify-content:center;padding:clamp(24px,4vw,56px);
+  border-left:1px solid rgba(191,143,0,.55)}
+.hv-logo img{width:min(100%,420px);height:auto;display:block}
 @media (prefers-reduced-motion:no-preference){
-  .pilier{opacity:0;transform:translateY(10px);animation:pilierIn .6s ease forwards}
-  .pilier:nth-child(1){animation-delay:.2s}.pilier:nth-child(2){animation-delay:.38s}.pilier:nth-child(3){animation-delay:.56s}
+  .hv-logo img{opacity:0;animation:logoIn .9s ease .2s forwards}
 }
-@keyframes pilierIn{to{opacity:1;transform:none}}
+@keyframes logoIn{to{opacity:1}}
 @media(max-width:860px){
   .hv{grid-template-columns:1fr;align-items:start}
+  .hv-logo{border-left:0;border-top:1px solid rgba(191,143,0,.55);justify-content:flex-start;padding:36px 0 0}
+  .hv-logo img{width:min(70%,280px)}
   .hero.hero-v2{padding:120px 6% 72px}
 }
 
@@ -297,11 +294,7 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
         <a href="#services" class="hero-link">Voir nos services</a>
       </div>
     </div>
-    <div class="hv-piliers">
-      <div class="pilier"><h2>Votre famille</h2><p><a href="/assurance-vie/">Assurance vie</a>, <a href="/assurance-invalidite/">assurance invalidité</a>, <a href="/assurance-maladies-graves/">assurance maladies graves</a></p></div>
-      <div class="pilier"><h2>Votre patrimoine</h2><p><a href="/assurance-hypothecaire/">Assurance hypothécaire</a>, <a href="/epargne-retraite/">REER et CELI</a>, <a href="/epargne-retraite/">CELIAPP pour une première propriété</a></p></div>
-      <div class="pilier"><h2>Votre avenir</h2><p><a href="/epargne-retraite/">Épargne et retraite</a>, <a href="/epargne-retraite/">REEE pour les études des enfants</a>, <a href="/epargne-retraite/">REEI</a></p></div>
-    </div>
+    <div class="hv-logo"><img src="/assets/logo_gff_white.png" alt="Groupe Financier Formule, cabinet de services financiers"></div>
   </div>
 </section>
 
