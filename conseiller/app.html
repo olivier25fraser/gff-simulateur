@@ -2605,6 +2605,7 @@ body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
         <input type="text" id="bud-cli-nom" placeholder="Nom du client (facultatif)" style="height:38px;border:1.5px solid var(--gry-m);border-radius:var(--r);padding:0 12px;font-size:13px;min-width:230px;font-family:'DM Sans',sans-serif">
         <button type="button" class="print-btn" style="margin:0" onclick="budCopierLien()">Copier le lien client</button>
         <button type="button" class="print-btn" style="margin:0" onclick="budOuvrirLien()">Aperçu de la page</button>
+        <button type="button" class="print-btn" style="margin:0" onclick="budVersClient()">Ouvrir ces montants en version client (PDF)</button>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--gry-m)">
         <input type="text" id="bud-import" placeholder="Collez ici le lien reçu du client" style="height:38px;border:1.5px solid var(--gry-m);border-radius:var(--r);padding:0 12px;font-size:13px;flex:1;min-width:230px;font-family:'DM Sans',sans-serif">
@@ -9172,6 +9173,18 @@ function budCopierLien(){
   const ok=()=>budMsg('Lien copié : '+u);
   if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(u).then(ok,()=>window.prompt('Copiez ce lien :',u));}
   else{const a=document.createElement('textarea');a.value=u;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok();}catch(e){window.prompt('Copiez ce lien :',u);}a.remove();}
+}
+function budVersClient(){
+  const v={};
+  document.querySelectorAll('#pane-budget .bud-cat input[type=number]').forEach(inp=>{
+    const x=parseFloat(inp.value);if(!(x>0))return;
+    const sel=inp.parentElement.querySelector('.bud-freq-sel');
+    v[inp.id.replace(/^b-/,'')]=[x,sel?parseInt(sel.value):12];
+  });
+  const n=(document.getElementById('bud-cli-nom')?.value||'').trim();
+  const bytes=new TextEncoder().encode(JSON.stringify({n:n,v:v}));let bin='';bytes.forEach(c=>bin+=String.fromCharCode(c));
+  const t=btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  window.open(location.origin+'/budget/#d='+t,'_blank','noopener');
 }
 function budOuvrirLien(){window.open(budUrlClient(),'_blank','noopener');}
 function budImporter(){
