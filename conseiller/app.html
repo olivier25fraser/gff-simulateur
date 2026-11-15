@@ -2292,11 +2292,11 @@ body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
     <!-- ══ COLONNE SAISIE ══ -->
     <div class="rt-inputs" id="rt-inputs">
       <div id="obj-seul" class="rt-only-seul">
-        <details class="rt-step" open><summary><span class="rt-num">1</span><span class="rt-st">Le client</span><span class="rt-ss" id="rt-s1"></span></summary><div class="rt-sb"><div class="rt-grid3"><div class="field"><label>Âge actuel</label><input type="number" id="ob-age" value="30" min="18" max="70"  oninput="calcObjSeul()"></div><div class="field"><label>Âge de retraite</label><input type="number" id="ob-ret" value="65" min="45" max="75"  oninput="calcObjSeul()"></div><div class="field"><label>Revenu brut annuel</label><input type="number" id="ob-revenu" value="75000" min="0"  oninput="this.dataset.touched='1';estimRRQPSV()"><div class="hint rt-tech">Sert à estimer la rente RRQ (MGA 2026 : 74 600 $)</div></div></div></div></details><details class="rt-step" open><summary><span class="rt-num">2</span><span class="rt-st">Épargne actuelle</span><span class="rt-ss" id="rt-s2"></span></summary><div class="rt-sb"><div class="rt-acc"><div class="rt-acc-row rt-acc-head"><div></div><div>Solde actuel</div><div>Cotisation / mois</div></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#BF8F00"></i>REER</div><label class="rt-money"><span>$</span><input type="number" id="ob-reer" value="10000" min="0"  oninput="calcObjSeul()"></label><label class="rt-money"><span>$</span><input type="number" id="ob-reer-cot" value="200" min="0"  oninput="calcObjSeul()"></label></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#2E75B6"></i>CELI</div><label class="rt-money"><span>$</span><input type="number" id="ob-celi" value="5000" min="0"  oninput="calcObjSeul()"></label><label class="rt-money"><span>$</span><input type="number" id="ob-celi-cot" value="100" min="0"  oninput="calcObjSeul()"></label></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#5C2D91"></i>CELIAPP</div><label class="rt-money"><span>$</span><input type="number" id="ob-celiapp" value="0" min="0"  oninput="calcObjSeul()"></label><label class="rt-money"><span>$</span><input type="number" id="ob-celiapp-cot" value="0" min="0"  oninput="calcObjSeul()"></label></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#595959"></i>Non enregistré</div><label class="rt-money"><span>$</span><input type="number" id="ob-ne" value="0" min="0"  oninput="calcObjSeul()"></label><label class="rt-money"><span>$</span><input type="number" id="ob-ne-cot" value="0" min="0"  oninput="calcObjSeul()"></label></div></div><div class="hint" id="ob-cot-total-lbl" style="margin-top:8px"></div></div></details><details class="rt-step" open><summary><span class="rt-num">3</span><span class="rt-st">Objectif de retraite</span><span class="rt-ss" id="rt-s3"></span></summary><div class="rt-sb"><div class="rt-grid3"><div class="field"><label>Revenu net désiré / an (en $ d'aujourd'hui)</label><input type="number" id="ob-besoin" value="50000" min="0"  oninput="calcObjSeul()"><div class="hint rt-tech">Revenu net après impôt que le client veut recevoir chaque année</div></div><div class="field"><label>Jusqu'à quel âge</label><input type="number" id="ob-duree" value="90" min="70" max="100"  oninput="calcObjSeul()"></div><div class="field"><label>Legs souhaité</label><input type="number" id="ob-legs" value="0" min="0"  oninput="calcObjSeul()"><div class="hint rt-tech">Optionnel — montant à laisser en héritage</div></div></div></div></details><details class="rt-step" open><summary><span class="rt-num">4</span><span class="rt-st">Revenus garantis à la retraite</span><span class="rt-ss" id="rt-s4"></span></summary><div class="rt-sb"><div class="rt-grid4"><div class="field"><label>Début RRQ / PSV (âge)</label><input type="number" id="ob-age-rrq" value="65" min="60" max="72"  oninput="estimRRQPSV()"><div class="hint rt-tech">RRQ : 60 à 72 ans (−0,6 %/mois avant 65, +0,7 %/mois après)</div></div><div class="field"><label>Âge de début PSV</label><input type="number" id="ob-age-psv" value="65" min="65" max="70" oninput="estimRRQPSV()"><div class="hint rt-tech">PSV : 65 à 70 ans (+0,6 %/mois de report)</div></div><div class="field"><label>RRQ estimé ($/an)</label><input type="number" id="ob-rrq" value="12000" min="0"  oninput="calcObjSeul()"><div class="hint rt-tech">Estimé automatiquement — modifiable avec un relevé précis</div></div><div class="field"><label>PSV estimée ($/an)</label><input type="number" id="ob-psv" value="8917" min="0"  oninput="calcObjSeul()"><div class="hint rt-tech">Estimé automatiquement, récupération fiscale incluse</div></div><div class="field"><label>Pension d'employeur ($/an)</label><input type="number" id="ob-rpa" value="0" min="0"  oninput="calcObjSeul()"><div class="hint rt-tech">Rente garantie, en $ d'aujourd'hui</div></div></div><div class="note rt-tech" id="ob-rrq-psv-note" style="margin-top:4px;font-size:10px"></div></div></details>
+        <details class="rt-step" open><summary><span class="rt-num">1</span><span class="rt-st">Le client</span><span class="rt-ss" id="rt-s1"></span></summary><div class="rt-sb"><div class="rt-grid3"><div class="field"><label>Âge actuel</label><input type="number" id="ob-age" value="30" min="18" max="70"  oninput="calcObjSeul()"></div><div class="field"><label>Âge de retraite</label><input type="number" id="ob-ret" value="65" min="45" max="75"  oninput="calcObjSeul()"></div><div class="field"><label>Revenu brut annuel</label><input type="number" id="ob-revenu" value="75000" min="0"  oninput="this.dataset.touched='1';estimRRQPSV()"><div class="hint rt-tech">Sert à estimer la rente RRQ (MGA 2026 : 74 600 $)</div></div></div></div></details><details class="rt-step" open><summary><span class="rt-num">2</span><span class="rt-st">Épargne actuelle</span><span class="rt-ss" id="rt-s2"></span></summary><div class="rt-sb"><div class="rt-acc"><div class="rt-acc-row rt-acc-head"><div></div><div>Solde actuel</div><div>Cotisation / mois</div></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#BF8F00"></i>REER</div><label class="rt-money"><span>$</span><input type="number" id="ob-reer" value="10000" min="0"  oninput="calcObjSeul()"></label><label class="rt-money"><span>$</span><input type="number" id="ob-reer-cot" value="200" min="0"  oninput="calcObjSeul()"></label></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#2E75B6"></i>CELI</div><label class="rt-money"><span>$</span><input type="number" id="ob-celi" value="5000" min="0"  oninput="calcObjSeul()"></label><label class="rt-money"><span>$</span><input type="number" id="ob-celi-cot" value="100" min="0"  oninput="calcObjSeul()"></label></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#5C2D91"></i>CELIAPP</div><label class="rt-money"><span>$</span><input type="number" id="ob-celiapp" value="0" min="0"  oninput="calcObjSeul()"></label><label class="rt-money"><span>$</span><input type="number" id="ob-celiapp-cot" value="0" min="0"  oninput="calcObjSeul()"></label></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#595959"></i>Non enregistré</div><label class="rt-money"><span>$</span><input type="number" id="ob-ne" value="0" min="0"  oninput="calcObjSeul()"></label><label class="rt-money"><span>$</span><input type="number" id="ob-ne-cot" value="0" min="0"  oninput="calcObjSeul()"></label></div></div><div class="hint" id="ob-cot-total-lbl" style="margin-top:8px"></div></div></details><details class="rt-step" open><summary><span class="rt-num">3</span><span class="rt-st">Objectif de retraite</span><span class="rt-ss" id="rt-s3"></span></summary><div class="rt-sb"><div class="rt-grid3"><div class="field"><label>Revenu net désiré / an (en $ d'aujourd'hui)</label><input type="number" id="ob-besoin" value="50000" min="0"  oninput="calcObjSeul()"><div class="hint rt-tech">Revenu net après impôt que le client veut recevoir chaque année</div></div><div class="field"><label>Puis, à partir de l\'âge de (optionnel)</label><input type="number" id="ob-bes2-age" min="50" max="105" placeholder="ex. 80" oninput="calcObjSeul()"><div class="hint rt-tech">Permet un revenu différent selon l\'âge. Ex. : 70 000 $ jusqu\'à 80 ans, puis 30 000 $ de 80 à 95 ans.</div></div><div class="field"><label>Revenu net désiré à partir de cet âge / an</label><input type="number" id="ob-bes2" min="0" placeholder="ex. 30000" oninput="calcObjSeul()"></div><div class="field"><label>Puis, à partir de l\'âge de (2e changement, optionnel)</label><input type="number" id="ob-bes3-age" min="50" max="105" oninput="calcObjSeul()"></div><div class="field"><label>Revenu net désiré à partir de cet âge / an</label><input type="number" id="ob-bes3" min="0" oninput="calcObjSeul()"></div><div class="field"><label>Jusqu'à quel âge</label><input type="number" id="ob-duree" value="90" min="70" max="100"  oninput="calcObjSeul()"></div><div class="field"><label>Legs souhaité</label><input type="number" id="ob-legs" value="0" min="0"  oninput="calcObjSeul()"><div class="hint rt-tech">Optionnel — montant à laisser en héritage</div></div></div></div></details><details class="rt-step" open><summary><span class="rt-num">4</span><span class="rt-st">Revenus garantis à la retraite</span><span class="rt-ss" id="rt-s4"></span></summary><div class="rt-sb"><div class="rt-grid4"><div class="field"><label>Début RRQ / PSV (âge)</label><input type="number" id="ob-age-rrq" value="65" min="60" max="72"  oninput="estimRRQPSV()"><div class="hint rt-tech">RRQ : 60 à 72 ans (−0,6 %/mois avant 65, +0,7 %/mois après)</div></div><div class="field"><label>Âge de début PSV</label><input type="number" id="ob-age-psv" value="65" min="65" max="70" oninput="estimRRQPSV()"><div class="hint rt-tech">PSV : 65 à 70 ans (+0,6 %/mois de report)</div></div><div class="field"><label>RRQ estimé ($/an)</label><input type="number" id="ob-rrq" value="12000" min="0"  oninput="calcObjSeul()"><div class="hint rt-tech">Estimé automatiquement — modifiable avec un relevé précis</div></div><div class="field"><label>PSV estimée ($/an)</label><input type="number" id="ob-psv" value="8917" min="0"  oninput="calcObjSeul()"><div class="hint rt-tech">Estimé automatiquement, récupération fiscale incluse</div></div><div class="field"><label>Pension d'employeur ($/an)</label><input type="number" id="ob-rpa" value="0" min="0"  oninput="calcObjSeul()"><div class="hint rt-tech">Rente garantie, en $ d'aujourd'hui</div></div></div><div class="note rt-tech" id="ob-rrq-psv-note" style="margin-top:4px;font-size:10px"></div></div></details>
         <details class="rt-step rt-adv rt-tech"><summary><span class="rt-num">+</span><span class="rt-st">Hypothèses et options avancées</span><span class="rt-ss" id="rt-s5"></span></summary><div class="rt-sb"><div class="rt-sub">Rendements et inflation</div><div class="rt-grid3"><div class="field"><label>Rendement — accumulation (%)</label><input type="number" id="ob-rend-acc" value="6" min="0" max="15" step="0.5"  oninput="calcObjSeul()"><div class="hint rt-tech">Phase d'épargne (ex. portefeuille croissance)</div></div><div class="field"><label>Rendement — retraite (%)</label><input type="number" id="ob-rend-ret" value="4" min="0" max="10" step="0.5"  oninput="calcObjSeul()"><div class="hint rt-tech">Phase de décaissement (ex. modéré / conservateur)</div></div><div class="field"><label>Inflation estimée (%)</label><input type="number" id="ob-inf" value="2" min="0" max="6" step="0.5"  oninput="calcObjSeul()"><div class="hint rt-tech">Ajuste le pouvoir d'achat du revenu désiré</div></div></div><div class="rt-sub">Ventes de biens immobiliers prévues</div><div class="hint" style="margin-bottom:10px">Une carte par propriété à vendre (ex. triplex dans 6 ans, résidence principale dans 10 ans). Chacune a son propre traitement fiscal.</div><div id="ob-immo-properties"></div><button type="button" class="rt-btn" onclick="ajouterObImmoProperty()">+ Ajouter une propriété</button><div class="rt-sub">Retraits au décaissement</div><div class="rt-grid2"><div class="field"><label>Stratégie de retrait</label><select id="ds-strategie" onchange="calcObjSeul()"><option value="auto" selected>Optimisée automatiquement (recommandé)</option><option value="manuel">Manuelle (ratio CELI / FERR ci-dessous)</option></select><div class="hint rt-tech">Compare plusieurs ordres de retrait (CELI, FERR, non enregistré) et retient le meilleur pour ce client.</div></div><div class="field"><label>% du besoin additionnel pris au CELI (mode manuel)</label><input type="number" id="ds-ratio-celi" value="70" min="0" max="100" step="5"  oninput="calcDec()"><div class="hint rt-tech">Après le FERR minimum et le non enregistré : favorise le CELI (non imposable, sans impact sur la PSV).</div></div><div class="field"><label>Part de gains dans le non enregistré (%)</label><input type="number" id="ds-nr-gains" value="40" min="0" max="100" step="5" oninput="calcObjSeul()"><div class="hint rt-tech">Seule la part de gains est imposable (inclusion 50 %). 0 % = tout est du capital déjà imposé ; 100 % = tout est gain.</div></div><div class="field"><label>SRG — Supplément de revenu garanti ($/an)</label><input type="number" id="ds-srg" value="0" min="0"  oninput="calcDec()"><div class="hint rt-tech">Si le revenu total est faible — selon la déclaration fiscale</div></div></div><details class="rt-manual"><summary>Ajustements manuels du décaissement <small>(normalement automatique)</small></summary><div class="hint" style="margin:8px 0 12px">Les champs ci-dessous sont remplis automatiquement à partir de la projection (en dollars de l'année de retraite). Modifiez-en un pour forcer une valeur ; il passera en or et ne sera plus écrasé.</div><div class="rt-grid3"><div class="field"><label>Âge début décaissement</label><input type="number" id="ds-age" value="65" min="55" max="75"  oninput="syncDsAgeNow();calcDec()"></div><div class="field"><label>Âge actuel (pour projeter)</label><input type="number" id="ds-age-now" value="65" min="30" max="75"  oninput="this.dataset.touched='1';calcDec()"></div><div class="field"><label>Âge de décès projeté</label><input type="number" id="ds-deces" value="90" min="70" max="100"  oninput="calcDec()"></div><div class="field"><label>Solde FERR / REER</label><input type="number" id="ds-ferr" value="400000" min="0"  oninput="calcDec()"></div><div class="field"><label>Solde CELI</label><input type="number" id="ds-celi" value="100000" min="0"  oninput="calcDec()"></div><div class="field"><label>Non enregistré</label><input type="number" id="ds-nonreg" value="50000" min="0"  oninput="calcDec()"></div><div class="field"><label>Rente / pension ($/an)</label><input type="number" id="ds-rente" value="0" min="0"  oninput="calcDec()"></div><div class="field"><label>Rendement annuel (%)</label><input type="number" id="ds-rend" value="5" min="0" max="15" step="0.5"  oninput="calcDec()"></div><div class="field"><label>Revenu désiré après impôt</label><input type="number" id="ds-besoin" value="50000" min="0"  oninput="calcDec()"></div><div class="field"><label>RRQ ($/an)</label><input type="number" id="ds-rrq" value="12000" min="0"  oninput="calcDec()"></div><div class="field"><label>Début RRQ (âge)</label><input type="number" id="ds-rrq-age" value="65" min="60" max="70"  oninput="calcDec()"></div><div class="field"><label>PSV ($/an)</label><input type="number" id="ds-psv" value="8088" min="0"  oninput="calcDec()"></div><div class="field"><label>Début PSV (âge)</label><input type="number" id="ds-psv-age" value="65" min="65" max="70"  oninput="calcDec()"></div></div><button type="button" class="rt-btn" onclick="rtResetManual()">↺ Tout remettre en automatique</button></details></div></details>
       </div>
       <div id="obj-couple" class="rt-only-couple">
-        <details class="rt-step" open><summary><span class="rt-num">1</span><span class="rt-st">Client 1</span><span class="rt-ss" id="rt-c1"></span></summary><div class="rt-sb"><div class="rt-acc"><div class="rt-acc-row rt-acc-head"><div></div><div>Solde actuel</div><div>Cotisation / mois</div></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#BF8F00"></i>REER</div><label class="rt-money"><span>$</span><input type="number" id="oc1-reer" value="15000" min="0"  oninput="calcObjCouple()"></label><label class="rt-money"><span>$</span><input type="number" id="oc1-reer-cot" value="150" min="0"  oninput="calcObjCouple()"></label></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#2E75B6"></i>CELI</div><label class="rt-money"><span>$</span><input type="number" id="oc1-celi" value="8000" min="0"  oninput="calcObjCouple()"></label><label class="rt-money"><span>$</span><input type="number" id="oc1-celi-cot" value="100" min="0"  oninput="calcObjCouple()"></label></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#595959"></i>Non enregistré</div><label class="rt-money"><span>$</span><input type="number" id="oc1-ne" value="0" min="0"  oninput="calcObjCouple()"></label><label class="rt-money"><span>$</span><input type="number" id="oc1-ne-cot" value="0" min="0"  oninput="calcObjCouple()"></label></div></div><div class="rt-grid2" style="margin-top:14px"><div class="field"><label>Âge actuel</label><input type="number" id="oc1-age" value="32" min="18" max="70"  oninput="calcObjCouple()"></div><div class="field"><label>Revenu brut annuel</label><input type="number" id="oc1-revenu" value="70000" min="0"  oninput="estimRRQPSVc1()"></div><div class="field"><label>Début RRQ / PSV (âge)</label><input type="number" id="oc1-age-rrq" value="65" min="60" max="72"  oninput="estimRRQPSVc1()"></div><div class="field"><label>Pension employeur ($/an)</label><input type="number" id="oc1-rpa" value="0" min="0"  oninput="calcObjCouple()"></div><div class="field"><label>RRQ estimé ($/an)</label><input type="number" id="oc1-rrq" value="11000" min="0"  oninput="calcObjCouple()"></div><div class="field"><label>PSV estimée ($/an)</label><input type="number" id="oc1-psv" value="8917" min="0"  oninput="calcObjCouple()"></div></div><div class="field"><label>Âge de début PSV</label><input type="number" id="oc1-age-psv" value="65" min="65" max="70" oninput="estimRRQPSVc1()"><div class="hint rt-tech">PSV : 65 à 70 ans (+0,6 %/mois de report)</div></div></div></details><details class="rt-step" open><summary><span class="rt-num">2</span><span class="rt-st">Client 2</span><span class="rt-ss" id="rt-c2"></span></summary><div class="rt-sb"><div class="rt-acc"><div class="rt-acc-row rt-acc-head"><div></div><div>Solde actuel</div><div>Cotisation / mois</div></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#BF8F00"></i>REER</div><label class="rt-money"><span>$</span><input type="number" id="oc2-reer" value="8000" min="0"  oninput="calcObjCouple()"></label><label class="rt-money"><span>$</span><input type="number" id="oc2-reer-cot" value="100" min="0"  oninput="calcObjCouple()"></label></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#2E75B6"></i>CELI</div><label class="rt-money"><span>$</span><input type="number" id="oc2-celi" value="5000" min="0"  oninput="calcObjCouple()"></label><label class="rt-money"><span>$</span><input type="number" id="oc2-celi-cot" value="75" min="0"  oninput="calcObjCouple()"></label></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#595959"></i>Non enregistré</div><label class="rt-money"><span>$</span><input type="number" id="oc2-ne" value="0" min="0"  oninput="calcObjCouple()"></label><label class="rt-money"><span>$</span><input type="number" id="oc2-ne-cot" value="0" min="0"  oninput="calcObjCouple()"></label></div></div><div class="rt-grid2" style="margin-top:14px"><div class="field"><label>Âge actuel</label><input type="number" id="oc2-age" value="30" min="18" max="70"  oninput="calcObjCouple()"></div><div class="field"><label>Revenu brut annuel</label><input type="number" id="oc2-revenu" value="60000" min="0"  oninput="estimRRQPSVc2()"></div><div class="field"><label>Début RRQ / PSV (âge)</label><input type="number" id="oc2-age-rrq" value="65" min="60" max="72"  oninput="estimRRQPSVc2()"></div><div class="field"><label>Pension employeur ($/an)</label><input type="number" id="oc2-rpa" value="0" min="0"  oninput="calcObjCouple()"></div><div class="field"><label>RRQ estimé ($/an)</label><input type="number" id="oc2-rrq" value="9000" min="0"  oninput="calcObjCouple()"></div><div class="field"><label>PSV estimée ($/an)</label><input type="number" id="oc2-psv" value="8917" min="0"  oninput="calcObjCouple()"></div></div><div class="field"><label>Âge de début PSV</label><input type="number" id="oc2-age-psv" value="65" min="65" max="70" oninput="estimRRQPSVc2()"><div class="hint rt-tech">PSV : 65 à 70 ans (+0,6 %/mois de report)</div></div></div></details><details class="rt-step" open><summary><span class="rt-num">3</span><span class="rt-st">Objectif du couple</span><span class="rt-ss" id="rt-c3"></span></summary><div class="rt-sb"><div class="rt-grid3"><div class="field"><label>Âge de retraite (les deux)</label><input type="number" id="oc-ret" value="65" min="45" max="75"  oninput="calcObjCouple()"></div><div class="field"><label>Revenu net désiré du couple / an (en $ d'aujourd'hui)</label><input type="number" id="oc-besoin" value="70000" min="0"  oninput="calcObjCouple()"></div><div class="field"><label>Jusqu'à quel âge</label><input type="number" id="oc-duree" value="90" min="70" max="100"  oninput="calcObjCouple()"></div><div class="field"><label>Legs souhaité</label><input type="number" id="oc-legs" value="0" min="0"  oninput="calcObjCouple()"></div></div></div></details>
+        <details class="rt-step" open><summary><span class="rt-num">1</span><span class="rt-st">Client 1</span><span class="rt-ss" id="rt-c1"></span></summary><div class="rt-sb"><div class="rt-acc"><div class="rt-acc-row rt-acc-head"><div></div><div>Solde actuel</div><div>Cotisation / mois</div></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#BF8F00"></i>REER</div><label class="rt-money"><span>$</span><input type="number" id="oc1-reer" value="15000" min="0"  oninput="calcObjCouple()"></label><label class="rt-money"><span>$</span><input type="number" id="oc1-reer-cot" value="150" min="0"  oninput="calcObjCouple()"></label></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#2E75B6"></i>CELI</div><label class="rt-money"><span>$</span><input type="number" id="oc1-celi" value="8000" min="0"  oninput="calcObjCouple()"></label><label class="rt-money"><span>$</span><input type="number" id="oc1-celi-cot" value="100" min="0"  oninput="calcObjCouple()"></label></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#595959"></i>Non enregistré</div><label class="rt-money"><span>$</span><input type="number" id="oc1-ne" value="0" min="0"  oninput="calcObjCouple()"></label><label class="rt-money"><span>$</span><input type="number" id="oc1-ne-cot" value="0" min="0"  oninput="calcObjCouple()"></label></div></div><div class="rt-grid2" style="margin-top:14px"><div class="field"><label>Âge actuel</label><input type="number" id="oc1-age" value="32" min="18" max="70"  oninput="calcObjCouple()"></div><div class="field"><label>Revenu brut annuel</label><input type="number" id="oc1-revenu" value="70000" min="0"  oninput="estimRRQPSVc1()"></div><div class="field"><label>Début RRQ / PSV (âge)</label><input type="number" id="oc1-age-rrq" value="65" min="60" max="72"  oninput="estimRRQPSVc1()"></div><div class="field"><label>Pension employeur ($/an)</label><input type="number" id="oc1-rpa" value="0" min="0"  oninput="calcObjCouple()"></div><div class="field"><label>RRQ estimé ($/an)</label><input type="number" id="oc1-rrq" value="11000" min="0"  oninput="calcObjCouple()"></div><div class="field"><label>PSV estimée ($/an)</label><input type="number" id="oc1-psv" value="8917" min="0"  oninput="calcObjCouple()"></div></div><div class="field"><label>Âge de début PSV</label><input type="number" id="oc1-age-psv" value="65" min="65" max="70" oninput="estimRRQPSVc1()"><div class="hint rt-tech">PSV : 65 à 70 ans (+0,6 %/mois de report)</div></div></div></details><details class="rt-step" open><summary><span class="rt-num">2</span><span class="rt-st">Client 2</span><span class="rt-ss" id="rt-c2"></span></summary><div class="rt-sb"><div class="rt-acc"><div class="rt-acc-row rt-acc-head"><div></div><div>Solde actuel</div><div>Cotisation / mois</div></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#BF8F00"></i>REER</div><label class="rt-money"><span>$</span><input type="number" id="oc2-reer" value="8000" min="0"  oninput="calcObjCouple()"></label><label class="rt-money"><span>$</span><input type="number" id="oc2-reer-cot" value="100" min="0"  oninput="calcObjCouple()"></label></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#2E75B6"></i>CELI</div><label class="rt-money"><span>$</span><input type="number" id="oc2-celi" value="5000" min="0"  oninput="calcObjCouple()"></label><label class="rt-money"><span>$</span><input type="number" id="oc2-celi-cot" value="75" min="0"  oninput="calcObjCouple()"></label></div><div class="rt-acc-row"><div class="rt-acc-name"><i style="background:#595959"></i>Non enregistré</div><label class="rt-money"><span>$</span><input type="number" id="oc2-ne" value="0" min="0"  oninput="calcObjCouple()"></label><label class="rt-money"><span>$</span><input type="number" id="oc2-ne-cot" value="0" min="0"  oninput="calcObjCouple()"></label></div></div><div class="rt-grid2" style="margin-top:14px"><div class="field"><label>Âge actuel</label><input type="number" id="oc2-age" value="30" min="18" max="70"  oninput="calcObjCouple()"></div><div class="field"><label>Revenu brut annuel</label><input type="number" id="oc2-revenu" value="60000" min="0"  oninput="estimRRQPSVc2()"></div><div class="field"><label>Début RRQ / PSV (âge)</label><input type="number" id="oc2-age-rrq" value="65" min="60" max="72"  oninput="estimRRQPSVc2()"></div><div class="field"><label>Pension employeur ($/an)</label><input type="number" id="oc2-rpa" value="0" min="0"  oninput="calcObjCouple()"></div><div class="field"><label>RRQ estimé ($/an)</label><input type="number" id="oc2-rrq" value="9000" min="0"  oninput="calcObjCouple()"></div><div class="field"><label>PSV estimée ($/an)</label><input type="number" id="oc2-psv" value="8917" min="0"  oninput="calcObjCouple()"></div></div><div class="field"><label>Âge de début PSV</label><input type="number" id="oc2-age-psv" value="65" min="65" max="70" oninput="estimRRQPSVc2()"><div class="hint rt-tech">PSV : 65 à 70 ans (+0,6 %/mois de report)</div></div></div></details><details class="rt-step" open><summary><span class="rt-num">3</span><span class="rt-st">Objectif du couple</span><span class="rt-ss" id="rt-c3"></span></summary><div class="rt-sb"><div class="rt-grid3"><div class="field"><label>Âge de retraite (les deux)</label><input type="number" id="oc-ret" value="65" min="45" max="75"  oninput="calcObjCouple()"></div><div class="field"><label>Revenu net désiré du couple / an (en $ d'aujourd'hui)</label><input type="number" id="oc-besoin" value="70000" min="0"  oninput="calcObjCouple()"></div><div class="field"><label>Puis, à partir de l\'âge de (optionnel)</label><input type="number" id="oc-bes2-age" min="50" max="105" placeholder="ex. 80" oninput="calcObjCouple()"><div class="hint rt-tech">Permet un revenu différent selon l\'âge (selon l\'âge du client 1). Ex. : 70 000 $ jusqu\'à 80 ans, puis 30 000 $ de 80 à 95 ans.</div></div><div class="field"><label>Revenu net désiré à partir de cet âge / an</label><input type="number" id="oc-bes2" min="0" placeholder="ex. 30000" oninput="calcObjCouple()"></div><div class="field"><label>Puis, à partir de l\'âge de (2e changement, optionnel)</label><input type="number" id="oc-bes3-age" min="50" max="105" oninput="calcObjCouple()"></div><div class="field"><label>Revenu net désiré à partir de cet âge / an</label><input type="number" id="oc-bes3" min="0" oninput="calcObjCouple()"></div><div class="field"><label>Jusqu'à quel âge</label><input type="number" id="oc-duree" value="90" min="70" max="100"  oninput="calcObjCouple()"></div><div class="field"><label>Legs souhaité</label><input type="number" id="oc-legs" value="0" min="0"  oninput="calcObjCouple()"></div></div></div></details>
         <details class="rt-step rt-adv rt-tech"><summary><span class="rt-num">+</span><span class="rt-st">Hypothèses et options avancées</span><span class="rt-ss" id="rt-c4"></span></summary><div class="rt-sb"><div class="rt-sub">Rendements et inflation</div><div class="rt-grid3"><div class="field"><label>Rendement — accumulation (%)</label><input type="number" id="oc-rend-acc" value="6" min="0" max="15" step="0.5"  oninput="calcObjCouple()"></div><div class="field"><label>Rendement — retraite (%)</label><input type="number" id="oc-rend-ret" value="4" min="0" max="10" step="0.5"  oninput="calcObjCouple()"></div><div class="field"><label>Inflation estimée (%)</label><input type="number" id="oc-inf" value="2" min="0" max="6" step="0.5"  oninput="calcObjCouple()"></div></div><div class="rt-sub">Vente d'un bien immobilier</div><div class="rt-grid3"><div class="field"><label>Dans combien d'années</label><input type="number" id="oc-immo-ans" value="0" min="0" max="60"  oninput="calcObjCouple()"><div class="hint rt-tech">0 = pas de vente prévue</div></div><div class="field"><label>Montant de la vente</label><input type="number" id="oc-immo-montant" value="0" min="0"  oninput="calcObjCouple()"></div><div class="field"><label>Taux d'imposition sur le gain (%)</label><input type="number" id="oc-immo-taux" value="0" min="0" max="60" step="1"  oninput="calcObjCouple()"><div class="hint rt-tech">0 % pour une résidence principale. Locatif / secondaire : souvent ~25 % effectif.</div></div></div><div class="rt-sub">Retraits au décaissement</div><div class="field"><label>Stratégie de retrait</label><select id="dc-strategie" onchange="calcObjCouple()"><option value="auto" selected>Optimisée automatiquement (recommandé)</option><option value="manuel">Manuelle (ratio CELI / FERR ci-dessous)</option></select><div class="hint rt-tech">Compare plusieurs ordres de retrait (CELI, FERR, non enregistré) et retient le meilleur pour ce client.</div></div><div class="field"><label>% du besoin additionnel pris au CELI (mode manuel)</label><input type="number" id="dc-ratio-celi" value="70" min="0" max="100" step="5"  oninput="calcDecCouple()"><div class="hint rt-tech">Après le FERR minimum et le non enregistré : favorise le CELI par défaut.</div></div><div class="field"><label>Part de gains dans le non enregistré (%)</label><input type="number" id="dc-nr-gains" value="40" min="0" max="100" step="5" oninput="calcObjCouple()"><div class="hint rt-tech">Seule la part de gains est imposable (inclusion 50 %). 0 % = tout est du capital déjà imposé ; 100 % = tout est gain.</div></div><details class="rt-manual"><summary>Ajustements manuels du décaissement <small>(normalement automatique)</small></summary><div class="hint" style="margin:8px 0 12px">Remplis automatiquement (dollars de l'année de retraite). Modifiez un champ pour forcer une valeur ; il passera en or.</div><div class="rt-grid3"><div class="field"><label>Âge début — Client 1</label><input type="number" id="dc1-age" value="65" min="55" max="75"  oninput="calcDecCouple()"></div><div class="field"><label>Âge début — Client 2</label><input type="number" id="dc2-age" value="63" min="55" max="75"  oninput="calcDecCouple()"></div><div class="field"><label>Âge actuel du couple</label><input type="number" id="dc-age-now" value="63" min="30" max="75"  oninput="calcDecCouple()"></div><div class="field"><label>FERR / REER — Client 1</label><input type="number" id="dc1-ferr" value="400000" min="0"  oninput="calcDecCouple()"></div><div class="field"><label>FERR / REER — Client 2</label><input type="number" id="dc2-ferr" value="200000" min="0"  oninput="calcDecCouple()"></div><div class="field"><label>Non enregistré (couple)</label><input type="number" id="dc-nonreg" value="0" min="0"  oninput="calcDecCouple()"></div><div class="field"><label>CELI — Client 1</label><input type="number" id="dc1-celi" value="80000" min="0"  oninput="calcDecCouple()"></div><div class="field"><label>CELI — Client 2</label><input type="number" id="dc2-celi" value="60000" min="0"  oninput="calcDecCouple()"></div><div class="field"><label>Rendement annuel (%)</label><input type="number" id="dc-rend" value="5" min="0" max="15" step="0.5"  oninput="calcDecCouple()"></div><div class="field"><label>Rente — Client 1 ($/an)</label><input type="number" id="dc1-rente" value="0" min="0"  oninput="calcDecCouple()"></div><div class="field"><label>Rente — Client 2 ($/an)</label><input type="number" id="dc2-rente" value="0" min="0"  oninput="calcDecCouple()"></div><div class="field"><label>Revenu désiré couple (après impôt)</label><input type="number" id="dc-besoin" value="75000" min="0"  oninput="calcDecCouple()"></div><div class="field"><label>RRQ — Client 1 ($/an)</label><input type="number" id="dc1-rrq" value="14000" min="0"  oninput="calcDecCouple()"></div><div class="field"><label>RRQ — Client 2 ($/an)</label><input type="number" id="dc2-rrq" value="9000" min="0"  oninput="calcDecCouple()"></div><div class="field"><label>Âge de décès projeté</label><input type="number" id="dc-deces" value="90" min="70" max="100"  oninput="calcDecCouple()"></div><div class="field"><label>PSV — Client 1 ($/an)</label><input type="number" id="dc1-psv" value="8088" min="0"  oninput="calcDecCouple()"></div><div class="field"><label>PSV — Client 2 ($/an)</label><input type="number" id="dc2-psv" value="8088" min="0"  oninput="calcDecCouple()"></div></div><button type="button" class="rt-btn" onclick="rtResetManual()">↺ Tout remettre en automatique</button></details></div></details>
       </div>
     </div>
@@ -5807,13 +5807,14 @@ function calcObjSeul() {
   const _totFV = reerFV + celiFV + capFV + neFV + immoValeurRetraite;
   const _phi = _totFV > 0 ? (reerFV + (neFV + immoValeurRetraite) * nrFracImposable('ds-nr-gains')) / _totFV : 1;
   // Retrait brut nécessaire à un âge donné : RRQ et PSV ne comptent qu'à partir de leur âge de début
-  const _cacheS = {};
+  const _cacheS = {}, _phS = rtPh('ob');
   const retraitAnneeS = (ageK) => {
-    const key = (ageK >= ageRrqS ? 1 : 0) + '-' + (ageK >= agePsvS ? 1 : 0) + '-' + (ageK >= 65 ? 1 : 0);
+    const bK = rtBes(besoin, _phS, ageK) * Math.pow(1 + inf, yrsAcc);
+    const key = (ageK >= ageRrqS ? 1 : 0) + '-' + (ageK >= agePsvS ? 1 : 0) + '-' + (ageK >= 65 ? 1 : 0) + '-' + bK;
     if (!(key in _cacheS)) {
       const psvK = ageK >= agePsvS ? psv * infK : 0;
       const gov = (ageK >= ageRrqS ? rrq * infK : 0) + psvK + rpa * infK;
-      _cacheS[key] = retraitBrutNecessaire(besoinInflation, 1, infK, gov, psvK, _phi, ageK);
+      _cacheS[key] = retraitBrutNecessaire(bK, 1, infK, gov, psvK, _phi, ageK);
     }
     return _cacheS[key];
   };
@@ -5922,7 +5923,7 @@ function calcObjSeul() {
   const ageRrqObj = g('ob-age-rrq');
   const inflFacteur = Math.pow(1 + inf, yrsAcc);
   drawObjChart(age, ageRet, ageDeces, actuelAujourdhui, cotisAnnuelleActuelle, rendAcc, rendRet, capitalNecessaire, manqueParAn, inf, yrsAcc, immoInjections,
-    { strategie: ($('ds-strategie') || {}).value || 'auto', ferr: reerFV, celi: celiFV + capFV, nr: neFV + immoValeurRetraite, rente: rpa * inflFacteur, rrqAn: rrq * inflFacteur, rrqAge: ageRrqObj, psvAn: psv * inflFacteur, psvAge: g('ob-age-psv') || 65, besoin: besoinInflation, ratioCeli: 0.70 });
+    { strategie: ($('ds-strategie') || {}).value || 'auto', ferr: reerFV, celi: celiFV + capFV, nr: neFV + immoValeurRetraite, rente: rpa * inflFacteur, rrqAn: rrq * inflFacteur, rrqAge: ageRrqObj, psvAn: psv * inflFacteur, psvAge: g('ob-age-psv') || 65, besoin: besoinInflation, besoinPh: _phS.map(x => ({ age: x.age, amt: x.amt * inflFacteur })), ratioCeli: 0.70 });
 
   window._transferAccSeul = {
     ferr: Math.round(reerFV), celi: Math.round(celiFV + capFV), nonreg: Math.round(neFV + immoValeurRetraite),
@@ -5995,13 +5996,14 @@ function calcObjCouple() {
   const infKC = Math.pow(1 + inf, yrsAccRef);
   const _totC = capitalActuelFutur + immoValeurRetraite;
   const _phiC = _totC > 0 ? (fvImposable + (fvNeC + immoValeurRetraite) * nrFracImposable('dc-nr-gains')) / _totC : 1;
-  const _cacheC = {};
+  const _cacheC = {}, _phC = rtPh('oc');
   const retraitAnneeC = (ageK) => {
-    const key = persons.map(p => (ageK >= p.ageRrq ? 1 : 0) + '' + (ageK >= p.agePsv ? 1 : 0)).join('-') + '-' + (ageK >= 65 ? 1 : 0);
+    const bK = rtBes(besoin, _phC, ageK) * Math.pow(1 + inf, yrsAccRef);
+    const key = persons.map(p => (ageK >= p.ageRrq ? 1 : 0) + '' + (ageK >= p.agePsv ? 1 : 0)).join('-') + '-' + (ageK >= 65 ? 1 : 0) + '-' + bK;
     if (!(key in _cacheC)) {
       let gov = 0, psvK = 0;
       persons.forEach(p => { gov += (ageK >= p.ageRrq ? p.rrq : 0) + p.rpa; if (ageK >= p.agePsv) { gov += p.psv; psvK += p.psv; } });
-      _cacheC[key] = retraitBrutNecessaire(besoinInflation, 2, infKC, gov * infKC, psvK * infKC, _phiC, ageK);
+      _cacheC[key] = retraitBrutNecessaire(bK, 2, infKC, gov * infKC, psvK * infKC, _phiC, ageK);
     }
     return _cacheC[key];
   };
@@ -6152,7 +6154,7 @@ function drawObjChart(age, ageRet, ageDeces, actuel, cotisAnn, rendAcc, rendRet,
     decResults = simulerDecaissement({
       ferr: decParams.ferr, celi: decParams.celi, nr: decParams.nr, rente: decParams.rente,
       rrqAn: decParams.rrqAn, rrqAge: decParams.rrqAge, psvAn: decParams.psvAn, psvAge: decParams.psvAge,
-      srgAn: 0, rend: rendRet, inf: inf, taxIdx: Math.pow(1 + inf, yrsAccLocal), nrFrac: nrFracImposable('ds-nr-gains'), strategie: decParams.strategie, besoin: decParams.besoin, ratioCeli: decParams.ratioCeli,
+      srgAn: 0, rend: rendRet, inf: inf, taxIdx: Math.pow(1 + inf, yrsAccLocal), nrFrac: nrFracImposable('ds-nr-gains'), strategie: decParams.strategie, besoin: decParams.besoin, besoinPh: decParams.besoinPh, ratioCeli: decParams.ratioCeli,
       ageRet, ageDeces, immoInjections: decImmoInjections
     });
   }
@@ -6341,6 +6343,31 @@ function syncDsAgeNow() {
 // Moteur de simulation de décaissement partagé — utilisé à la fois par l'onglet Décaissement
 // (tableau détaillé) et par le graphique de l'onglet Accumulation, pour garantir que les deux
 // racontent TOUJOURS la même histoire (même règles FERR minimum, même ratio CELI/FERR, etc.)
+// Revenu désiré par tranche d'âge (ex. 70 000 $ de 65 à 80 ans, puis 30 000 $ après 80 ans)
+function rtPh(pre) {
+  const out = [];
+  [2, 3].forEach(n => {
+    const a = $(pre + '-bes' + n + '-age'), m = $(pre + '-bes' + n);
+    if (a && m && a.value !== '' && m.value !== '' && g(pre + '-bes' + n + '-age') > 0) out.push({ age: g(pre + '-bes' + n + '-age'), amt: g(pre + '-bes' + n) });
+  });
+  return out.sort((x, y) => x.age - y.age);
+}
+function rtBes(base, ph, age) { let v = base; if (ph) for (const x of ph) if (age >= x.age) v = x.amt; return v; }
+function rtPhTxt(base, ph, ageRet, ageFin) {
+  if (!ph || !ph.length) return '';
+  const seg = []; let from = ageRet, cur = base;
+  ph.forEach(x => { seg.push(from + '–' + x.age + ' ans : ' + fmt(cur)); from = x.age; cur = x.amt; });
+  seg.push(from + '–' + ageFin + ' ans : ' + fmt(cur));
+  return seg.join(' · ');
+}
+function rtSyncPh(src, dst, k) {
+  [2, 3].forEach(n => {
+    const a = $(src + '-bes' + n + '-age'), m = $(src + '-bes' + n);
+    const ok = a && m && a.value !== '' && m.value !== '';
+    rtSet(dst + '-bes' + n + '-age', ok ? a.value : '');
+    rtSet(dst + '-bes' + n, ok ? Math.round(g(src + '-bes' + n) * k) : '');
+  });
+}
 function _simDecBase(p) {
   const annees = Math.max(1, p.ageDeces - p.ageRet);
   let ferr = p.ferr, celi = p.celi, nr = p.nr;
@@ -6414,13 +6441,14 @@ function _simDecBase(p) {
       return { f, c, n, retraitFerr, retraitCeli, retraitNr, revBrut, impot, revNet };
     };
     let res = sim(0);
-    if (res.revNet < p.besoin) {
+    const besA = rtBes(p.besoin, p.besoinPh, age);
+    if (res.revNet < besA) {
       let lo = 0, hi = f0 + c0 + n0;
       res = sim(hi);
-      if (res.revNet >= p.besoin) {
+      if (res.revNet >= besA) {
         for (let k = 0; k < 45; k++) {
           const mid = (lo + hi) / 2, r = sim(mid);
-          if (r.revNet >= p.besoin) { hi = mid; res = r; } else lo = mid;
+          if (r.revNet >= besA) { hi = mid; res = r; } else lo = mid;
         }
       }
     }
@@ -6462,7 +6490,7 @@ function simulerDecaissement(p) {
   if (p.strategie !== 'auto') return _simDecBase(p);
   const total0 = (p.ferr || 0) + (p.celi || 0) + (p.nr || 0);
   const score = res => {
-    const ok = res.filter(r => r.revNet >= p.besoin * 0.9).length;
+    const ok = res.filter(r => r.revNet >= rtBes(p.besoin, p.besoinPh, r.age) * 0.9).length;
     const l = res[res.length - 1] || { ferr: 0, celi: 0, nr: 0 };
     return { ok, estate: estateNet(l.ferr, l.celi, l.nr, p.taxIdx) };
   };
@@ -6484,7 +6512,7 @@ function calcDec() {
   let ferrSol = g('ds-ferr'), celiSol = g('ds-celi');
   let nonreg = g('ds-nonreg'), rente = g('ds-rente');
   const rend = g('ds-rend') / 100;
-  const besoin = g('ds-besoin');
+  const besoin = g('ds-besoin'), besoinPh = rtPh('ds');
   const rrqAn = g('ds-rrq'), rrqAge = g('ds-rrq-age');
   const psvAn = g('ds-psv'), psvAge = g('ds-psv-age');
   const srgAn = g('ds-srg');
@@ -6520,7 +6548,7 @@ function calcDec() {
   const results = simulerDecaissement({
     strategie: ($('ds-strategie') || {}).value || 'auto',
     ferr: ferrSol, celi: celiSol, nr: nonreg, rente,
-    rrqAn, rrqAge, psvAn, psvAge, srgAn, rend, besoin, ratioCeli,
+    rrqAn, rrqAge, psvAn, psvAge, srgAn, rend, besoin, besoinPh, ratioCeli,
     ageRet, ageDeces, immoInjections, inf: rtInfCtx().inf, taxIdx: rtInfCtx().idx, nrFrac: nrFracImposable('ds-nr-gains')
   });
 
@@ -6529,7 +6557,7 @@ function calcDec() {
     totalImpot += r.impot;
     totalNet += r.revNet;
     totalFerr += r.retraitFerr;
-    if (r.revNet >= besoin * 0.9) anneesOk++;
+    if (r.revNet >= rtBes(besoin, besoinPh, r.age) * 0.9) anneesOk++;
     if (r.ferr <= 0 && !premierEpuise) premierEpuise = 'FERR épuisé à ' + r.age + ' ans';
 
     const cls = r.venteImmoAn > 0 ? 'age-psv' : (r.age >= psvAge && (r.age - ageRet) < 3 ? 'age-psv' : '');
@@ -6544,7 +6572,7 @@ function calcDec() {
       <td>${r.celi > 0 ? fmt(Math.round(r.celi)) : '—'}</td>
       <td>${fmt(r.revBrut)}</td>
       <td style="color:var(--org)">${fmt(r.impot)}</td>
-      <td style="font-weight:700;color:${r.revNet>=besoin*0.9?'var(--grn)':'var(--org)'}">${fmt(r.revNet)}</td>
+      <td style="font-weight:700;color:${r.revNet>=rtBes(besoin,besoinPh,r.age)*0.9?'var(--grn)':'var(--org)'}">${fmt(r.revNet)}</td>
     </tr>`;
   });
 
@@ -6561,7 +6589,7 @@ function calcDec() {
     rr('Solde FERR initial', fmt(ferrSol)) +
     rr('Retrait minimum FERR à ' + ageRet + ' ans', fmt(Math.round(ferrSol * ferrMin(ageRet)))) +
     rr('Taux marginal estimé à la retraite', fp(tauxEff)) +
-    rr('Revenu désiré après impôt', fmt(besoin)) +
+    rr('Revenu désiré après impôt', besoinPh.length ? rtPhTxt(besoin, besoinPh, ageRet, ageDeces) : fmt(besoin)) +
     rr('Années où objectif atteint', anneesOk + ' / ' + annees) +
     (premierEpuise ? rr('Alerte', '<span style="color:var(--org)">' + premierEpuise + '</span>') : '');
 
@@ -6620,9 +6648,9 @@ function calcDec() {
   document.getElementById('dec-note-seul').textContent =
     (growthNote ? growthNote + ' ' : '') +
     'Taux de retrait minimum FERR selon les règles ARC 2026. Impôt calculé sur le revenu imposable (FERR + gouvernement + part de gains du non enregistré), crédits 65+ estimés, récupération de la PSV incluse. Retraits CELI non imposables. Les lignes en jaune indiquent le début de la PSV. Les rendements passés ne garantissent pas les résultats futurs.';
-  const _rtFail = results.find(r => r.revNet < besoin * 0.9);
+  const _rtFail = results.find(r => r.revNet < rtBes(besoin, besoinPh, r.age) * 0.9);
   window._rtDecS = {
-    results, besoin, ok: results.filter(r => r.revNet >= besoin * 0.9).length, annees,
+    results, besoin, ok: results.filter(r => r.revNet >= rtBes(besoin, besoinPh, r.age) * 0.9).length, annees,
     epuise: (results.find(r => r.capitalTotal <= 0.5) || {}).age || null,
     netMoyen: results.length ? results.reduce((s, r) => s + r.revNet, 0) / results.length : 0,
     premierEchec: _rtFail ? _rtFail.age : null,
@@ -6681,7 +6709,7 @@ function _calcDecCoupleCore() {
   const rrqAge1 = g('oc1-age-rrq') || 65, rrqAge2 = g('oc2-age-rrq') || 65, psvAge1 = g('oc1-age-psv') || 65, psvAge2 = g('oc2-age-psv') || 65;
   const rrq1 = g('dc1-rrq'), psv1 = g('dc1-psv');
   const rrq2 = g('dc2-rrq'), psv2 = g('dc2-psv');
-  const rend = g('dc-rend') / 100, besoin = g('dc-besoin'), ageDeces = g('dc-deces');
+  const rend = g('dc-rend') / 100, besoin0 = g('dc-besoin'), phC = rtPh('dc'), ageDeces = g('dc-deces');
   const ratioCeli = window._decOvr ? window._decOvr.ratio : Math.min(1, Math.max(0, g('dc-ratio-celi') / 100));
   const nrFirstC = window._decOvr ? window._decOvr.nrFirst : true;
   const fillToC = window._decOvr ? (window._decOvr.fillTo || 0) : 0;
@@ -6721,6 +6749,7 @@ function _calcDecCoupleCore() {
 
   for (let i = 0; i < annees; i++) {
     const a1 = age1Ret + i, a2 = age2Ret + i;
+    const besoin = rtBes(besoin0, phC, a1);
     const an = 2026 + i;
 
     f1 = Math.max(0, f1 * (1 + rendEffC)); f2 = Math.max(0, f2 * (1 + rendEffC));
@@ -6856,7 +6885,7 @@ function _calcDecCoupleCore() {
     noteEl.textContent = (growthNote ? growthNote + ' ' : '') +
       'Taux de retrait minimum FERR selon les règles ARC 2026. Impôt calculé séparément pour chaque conjoint (fractionnement). Retraits CELI non imposables. Les rendements passés ne garantissent pas les résultats futurs.';
   }
-  window._rtDecC = { fin: { ferr: f1 + f2, celi: c1 + c2, nr }, ok: _rtOk, annees, premierEchec: _rtFail, capFin: _rtCap, rows: _rtRowsC, epuise: _rtEpuise, netMoyen: annees ? _rtNetSum / annees : 0, besoin };
+  window._rtDecC = { fin: { ferr: f1 + f2, celi: c1 + c2, nr }, ok: _rtOk, annees, premierEchec: _rtFail, capFin: _rtCap, rows: _rtRowsC, epuise: _rtEpuise, netMoyen: annees ? _rtNetSum / annees : 0, besoin: besoin0 };
   if (typeof rtAfterDec === 'function') rtAfterDec();
 }
 
@@ -8399,6 +8428,7 @@ function rtSyncDecSeul() {
   rtSet('ds-rente', Math.round(a.rpa * k));
   rtSet('ds-rend', a.rendRetPct);
   rtSet('ds-besoin', Math.round(a.besoin * k));
+  rtSyncPh('ob', 'ds', k);
   rtSet('ds-rrq', Math.round(a.rrq * k));
   rtSet('ds-rrq-age', a.ageRrq);
   rtSet('ds-psv', Math.round(a.psv * k));
@@ -8422,6 +8452,7 @@ function rtSyncDecCouple() {
   rtSet('dc1-psv', Math.round(g('oc1-psv') * k)); rtSet('dc2-psv', Math.round(g('oc2-psv') * k));
   rtSet('dc-rend', g('oc-rend-ret'));
   rtSet('dc-besoin', Math.round(g('oc-besoin') * k));
+  rtSyncPh('oc', 'dc', k);
   rtSet('dc-deces', g('oc-duree'));
 }
 
@@ -8727,7 +8758,7 @@ function rtUpdateSummaries() {
     const bal = g('ob-reer') + g('ob-celi') + g('ob-celiapp') + g('ob-ne');
     const cot = g('ob-reer-cot') + g('ob-celi-cot') + g('ob-celiapp-cot') + g('ob-ne-cot');
     set('rt-s2', fmt(bal) + ' · ' + fmt(cot) + '/mois');
-    set('rt-s3', fmt(g('ob-besoin')) + '/an jusqu\'à ' + g('ob-duree') + ' ans');
+    set('rt-s3', (rtPh('ob').length ? rtPhTxt(g('ob-besoin'), rtPh('ob'), g('ob-ret'), g('ob-duree')) : fmt(g('ob-besoin')) + '/an jusqu\'à ' + g('ob-duree') + ' ans'));
     set('rt-s4', fmt(g('ob-rrq') + g('ob-psv') + g('ob-rpa')) + '/an dès ' + g('ob-age-rrq') + ' ans');
     set('rt-s5', g('ob-rend-acc') + ' % / ' + g('ob-rend-ret') + ' % · infl. ' + g('ob-inf') + ' %');
   } else {
@@ -8866,7 +8897,7 @@ function rtPrintHyp() {
   if (rtMode === 'seul') {
     const bal = g('ob-reer') + g('ob-celi') + g('ob-celiapp') + g('ob-ne');
     const cot = g('ob-reer-cot') + g('ob-celi-cot') + g('ob-celiapp-cot') + g('ob-ne-cot');
-    h = row('Âge actuel / retraite', g('ob-age') + ' ans → ' + g('ob-ret') + ' ans') + row('Revenu net désiré', fmt(g('ob-besoin')) + '/an (en $ d\'aujourd\'hui)')
+    h = row('Âge actuel / retraite', g('ob-age') + ' ans → ' + g('ob-ret') + ' ans') + row('Revenu net désiré', (rtPh('ob').length ? rtPhTxt(g('ob-besoin'), rtPh('ob'), g('ob-ret'), g('ob-duree')) : fmt(g('ob-besoin')) + '/an') + ' (en $ d\'aujourd\'hui)')
       + row('Épargne actuelle', fmt(bal)) + row('Cotisations actuelles', fmt(cot) + '/mois')
       + row('Revenus garantis (RRQ, PSV, pension)', fmt(g('ob-rrq') + g('ob-psv') + g('ob-rpa')) + '/an dès ' + g('ob-age-rrq') + ' ans')
       + row('Rendement accumulation / retraite', g('ob-rend-acc') + ' % / ' + g('ob-rend-ret') + ' %') + row('Inflation estimée', g('ob-inf') + ' %') + row('Planifié jusqu\'à', g('ob-duree') + ' ans');
@@ -8979,7 +9010,7 @@ function rtPrintClient() {
   if (seul) {
     const bal = g('ob-reer') + g('ob-celi') + g('ob-celiapp') + g('ob-ne'), cot = g('ob-reer-cot') + g('ob-celi-cot') + g('ob-celiapp-cot') + g('ob-ne-cot');
     H.push(['Âge actuel → retraite', g('ob-age') + ' ans → ' + g('ob-ret') + ' ans'], ['Planifié jusqu\'à', g('ob-duree') + ' ans'],
-      ['Revenu net désiré', f0(g('ob-besoin')) + ' / an (en $ d\'aujourd\'hui)'], ['Épargne actuelle', f0(bal)], ['Cotisations actuelles', f0(cot) + ' / mois'],
+      ['Revenu net désiré', (rtPh('ob').length ? rtPhTxt(g('ob-besoin'), rtPh('ob'), g('ob-ret'), g('ob-duree')).replace(/(\d[\d\s\u00a0\u202f]*)\s?\$/g, '$1 $') : f0(g('ob-besoin')) + ' / an') + ' (en $ d\'aujourd\'hui)'], ['Épargne actuelle', f0(bal)], ['Cotisations actuelles', f0(cot) + ' / mois'],
       ['RRQ (début à ' + g('ob-age-rrq') + ' ans)', f0(g('ob-rrq')) + ' / an'], ['PSV (début à ' + (g('ob-age-psv') || 65) + ' ans)', f0(g('ob-psv')) + ' / an'],
       ['Rendement avant / pendant la retraite', g('ob-rend-acc') + ' % / ' + g('ob-rend-ret') + ' %'], ['Inflation', g('ob-inf') + ' %']);
   } else {
@@ -9230,5 +9261,6 @@ var V2F = n => fmt(Math.round(n));
 })();
 
 </script>
+<div hidden><input type="hidden" id="ds-bes2-age"><input type="hidden" id="ds-bes2"><input type="hidden" id="ds-bes3-age"><input type="hidden" id="ds-bes3"><input type="hidden" id="dc-bes2-age"><input type="hidden" id="dc-bes2"><input type="hidden" id="dc-bes3-age"><input type="hidden" id="dc-bes3"></div>
 </body>
 </html>
