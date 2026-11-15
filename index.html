@@ -91,33 +91,50 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
 .hero-link:hover{border-bottom-color:var(--gold)}
 
 /* ── HERO v2 ── */
-.hero.hero-v2{display:flex;flex-direction:column;justify-content:center;min-height:min(100vh,880px);
-  padding:128px 5% 0;background:var(--noir)}
+.hero.hero-v2{display:flex;flex-direction:column;justify-content:center;min-height:0;
+  padding:104px 5% 0;background:var(--noir)}
 .hero.hero-v2::before{background:radial-gradient(ellipse at 78% 55%,rgba(191,143,0,.10) 0%,transparent 62%)}
 .hv-lignes{position:absolute;top:0;right:0;width:66%;height:100%;z-index:0;pointer-events:none;
   -webkit-mask-image:linear-gradient(to right,transparent 0,#000 38%);mask-image:linear-gradient(to right,transparent 0,#000 38%)}
-.hv{max-width:1200px;margin:0 auto;width:100%;position:relative;z-index:1;flex:1;display:flex;align-items:center}
-.hv .hero-badge-rule{width:56px;height:2px;margin-bottom:30px}
-.hero.hero-v2 .hero-content{max-width:700px}
-.hero.hero-v2 h1{font-size:clamp(42px,5.8vw,76px);line-height:1.05;font-weight:500;margin-bottom:28px}
+.hv{max-width:1200px;margin:0 auto;width:100%;position:relative;z-index:1;flex:1;display:flex;align-items:center;padding:56px 0 52px}
+.hv .hero-badge-rule{width:56px;height:2px;margin-bottom:24px}
+.hero.hero-v2 .hero-content{max-width:760px}
+.hero.hero-v2 h1{font-size:clamp(42px,5.2vw,66px);line-height:1.05;font-weight:500;margin-bottom:22px}
 .hero.hero-v2 p{max-width:31em}
 .hero.hero-v2 .btn-primary{padding:17px 34px}
-.hv-pied{max-width:1200px;margin:0 auto;width:100%;position:relative;z-index:1;display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid rgba(191,143,0,.45);margin-top:36px}
-.hv-pied div{padding:24px 28px 30px 0}
-.hv-pied div+div{padding-left:28px;border-left:1px solid rgba(255,255,255,.12)}
-.hv-pied b{display:block;font-family:'Fraunces',serif;font-weight:500;font-size:19px;color:#fff;margin-bottom:4px}
-.hv-pied span{font-size:14.5px;line-height:1.5;color:rgba(255,255,255,.58)}
+.hv-vie{max-width:1200px;margin:0 auto;width:100%;position:relative;z-index:1;margin-top:20px;padding-bottom:28px;
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));list-style:none}
+.hv-vie::before{content:"";position:absolute;left:0;right:0;top:6px;height:2px;transform-origin:left;
+  background:linear-gradient(90deg,#BF8F00 0%,#BF8F00 70%,rgba(191,143,0,.25) 100%)}
+.hv-vie li{position:relative;padding:34px 24px 0 0}
+.hv-vie li::before{content:"";position:absolute;left:0;top:0;width:14px;height:14px;border-radius:50%;
+  background:var(--noir);border:2px solid #BF8F00;box-sizing:border-box;transition:background .25s,box-shadow .25s}
+.hv-vie a{display:block;text-decoration:none;color:inherit}
+.hv-vie b{display:block;font-family:'Fraunces',serif;font-weight:500;font-size:20px;color:#fff;margin-bottom:6px;transition:color .25s}
+.hv-vie span{display:block;font-size:14.5px;line-height:1.5;color:rgba(255,255,255,.58);max-width:17em}
+.hv-vie li:hover::before,.hv-vie li:focus-within::before{background:#BF8F00;box-shadow:0 0 0 6px rgba(191,143,0,.18)}
+.hv-vie li:hover b,.hv-vie a:focus-visible b{color:#E3B53A}
+.hv-vie a:focus-visible{outline:2px solid #BF8F00;outline-offset:6px}
 @media (prefers-reduced-motion:no-preference){
   .hv-lignes{opacity:0;animation:lignesIn 1.4s ease .1s forwards}
+  .hv-vie::before{transform:scaleX(0);animation:vieTrace 1.6s cubic-bezier(.6,.1,.2,1) .5s forwards}
+  .hv-vie li::before{opacity:0;animation:viePoint .4s ease forwards}
+  .hv-vie li:nth-child(1)::before{animation-delay:.6s}.hv-vie li:nth-child(2)::before{animation-delay:1.0s}
+  .hv-vie li:nth-child(3)::before{animation-delay:1.4s}.hv-vie li:nth-child(4)::before{animation-delay:1.8s}
 }
+@keyframes vieTrace{to{transform:scaleX(1)}}
+@keyframes vieTraceV{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes viePoint{to{opacity:1}}
 @keyframes lignesIn{to{opacity:1}}
 @media(max-width:860px){
   .hero.hero-v2{padding:120px 6% 0;min-height:0}
   .hv-lignes{width:100%;opacity:.3;animation:none}
-  .hv-pied{grid-template-columns:1fr;margin-top:40px}
-  .hv-pied div,.hv-pied div+div{padding:18px 0;border-left:0;border-top:1px solid rgba(255,255,255,.12)}
-  .hv-pied div:first-child{border-top:0}
+  .hv-vie{grid-template-columns:1fr;margin-top:40px;padding-left:34px}
+  .hv-vie::before{left:6px;right:auto;top:6px;bottom:40px;width:2px;height:auto;transform-origin:top;
+    background:linear-gradient(180deg,#BF8F00 0%,#BF8F00 70%,rgba(191,143,0,.25) 100%)}
+  .hv-vie li{padding:0 0 26px 0}
+  .hv-vie li::before{left:-34px;top:3px}
+  .hv-vie::before{animation-name:vieTraceV}
 }
 
 /* ── SERVICES ── */
@@ -302,11 +319,12 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
       </div>
     </div>
   </div>
-  <div class="hv-pied">
-    <div><b>Cabinet indépendant</b><span>Des recommandations fondées sur vos besoins</span></div>
-    <div><b>Consultation gratuite</b><span>Sans obligation, sans pression</span></div>
-    <div><b>Un suivi dans le temps</b><span>Vos protections évoluent avec votre situation</span></div>
-  </div>
+  <ul class="hv-vie" aria-label="Nos solutions selon les étapes de votre vie">
+    <li><a href="/assurance-hypothecaire/"><b>Premier achat</b><span>Protéger votre prêt hypothécaire et votre maison</span></a></li>
+    <li><a href="/assurance-vie/"><b>Famille</b><span>Assurer ceux qui comptent sur vous</span></a></li>
+    <li><a href="/assurance-invalidite/"><b>Revenu protégé</b><span>Maintenir votre revenu si la maladie ou un accident survient</span></a></li>
+    <li><a href="/epargne-retraite/"><b>Retraite</b><span>Épargner dès maintenant pour votre revenu de demain</span></a></li>
+  </ul>
 </section>
 
 <!-- ═══ SERVICES + POURQUOI + PROCESSUS + CTA (vague continue) ═══ -->
