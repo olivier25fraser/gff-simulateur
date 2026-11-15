@@ -23,23 +23,28 @@ button,input,select{font-family:inherit}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
 /* ── Haut de page ── */
-.topbar{background:var(--noir);padding:0 5%;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(191,143,0,.45)}
-.topbar img{height:34px;width:auto;display:block}
+.topbar{background:var(--noir);padding:0 5%;height:78px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(191,143,0,.45)}
+.topbar img{height:52px;width:auto;display:block}
 .topbar a{color:rgba(255,255,255,.7);text-decoration:none;font-size:13.5px;font-weight:500}
 .topbar a:hover{color:#fff}
-.hero{background:var(--noir);position:relative;overflow:hidden;padding:52px 5% 60px}
-.hero svg{position:absolute;top:0;right:0;width:62%;height:100%;pointer-events:none;
+.topbar .tel{display:flex;align-items:center;gap:8px;color:#fff;font-weight:600}
+.topbar .tel svg{width:16px;height:16px;stroke:var(--gold-l);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hero{background:var(--noir);position:relative;overflow:hidden;padding:64px 5% 72px}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 40%,rgba(191,143,0,.14),transparent 60%)}
+.hero svg{position:absolute;top:0;right:0;width:70%;height:100%;pointer-events:none;
   -webkit-mask-image:linear-gradient(to right,transparent 0,#000 40%);mask-image:linear-gradient(to right,transparent 0,#000 40%)}
 .hero-in{max-width:1160px;margin:0 auto;position:relative}
 .rule{width:56px;height:2px;background:var(--gold);margin-bottom:22px}
 .hero h1{font-family:'Fraunces',serif;font-weight:500;color:#fff;font-size:clamp(34px,5vw,54px);line-height:1.08;margin-bottom:14px}
-.hero p{color:rgba(255,255,255,.7);font-size:16px;max-width:36em}
+.hero p{color:rgba(255,255,255,.72);font-size:17px;max-width:36em}
+.offert{display:inline-flex;align-items:center;gap:9px;margin-top:22px;padding:8px 16px;border:1px solid rgba(191,143,0,.6);border-radius:30px;color:var(--gold-l);font-size:13px;font-weight:600}
+.offert::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--gold)}
 .etapes{display:flex;flex-wrap:wrap;gap:10px 34px;margin-top:28px;list-style:none;counter-reset:e}
 .etapes li{color:rgba(255,255,255,.85);font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;counter-increment:e}
 .etapes li::before{content:counter(e);width:24px;height:24px;border-radius:50%;border:1.5px solid var(--gold);color:var(--gold-l);font-size:12px;font-weight:700;display:grid;place-items:center}
 
 /* ── Mise en page ── */
-.wrap{max-width:1160px;margin:0 auto;padding:36px 20px 120px;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:28px;align-items:start}
+.wrap{max-width:1160px;margin:0 auto;padding:36px 20px 56px;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:28px;align-items:start}
 .identite{grid-column:1/-1;background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow);padding:18px 22px;display:flex;flex-wrap:wrap;gap:16px 28px;align-items:end}
 .identite label{display:block;font-size:12.5px;font-weight:600;color:var(--gry);margin-bottom:4px}
 .identite input{height:42px;border:1.5px solid var(--gry-m);border-radius:var(--r);padding:0 12px;font-size:15px;min-width:260px;background:#fff}
@@ -48,6 +53,10 @@ button,input,select{font-family:inherit}
 
 .sect{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow);margin-bottom:22px;overflow:hidden}
 .sect-h{display:flex;justify-content:space-between;align-items:baseline;padding:16px 22px;border-bottom:1px solid var(--gry-m);border-top:3px solid var(--gold)}
+.sect-h{background:linear-gradient(90deg,#FFFDF5,#fff)}
+.sect-h .ic{display:flex;gap:14px;align-items:center}
+.ico{width:42px;height:42px;border-radius:12px;background:var(--gold-p);display:grid;place-items:center;flex:none}
+.ico svg{width:22px;height:22px;stroke:var(--gold);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .sect-h h2{font-family:'Fraunces',serif;font-weight:500;font-size:22px}
 .sect-h small{display:block;font-family:'Public Sans',sans-serif;font-size:12.5px;color:var(--gry);font-weight:400;margin-top:1px}
 .sect-t{font-family:'Fraunces',serif;font-size:21px;font-weight:600;color:var(--gold);white-space:nowrap}
@@ -67,6 +76,7 @@ button,input,select{font-family:inherit}
 /* ── Bilan ── */
 .bilan{position:sticky;top:16px}
 .carte{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden}
+.carte:empty{display:none}
 .carte-h{background:var(--noir);color:#fff;font-family:'Fraunces',serif;font-size:18px;font-weight:500;padding:13px 20px;border-bottom:2px solid var(--gold)}
 .carte-b{padding:18px 20px}
 .solde{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 20px;border-radius:var(--r-lg);margin-bottom:18px}
@@ -96,15 +106,29 @@ button,input,select{font-family:inherit}
 .btn.or{background:var(--gold);border-color:var(--gold);color:#fff}.btn.or:hover{background:var(--gold-l);border-color:var(--gold-l)}
 .btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .lien-link{background:none;border:0;color:var(--gry);font-size:12.5px;text-decoration:underline;cursor:pointer;justify-self:center}
+.contact{display:flex;gap:14px;align-items:center;background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow);padding:16px 18px;margin-top:18px;border-left:3px solid var(--gold)}
+.contact img{height:44px;width:auto;flex:none}
+.contact b{display:block;font-family:'Fraunces',serif;font-weight:500;font-size:16px;line-height:1.25}
+.contact span{display:block;font-size:12.5px;color:var(--gry);margin:2px 0 4px}
+.contact a{display:block;font-size:13.5px;font-weight:600;color:var(--noir);text-decoration:none}.contact a:hover{color:var(--gold)}
 .confid{font-size:12px;color:var(--gry);line-height:1.5;margin-top:4px}
 .toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%) translateY(20px);background:var(--noir);color:#fff;padding:11px 20px;border-radius:30px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:all .25s;z-index:99;border:1px solid var(--gold)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 
+.foot{background:var(--noir);border-top:2px solid var(--gold);padding:40px 5% 120px;color:rgba(255,255,255,.7)}
+.foot-in{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:auto auto 1fr;gap:28px 48px;align-items:start}
+.foot img{height:64px;width:auto;display:block}
+.foot-txt{display:flex;gap:48px;font-size:14px;line-height:1.7}
+.foot-txt b{color:#fff;font-family:'Fraunces',serif;font-weight:500;font-size:17px}
+.foot a{color:rgba(255,255,255,.85);text-decoration:none}.foot a:hover{color:var(--gold-l)}
+.foot-note{font-size:12.5px;line-height:1.6;max-width:34em;justify-self:end;color:rgba(255,255,255,.5)}
+@media(max-width:960px){.foot-in{grid-template-columns:1fr}.foot-txt{flex-wrap:wrap;gap:20px 40px}.foot-note{justify-self:start}.foot{padding-bottom:100px}}
+@media print{.foot{display:none!important}}
 .pied{max-width:1160px;margin:0 auto;padding:0 20px 40px;font-size:12px;color:var(--gry);grid-column:1/-1}
 
 .barre{display:none}
 @media(max-width:960px){
-  .wrap{grid-template-columns:1fr;padding-bottom:110px}
+  .wrap{grid-template-columns:1fr;padding-bottom:40px}
   .bilan{position:static}
   .barre{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--noir);color:#fff;padding:10px 16px;justify-content:space-between;align-items:center;border-top:2px solid var(--gold)}
   .barre span{font-size:12px;color:rgba(255,255,255,.7)}.barre b{font-family:'Fraunces',serif;font-size:22px;font-weight:600}
@@ -116,6 +140,8 @@ button,input,select{font-family:inherit}
   .row>div:first-child{grid-column:1/-1}
   .sect-h{padding:14px 16px}.identite{padding:16px}.identite input{min-width:0;width:100%}
   .identite>div{flex:1 1 100%}
+  .topbar{height:66px}.topbar img{height:42px}.topbar .tel{font-size:12.5px}
+  .contact{flex-wrap:wrap}
   .hero{padding:40px 6% 44px}.hero svg{width:100%;opacity:.35}
 }
 
@@ -160,7 +186,7 @@ button,input,select{font-family:inherit}
 
 <header class="topbar">
   <a href="/" aria-label="Groupe Financier Formule — accueil"><img src="/assets/logo_gff_white.png" alt="Groupe Financier Formule"></a>
-  <a href="/">gfformule.ca</a>
+  <a class="tel" data-ct href="tel:+14185169553"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg><span data-ctt>418-516-9553</span></a>
 </header>
 
 <section class="hero">
@@ -169,6 +195,7 @@ button,input,select{font-family:inherit}
     <div class="rule" aria-hidden="true"></div>
     <h1>Mon budget</h1>
     <p>Un portrait clair de vos revenus et de vos dépenses, à remplir à votre rythme. Les totaux se calculent au fur et à mesure.</p>
+    <div class="offert">Un outil offert par Groupe Financier Formule</div>
     <ol class="etapes">
       <li>Remplissez vos montants</li>
       <li>Consultez votre bilan</li>
@@ -200,12 +227,23 @@ button,input,select{font-family:inherit}
       <button class="btn" id="b-copy" type="button"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>Copier le lien de mon budget</button>
       <button class="lien-link" id="b-reset" type="button">Tout effacer</button>
     </div>
+    <div class="contact"><img src="/assets/logo_gff.png" alt="Groupe Financier Formule"><div><b>Une question sur votre budget?</b><span>Votre conseiller, <span data-cn style="display:inline;margin:0">Olivier Fraser</span>, est là pour en discuter avec vous.</span><a data-ct href="tel:+14185169553"><span data-ctt>418-516-9553</span></a><a data-ce href="mailto:ofraser@gfformule.ca"><span data-cet>ofraser@gfformule.ca</span></a></div></div>
     <p class="confid">Vos montants restent sur votre appareil. Rien n'est transmis à Groupe Financier Formule tant que vous n'envoyez pas vous-même le lien ou le PDF.</p>
   </aside>
 
-  <p class="pied">Outil informatif. Il illustre vos renseignements et ne constitue pas un conseil financier, fiscal ou juridique. Les repères affichés sont indicatifs et se discutent avec votre conseiller.</p>
+  <p class="pied" style="display:none">Outil informatif. Il illustre vos renseignements et ne constitue pas un conseil financier, fiscal ou juridique. Les repères affichés sont indicatifs et se discutent avec votre conseiller.</p>
 </main>
 
+<footer class="foot">
+  <div class="foot-in">
+    <img src="/assets/logo_gff_white.png" alt="Groupe Financier Formule">
+    <div class="foot-txt">
+      <p><b>Groupe Financier Formule</b><br>Cabinet de services financiers</p>
+      <p><span data-cn>Olivier Fraser</span><br><a data-ct href="tel:+14185169553"><span data-ctt>418-516-9553</span></a><br><a data-ce href="mailto:ofraser@gfformule.ca"><span data-cet>ofraser@gfformule.ca</span></a><br><a href="/">gfformule.ca</a></p>
+    </div>
+    <p class="foot-note">Outil informatif. Il illustre vos renseignements et ne constitue pas un conseil financier, fiscal ou juridique. Les repères affichés sont indicatifs et se discutent avec votre conseiller.</p>
+  </div>
+</footer>
 <div class="barre" id="barre"><div><span id="barre-l">Solde mensuel</span><br><b id="barre-v">0 $</b></div><a href="#solde" id="barre-a">Voir le bilan</a></div>
 <div class="toast" id="toast" role="status"></div>
 
@@ -223,11 +261,20 @@ var SECT=[
  {k:'vie',t:'Vie courante',s:'Le quotidien et les loisirs',f:[['epic','Épicerie / alimentation'],['resto','Restaurants / sorties'],['vete','Vêtements / soins personnels'],['sante','Santé / médicaments'],['loisir','Loisirs / abonnements'],['enf-dep','Garderie / éducation des enfants'],['vac','Vacances / voyages']]},
  {k:'ep',t:'Dettes et épargne',s:'Ce que vous remboursez ou mettez de côté',f:[['reer-m','REER (cotisation)'],['celi-m','CELI (cotisation)'],['reee-m','REEE (cotisation)'],['dettes','Remboursement de dettes / cartes'],['assurance','Assurance vie / invalidité'],['urgence','Fonds d’urgence (épargne liquide)']]}
 ];
+var ICO={rev:'<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',log:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',trans:'<path d="M5 16l1.5-5.5A2 2 0 0 1 8.4 9h7.2a2 2 0 0 1 1.9 1.5L19 16"/><rect x="3" y="16" width="18" height="4" rx="1.5"/><circle cx="7.5" cy="18" r=".6"/><circle cx="16.5" cy="18" r=".6"/>',vie:'<path d="M6 7h12l-1 13H7z"/><path d="M9 7a3 3 0 0 1 6 0"/>',ep:'<path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/>'};
 var COUL={log:'#0F0F0F',trans:'#BF8F00',vie:'#2E75B6',ep:'#538135',sur:'#BFD9A8'};
 var NOMS={log:'Logement',trans:'Transport',vie:'Vie courante',ep:'Dettes et épargne',sur:'Surplus'};
 var $=function(i){return document.getElementById(i)};
 var fmt=function(n){return new Intl.NumberFormat('fr-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0}).format(Math.round(n))};
 var KEY='gff-budget-v1';
+var CONSEILLERS={olivier:{nom:'Olivier Fraser',email:'ofraser@gfformule.ca',tel:'418-516-9553'},maxime:{nom:'Maxime Théberge',email:'mtheberge@gfformule.ca',tel:'418-516-9121'}};
+var CONS=CONSEILLERS.olivier,consKey='olivier';
+function setCons(k){if(!CONSEILLERS[k])return;consKey=k;CONS=CONSEILLERS[k];
+  document.querySelectorAll('[data-cn]').forEach(function(e){e.textContent=CONS.nom});
+  document.querySelectorAll('[data-ct]').forEach(function(e){e.href='tel:+1'+CONS.tel.replace(/\D/g,'')});
+  document.querySelectorAll('[data-ctt]').forEach(function(e){e.textContent=CONS.tel});
+  document.querySelectorAll('[data-ce]').forEach(function(e){e.href='mailto:'+CONS.email});
+  document.querySelectorAll('[data-cet]').forEach(function(e){e.textContent=CONS.email});}
 
 /* lignes décoratives du haut */
 (function(){var s='',i,j;for(i=0;i<16;i++){var d='';for(j=0;j<=76;j++){var x=j*10,y=230-i*7+Math.sin(j/11+i*.22)*34+j*1.1*(1-i/22)*-0.9;d+=(j?'L':'M')+x+','+y.toFixed(1)}s+='<path d="'+d+'" fill="none" stroke="#BF8F00" stroke-width="1" opacity="'+(0.12+i*0.04).toFixed(2)+'"/>'}$('lignes').innerHTML=s})();
@@ -235,7 +282,7 @@ var KEY='gff-budget-v1';
 /* formulaire */
 var html='';
 SECT.forEach(function(S){
-  html+='<section class="sect" id="s-'+S.k+'"><div class="sect-h"><div><h2>'+S.t+'</h2><small>'+S.s+'</small></div><div class="sect-t" id="t-'+S.k+'">0 $</div></div>';
+  html+='<section class="sect" id="s-'+S.k+'"><div class="sect-h"><div class="ic"><span class="ico"><svg viewBox="0 0 24 24">'+ICO[S.k]+'</svg></span><div><h2>'+S.t+'</h2><small>'+S.s+'</small></div></div><div class="sect-t" id="t-'+S.k+'">0 $</div></div>';
   S.f.forEach(function(f){
     html+='<div class="row" data-id="'+f[0]+'"><div><label for="b-'+f[0]+'">'+f[1]+'</label><span class="eq" id="e-'+f[0]+'"></span></div>'
       +'<div class="amt"><input id="b-'+f[0]+'" type="number" inputmode="decimal" min="0" step="any" placeholder="0"><span>$</span></div>'
@@ -308,14 +355,14 @@ function rapport(){
   if(d.base){h+='<div class="r-two"><div><h2>Répartition</h2><div style="display:flex;gap:10pt;align-items:center">'+donut(d.cats,d.base).svg.replace('width="130" height="130"','width="92" height="92"')+'<div class="r-leg" style="flex:1">'+d.cats.map(function(c){return '<div><span><i style="background:'+COUL[c[0]]+'"></i>'+NOMS[c[0]]+'</span><b>'+fmt(c[1])+'</b></div>'}).join('')+'</div></div></div>'
     +'<div><h2>Repère 50 / 30 / 20</h2><div class="r-regle">'+d.rg.map(function(r){return '<div><b>'+r.p+' %</b>'+r.t+'<br>repère '+r.c+'</div>'}).join('')+'</div></div></div>';}
   if(window.__ob&&window.__ob.length&&d.rev>0)h+='<div class="r-sec"><h2>À retenir</h2><ul class="r-obs">'+window.__ob.map(function(o){return '<li>'+o+'</li>'}).join('')+'</ul></div>';
-  h+='<div class="r-foot">Document informatif préparé à partir des renseignements fournis par le client. Il ne constitue pas un conseil financier, fiscal ou juridique; les repères présentés sont indicatifs. Montants convertis en équivalent mensuel.<br><b>Groupe Financier Formule</b> · Cabinet de services financiers · gfformule.ca · ofraser@gfformule.ca · 418-516-9553</div>';
+  h+='<div class="r-foot">Document informatif préparé à partir des renseignements fournis par le client. Il ne constitue pas un conseil financier, fiscal ou juridique; les repères présentés sont indicatifs. Montants convertis en équivalent mensuel.<br><b>Groupe Financier Formule</b> · Cabinet de services financiers · gfformule.ca · '+CONS.nom+' · '+CONS.email+' · '+CONS.tel+'</div>';
   $('rapport').innerHTML=h;
 }
 function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 
 /* état, sauvegarde, partage */
-function etat(){var v={};SECT.forEach(function(S){S.f.forEach(function(f){var x=parseFloat($('b-'+f[0]).value);if(x>0)v[f[0]]=[x,parseInt($('f-'+f[0]).value)]})});return {n:$('nom').value.trim(),v:v}}
-function charge(o){if(!o)return;if(o.n!=null)$('nom').value=o.n;SECT.forEach(function(S){S.f.forEach(function(f){var x=o.v&&o.v[f[0]];$('b-'+f[0]).value=x?x[0]:'';$('f-'+f[0]).value=x?x[1]:12})})}
+function etat(){var v={};SECT.forEach(function(S){S.f.forEach(function(f){var x=parseFloat($('b-'+f[0]).value);if(x>0)v[f[0]]=[x,parseInt($('f-'+f[0]).value)]})});return {n:$('nom').value.trim(),v:v,c:consKey}}
+function charge(o){if(!o)return;if(o.c)setCons(o.c);if(o.n!=null)$('nom').value=o.n;SECT.forEach(function(S){S.f.forEach(function(f){var x=o.v&&o.v[f[0]];$('b-'+f[0]).value=x?x[0]:'';$('f-'+f[0]).value=x?x[1]:12})})}
 function enc(o){var b=new TextEncoder().encode(JSON.stringify(o)),s='';b.forEach(function(c){s+=String.fromCharCode(c)});return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
 function dec(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';var s=atob(t),a=new Uint8Array(s.length);for(var i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return JSON.parse(new TextDecoder().decode(a))}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(etat()))}catch(e){}}
@@ -334,7 +381,7 @@ $('b-copy').onclick=function(){copie(lien(),'Lien copié')};
 $('b-mail').onclick=function(){
   var d=window.__d,nom=$('nom').value.trim();
   var corps='Bonjour,\n\nVoici mon budget'+(nom?' ('+nom+')':'')+' : '+(d.vide?'':'revenus '+fmt(d.rev)+', dépenses '+fmt(d.dep)+' par mois.\n')+'\nLien vers mon budget rempli :\n'+lien()+'\n\nMerci!';
-  location.href='mailto:ofraser@gfformule.ca?subject='+encodeURIComponent('Mon budget'+(nom?' — '+nom:''))+'&body='+encodeURIComponent(corps);
+  location.href='mailto:'+CONS.email+'?subject='+encodeURIComponent('Mon budget'+(nom?' — '+nom:''))+'&body='+encodeURIComponent(corps);
 };
 $('b-reset').onclick=function(){if(!confirm('Effacer tous les montants?'))return;charge({n:'',v:{}});history.replaceState(null,'',location.pathname+location.search);calc()};
 
@@ -342,6 +389,7 @@ $('b-reset').onclick=function(){if(!confirm('Effacer tous les montants?'))return
 var q=new URLSearchParams(location.search),h=location.hash.match(/d=([A-Za-z0-9_-]+)/),done=false;
 if(h){try{charge(dec(h[1]));done=true}catch(e){}}
 if(!done){try{var sv=JSON.parse(localStorage.getItem(KEY)||'null');if(sv){charge(sv);done=true}}catch(e){}}
+if(q.get('c'))setCons(q.get('c'));
 if(q.get('nom')&&!$('nom').value)$('nom').value=q.get('nom').slice(0,80);
 calc();
 })();

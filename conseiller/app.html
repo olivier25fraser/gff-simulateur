@@ -2602,6 +2602,7 @@ body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
     <div class="cb">
       <div style="font-size:12px;color:var(--gry);margin-bottom:10px">Envoyez ce lien : le client remplit son budget sur une page à l'image de GFF, l'imprime en PDF ou vous renvoie son lien rempli, que vous pouvez importer ici.</div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <select id="bud-cli-cons" title="Conseiller affiché sur la page du client" style="height:38px;border:1.5px solid var(--gry-m);border-radius:var(--r);padding:0 10px;font-size:13px;font-family:'DM Sans',sans-serif;background:#fff"><option value="olivier">Conseiller : Olivier Fraser</option><option value="maxime">Conseiller : Maxime Théberge</option></select>
         <input type="text" id="bud-cli-nom" placeholder="Nom du client (facultatif)" style="height:38px;border:1.5px solid var(--gry-m);border-radius:var(--r);padding:0 12px;font-size:13px;min-width:230px;font-family:'DM Sans',sans-serif">
         <button type="button" class="print-btn" style="margin:0" onclick="budCopierLien()">Copier le lien client</button>
         <button type="button" class="print-btn" style="margin:0" onclick="budOuvrirLien()">Aperçu de la page</button>
@@ -9166,7 +9167,9 @@ function syncDossier(srcId, quiet) {
 function budMsg(t,ok){const m=document.getElementById('bud-cli-msg');if(m){m.textContent=t;m.style.color=ok===false?'#C55A11':'#375623'}}
 function budUrlClient(){
   const nom=(document.getElementById('bud-cli-nom')?.value||'').trim();
-  return location.origin+'/budget/'+(nom?'?nom='+encodeURIComponent(nom):'');
+  const c=document.getElementById('bud-cli-cons')?.value||'olivier';
+  const q=[];if(nom)q.push('nom='+encodeURIComponent(nom));if(c!=='olivier')q.push('c='+c);
+  return location.origin+'/budget/'+(q.length?'?'+q.join('&'):'');
 }
 function budCopierLien(){
   const u=budUrlClient();
@@ -9182,7 +9185,7 @@ function budVersClient(){
     v[inp.id.replace(/^b-/,'')]=[x,sel?parseInt(sel.value):12];
   });
   const n=(document.getElementById('bud-cli-nom')?.value||'').trim();
-  const bytes=new TextEncoder().encode(JSON.stringify({n:n,v:v}));let bin='';bytes.forEach(c=>bin+=String.fromCharCode(c));
+  const bytes=new TextEncoder().encode(JSON.stringify({n:n,v:v,c:(document.getElementById('bud-cli-cons')?.value||'olivier')}));let bin='';bytes.forEach(c=>bin+=String.fromCharCode(c));
   const t=btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
   window.open(location.origin+'/budget/#d='+t,'_blank','noopener');
 }
