@@ -1278,8 +1278,12 @@ body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
           <input type="number" id="an-autres-dette" value="0" min="0" oninput="calcActifNet()"></div>
 
         <div class="actif-section">Protection d'assurance en vigueur</div>
-        <div class="field"><label>Assurance vie &mdash; capital-décès total ($)</label>
-          <input type="number" id="an-ass-vie" value="0" min="0" oninput="calcActifNet()"></div>
+        <div class="field"><label>Assurance vie temporaire &mdash; capital-décès ($)</label>
+          <input type="number" id="an-ass-vie-t" value="0" min="0" oninput="calcActifNet()"></div>
+        <div class="field"><label>Assurance vie temporaire &mdash; durée restante <span class="sub">en années (ex. 20)</span></label>
+          <input type="number" id="an-ass-vie-t-duree" value="0" min="0" max="60" oninput="calcActifNet()"></div>
+        <div class="field"><label>Assurance vie permanente &mdash; capital-décès ($)</label>
+          <input type="number" id="an-ass-vie-p" value="0" min="0" oninput="calcActifNet()"></div>
         <div class="field"><label>Assurance invalidité &mdash; prestation mensuelle ($/mois)</label>
           <input type="number" id="an-ass-inv" value="0" min="0" oninput="calcActifNet()"></div>
         <div class="field"><label>Assurance maladies graves &mdash; capital ($)</label>
@@ -4389,7 +4393,7 @@ function bilanData() {
     reer: v('an-reer-val'), celi: v('an-celi-val'), reee: v('an-reee-val'), rpa: v('an-rpa'),
     nonreg: v('an-nonreg'), rachat: v('an-rachat'), autres: v('an-autres-actif'),
     hypo: v('an-hypo'), auto: v('an-auto'), cc: v('an-cc'), autresD: v('an-autres-dette'),
-    assVie: v('an-ass-vie'), assInv: v('an-ass-inv'), assMg: v('an-ass-mg')
+    assVieT: v('an-ass-vie-t'), assVieDuree: v('an-ass-vie-t-duree'), assVieP: v('an-ass-vie-p'), assInv: v('an-ass-inv'), assMg: v('an-ass-mg')
   };
   d.groupes = [
     { cle: 'liq', nom: 'Liquidités', val: d.liquide, coul: '#2E75B6' },
@@ -4411,7 +4415,9 @@ function bilanData() {
     ['Placements non enregistrés', [['Placements non enregistrés', d.nonreg]]],
     ['Autres actifs', [['Valeur de rachat (assurance vie)', d.rachat], ['Autres actifs', d.autres]]]
   ];
-  d.lignesAss = [['Assurance vie : capital-décès', d.assVie, 'cap'], ['Assurance invalidité : prestation mensuelle', d.assInv, 'mois'], ['Assurance maladies graves : capital', d.assMg, 'cap']].filter(x => x[1] > 0);
+  d.assVie = d.assVieT + d.assVieP;
+  const dureeTxt = d.assVieDuree > 0 ? ' (' + d.assVieDuree + (d.assVieDuree > 1 ? ' ans' : ' an') + ' restant' + (d.assVieDuree > 1 ? 's' : '') + ')' : '';
+  d.lignesAss = [['Assurance vie temporaire' + dureeTxt, d.assVieT, 'cap'], ['Assurance vie permanente', d.assVieP, 'cap'], ['Assurance invalidité : prestation mensuelle', d.assInv, 'mois'], ['Assurance maladies graves : capital', d.assMg, 'cap']].filter(x => x[1] > 0);
   d.lignesPassif = [['Hypothèque', d.hypo], ['Prêts auto', d.auto], ['Cartes de crédit / marges', d.cc], ['Prêts étudiants / autres dettes', d.autresD]];
   return d;
 }
@@ -4465,7 +4471,7 @@ function calcActifNet() {
   if (d.lignesAss.length) {
     html += '<div class="actif-section">Protection d\'assurance en vigueur</div>';
     d.lignesAss.forEach(([n, v, t]) => { html += '<div class="actif-row"><span class="al">' + n + '</span><span class="av">' + fmt(v) + (t === 'mois' ? ' / mois' : '') + '</span></div>'; });
-    if (d.assVie > 0 && d.passif > 0) html += '<div style="font-size:11px;color:var(--gry);margin-top:8px">Le capital-décès en vigueur représente ' + Math.round(d.assVie / d.passif * 100) + ' % du passif total.</div>';
+    if (d.assVie > 0 && d.passif > 0) html += '<div style="font-size:11px;color:var(--gry);margin-top:8px">Le capital-décès total en vigueur (' + fmt(d.assVie) + ') représente ' + Math.round(d.assVie / d.passif * 100) + ' % du passif total.</div>';
   }
   zone.innerHTML = html;
 }
@@ -4512,7 +4518,7 @@ function printBilan() {
   if (d.lignesAss.length) {
     h += '<div class="card"><div class="ch bl">Protection d\'assurance en vigueur</div><div class="cb">' +
       d.lignesAss.map(([n, v, t]) => pf(n, fmt(v) + (t === 'mois' ? ' / mois' : ''))).join('') +
-      (d.assVie > 0 && d.passif > 0 ? '<div class="note" style="margin-top:8px">Le capital-décès en vigueur représente ' + Math.round(d.assVie / d.passif * 100) + ' % du passif total déclaré.</div>' : '') +
+      (d.assVie > 0 && d.passif > 0 ? '<div class="note" style="margin-top:8px">Le capital-décès total en vigueur (' + fmt(d.assVie) + ') représente ' + Math.round(d.assVie / d.passif * 100) + ' % du passif total déclaré.</div>' : '') +
       '</div></div>';
   }
   // projection
