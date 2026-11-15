@@ -1205,6 +1205,14 @@ body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
 
 <!-- ═══════ PROFIL ═══════ -->
 <div id="pane-profil" class="pane on">
+  <button class="print-btn" onclick="printBilan()">
+    <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#BF8F00;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">
+      <polyline points="6 9 6 2 18 2 18 9"/>
+      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+      <rect x="6" y="14" width="12" height="8"/>
+    </svg>
+    Imprimer le bilan patrimonial (PDF)
+  </button>
   <div id="kpis" class="kpis"></div>
 
   <div class="card" style="margin-bottom:18px">
@@ -1223,6 +1231,8 @@ body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
         <div class="ch nv">Profil personnel</div>
         <div class="cb">
           <div class="hint" style="margin:0 0 14px;padding:9px 12px;background:#FFF8E1;border-left:3px solid #BF8F00;border-radius:6px;font-size:12px">Ces renseignements alimentent automatiquement les autres onglets (REER, CELI, retraite, succession…). Un champ modifié à la main ailleurs n'est plus écrasé.</div>
+          <div class="field"><label>Nom du client <span class="sub">pour le rapport imprimé</span></label>
+            <input type="text" id="p-nom" placeholder="Prénom Nom" maxlength="80" oninput="calcActifNet()"></div>
           <div class="field"><label>Situation familiale</label>
             <select id="p-sit" onchange="calc()">
               <option>Personne seule</option><option>Couple (2 revenus)</option>
@@ -1236,6 +1246,8 @@ body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
           <div class="field"><label>Enfants à charge</label><input type="number" id="p-enf" value="0" min="0" max="10" oninput="calc()"></div>
 
         <div class="actif-section">Actif</div>
+        <div class="field"><label>Comptes bancaires / liquidités ($)</label>
+          <input type="number" id="an-liquide" value="0" min="0" oninput="calcActifNet()"></div>
         <div class="field"><label>Valeur de la résidence principale ($)</label>
           <input type="number" id="an-maison" value="0" min="0" oninput="calcActifNet()"></div>
         <div class="field"><label>Autres propriétés / immobilier ($)</label>
@@ -1246,8 +1258,12 @@ body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
           <input type="number" id="an-celi-val" value="0" min="0" oninput="calcActifNet()"></div>
         <div class="field"><label>REEE ($)</label>
           <input type="number" id="an-reee-val" value="0" min="0" oninput="calcActifNet()"></div>
+        <div class="field"><label>Régime de retraite de l'employeur &mdash; valeur estimée ($)</label>
+          <input type="number" id="an-rpa" value="0" min="0" oninput="calcActifNet()"></div>
         <div class="field"><label>Placements non enregistrés ($)</label>
           <input type="number" id="an-nonreg" value="0" min="0" oninput="calcActifNet()"></div>
+        <div class="field"><label>Valeur de rachat &mdash; assurance vie permanente ($)</label>
+          <input type="number" id="an-rachat" value="0" min="0" oninput="calcActifNet()"></div>
         <div class="field"><label>Autres actifs (véhicule, entreprise...) ($)</label>
           <input type="number" id="an-autres-actif" value="0" min="0" oninput="calcActifNet()"></div>
 
@@ -1260,6 +1276,14 @@ body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
           <input type="number" id="an-cc" value="0" min="0" oninput="calcActifNet()"></div>
         <div class="field"><label>Prêts étudiants / autres dettes ($)</label>
           <input type="number" id="an-autres-dette" value="0" min="0" oninput="calcActifNet()"></div>
+
+        <div class="actif-section">Protection d'assurance en vigueur</div>
+        <div class="field"><label>Assurance vie &mdash; capital-décès total ($)</label>
+          <input type="number" id="an-ass-vie" value="0" min="0" oninput="calcActifNet()"></div>
+        <div class="field"><label>Assurance invalidité &mdash; prestation mensuelle ($/mois)</label>
+          <input type="number" id="an-ass-inv" value="0" min="0" oninput="calcActifNet()"></div>
+        <div class="field"><label>Assurance maladies graves &mdash; capital ($)</label>
+          <input type="number" id="an-ass-mg" value="0" min="0" oninput="calcActifNet()"></div>
         </div>
       </div>
       <div class="card notes-card">
@@ -3261,8 +3285,8 @@ function drawNetWorth() {
   const rev=g('p-rev'), age=g('p-age'), ret=g('p-ret');
   const reerCot=getAnnualCot('r'), reerRend=g('r-rend')/100, reerSol=g('r-sol');
   const celiCot=getAnnualCot('c'), celiRend=g('c-ren')/100, celiSol=g('c-sol');
-  const maison=g('an-maison'), hypo=g('an-hypo');
-  const autresA=g('an-reer-val')+g('an-celi-val')+g('an-nonreg')+g('an-autres-actif');
+  const maison=g('an-maison')+g('an-immo'), hypo=g('an-hypo');
+  const autresA=g('an-reer-val')+g('an-celi-val')+g('an-reee-val')+g('an-nonreg')+g('an-liquide')+g('an-rpa')+g('an-rachat')+g('an-autres-actif');
   const dettes=g('an-auto')+g('an-cc')+g('an-autres-dette');
 
   const W=Math.max(500,svg.parentElement?.offsetWidth||700);
@@ -3353,6 +3377,7 @@ function drawNetWorth() {
     `<span>Immo. : <strong>${fmt(Math.round(sImmo[years]))}</strong></span>`;
 }
 
+  window._drawNW = drawNetWorth;
   drawNetWorth();
   var _pr = document.getElementById("pane-retraite");
   if(_pr && _pr.classList.contains("on")){ if(typeof rtRecalc==='function') rtRecalc(); }
@@ -4357,67 +4382,157 @@ function retenueSource(retrait) {
 // ══════════════════════════════════════════
 // ACTIF NET
 // ══════════════════════════════════════════
+function bilanData() {
+  const v = id => g(id);
+  const d = {
+    liquide: v('an-liquide'), maison: v('an-maison'), immo: v('an-immo'),
+    reer: v('an-reer-val'), celi: v('an-celi-val'), reee: v('an-reee-val'), rpa: v('an-rpa'),
+    nonreg: v('an-nonreg'), rachat: v('an-rachat'), autres: v('an-autres-actif'),
+    hypo: v('an-hypo'), auto: v('an-auto'), cc: v('an-cc'), autresD: v('an-autres-dette'),
+    assVie: v('an-ass-vie'), assInv: v('an-ass-inv'), assMg: v('an-ass-mg')
+  };
+  d.groupes = [
+    { cle: 'liq', nom: 'Liquidités', val: d.liquide, coul: '#2E75B6' },
+    { cle: 'reg', nom: 'Épargne-retraite et études', val: d.reer + d.celi + d.reee + d.rpa, coul: '#BF8F00' },
+    { cle: 'nr',  nom: 'Placements non enregistrés', val: d.nonreg, coul: '#0F0F0F' },
+    { cle: 'imm', nom: 'Immobilier', val: d.maison + d.immo, coul: '#538135' },
+    { cle: 'aut', nom: 'Autres actifs', val: d.rachat + d.autres, coul: '#8C8C8C' }
+  ];
+  d.actif = d.groupes.reduce((a, x) => a + x.val, 0);
+  d.passif = d.hypo + d.auto + d.cc + d.autresD;
+  d.net = d.actif - d.passif;
+  d.ratio = d.actif > 0 ? d.passif / d.actif * 100 : (d.passif > 0 ? 100 : 0);
+  d.pctImmo = d.actif > 0 ? (d.maison + d.immo) / d.actif * 100 : 0;
+  d.pctPlac = d.actif > 0 ? (d.reer + d.celi + d.reee + d.rpa + d.nonreg) / d.actif * 100 : 0;
+  d.lignesActif = [
+    ['Liquidités', [['Comptes bancaires / liquidités', d.liquide]]],
+    ['Immobilier', [['Résidence principale', d.maison], ['Autres propriétés', d.immo]]],
+    ['Épargne-retraite et études', [['REER / FERR', d.reer], ['CELI', d.celi], ['REEE', d.reee], ["Régime de retraite de l'employeur", d.rpa]]],
+    ['Placements non enregistrés', [['Placements non enregistrés', d.nonreg]]],
+    ['Autres actifs', [['Valeur de rachat (assurance vie)', d.rachat], ['Autres actifs', d.autres]]]
+  ];
+  d.lignesAss = [['Assurance vie : capital-décès', d.assVie, 'cap'], ['Assurance invalidité : prestation mensuelle', d.assInv, 'mois'], ['Assurance maladies graves : capital', d.assMg, 'cap']].filter(x => x[1] > 0);
+  d.lignesPassif = [['Hypothèque', d.hypo], ['Prêts auto', d.auto], ['Cartes de crédit / marges', d.cc], ['Prêts étudiants / autres dettes', d.autresD]];
+  return d;
+}
+
+function bilanBarre(d, h) {
+  const segs = d.groupes.filter(x => x.val > 0 && d.actif > 0);
+  return '<div style="display:flex;height:' + h + 'px;border-radius:' + Math.round(h / 2) + 'px;overflow:hidden;background:#eee;-webkit-print-color-adjust:exact;print-color-adjust:exact">' +
+    segs.map(x => '<div style="width:' + (x.val / d.actif * 100).toFixed(2) + '%;background:' + x.coul + ';-webkit-print-color-adjust:exact;print-color-adjust:exact"></div>').join('') + '</div>';
+}
+
 function calcActifNet() {
-  const maison   = g('an-maison');
-  const immo     = g('an-immo');
-  const reer_v   = g('an-reer-val');
-  const celi_v   = g('an-celi-val');
-  const reee_v   = g('an-reee-val');
-  const nonreg   = g('an-nonreg');
-  const autres_a = g('an-autres-actif');
-  const hypo     = g('an-hypo');
-  const auto_v   = g('an-auto');
-  const cc       = g('an-cc');
-  const autres_d = g('an-autres-dette');
-
-  const totalActif  = maison+immo+reer_v+celi_v+reee_v+nonreg+autres_a;
-  const totalPassif = hypo+auto_v+cc+autres_d;
-  const actifNet    = totalActif - totalPassif;
-  const ratio       = totalActif > 0 ? (totalPassif/totalActif*100) : 0;
-
-  if (totalActif === 0 && totalPassif === 0) return;
-
   const zone = document.getElementById('actif-net-zone');
   if (!zone) return;
-
-  const items = [
-    ['Résidence principale', maison, 'pos'],
-    ['Autres propriétés',    immo,   'pos'],
-    ['REER / FERR',          reer_v, 'pos'],
-    ['CELI',                 celi_v, 'pos'],
-    ['REEE',                 reee_v, 'pos'],
-    ['Non enregistrés',      nonreg, 'pos'],
-    ['Autres actifs',        autres_a,'pos'],
-  ].filter(([,v])=>v>0);
-
-  const debts = [
-    ['Hypothèque',          hypo,     'neg'],
-    ['Prêts auto',          auto_v,   'neg'],
-    ['Cartes / marges',     cc,       'neg'],
-    ['Autres dettes',       autres_d, 'neg'],
-  ].filter(([,v])=>v>0);
-
-  let html = `<div style="font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--gry);margin-bottom:8px">Actif total</div>`;
-  items.forEach(([l,v])=>{
-    html+=`<div class="actif-row"><span class="al">${l}</span><span class="av pos">${fmt(v)}</span></div>`;
-  });
-  html+=`<div class="actif-row" style="font-weight:700"><span class="al">Total actif</span><span class="av pos">${fmt(totalActif)}</span></div>`;
-
-  if (debts.length) {
-    html+=`<div style="font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--gry);margin:14px 0 8px">Passif (dettes)</div>`;
-    debts.forEach(([l,v])=>{
-      html+=`<div class="actif-row"><span class="al">${l}</span><span class="av neg">- ${fmt(v)}</span></div>`;
-    });
-    html+=`<div class="actif-row" style="font-weight:700"><span class="al">Total passif</span><span class="av neg">- ${fmt(totalPassif)}</span></div>`;
+  const d = bilanData();
+  if (window._drawNW) { try { window._drawNW(); } catch (e) {} }
+  if (d.actif === 0 && d.passif === 0 && !d.lignesAss.length) {
+    zone.innerHTML = '<div style="color:var(--gry);font-size:12px">Remplissez les champs actif/passif dans le profil pour voir votre bilan.</div>';
+    return;
   }
+  const okR = d.ratio <= 35 ? '#375623' : d.ratio <= 60 ? '#BF8F00' : '#C55A11';
+  const legende = d.groupes.filter(x => x.val > 0).map(x =>
+    '<div style="display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px"><span style="width:10px;height:10px;border-radius:50%;background:' + x.coul + ';flex:none"></span>' +
+    '<span style="flex:1;color:var(--gry)">' + x.nom + '</span><strong style="color:var(--ink)">' + fmt(x.val) + '</strong>' +
+    '<span style="width:44px;text-align:right;color:var(--gry);font-size:11px">' + (d.actif > 0 ? Math.round(x.val / d.actif * 100) : 0) + ' %</span></div>').join('');
 
-  html+=`<div class="actif-net-total">
-    <div><div class="ant-label">Actif net</div>
-    <div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:2px">Ratio d'endettement: ${ratio.toFixed(0)}%</div></div>
-    <div class="ant-value" style="color:${actifNet>=0?'#BF8F00':'#ff6b6b'}">${fmt(actifNet)}</div>
-  </div>`;
+  let html = '<div class="actif-net-total" style="margin-top:0"><div><div class="ant-label">Actif net</div>' +
+    '<div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:3px">Actif ' + fmt(d.actif) + ' \u2212 passif ' + fmt(d.passif) + '</div></div>' +
+    '<div class="ant-value" style="color:' + (d.net >= 0 ? '#BF8F00' : '#ff6b6b') + '">' + fmt(d.net) + '</div></div>';
 
+  html += '<div class="actif-section">Composition de l\'actif</div>' + bilanBarre(d, 14) + '<div style="margin-top:10px">' + legende + '</div>';
+
+  html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px">' +
+    '<div style="background:var(--gry-l);border-radius:8px;padding:10px 12px"><div style="font-size:10px;color:var(--gry);font-weight:600">Endettement</div><div style="font-size:19px;font-weight:700;color:' + okR + '">' + Math.round(d.ratio) + ' %</div><div style="font-size:10px;color:var(--gry)">passif \u00f7 actif</div></div>' +
+    '<div style="background:var(--gry-l);border-radius:8px;padding:10px 12px"><div style="font-size:10px;color:var(--gry);font-weight:600">Immobilier</div><div style="font-size:19px;font-weight:700">' + Math.round(d.pctImmo) + ' %</div><div style="font-size:10px;color:var(--gry)">de l\'actif</div></div>' +
+    '<div style="background:var(--gry-l);border-radius:8px;padding:10px 12px"><div style="font-size:10px;color:var(--gry);font-weight:600">Placements</div><div style="font-size:19px;font-weight:700">' + Math.round(d.pctPlac) + ' %</div><div style="font-size:10px;color:var(--gry)">de l\'actif</div></div></div>';
+
+  html += '<div class="actif-section">Détail de l\'actif</div>';
+  d.lignesActif.forEach(([titre, lignes]) => {
+    const l = lignes.filter(([, v]) => v > 0);
+    if (!l.length) return;
+    l.forEach(([n, v]) => { html += '<div class="actif-row"><span class="al">' + n + '</span><span class="av pos">' + fmt(v) + '</span></div>'; });
+  });
+  html += '<div class="actif-row" style="font-weight:700"><span class="al">Total actif</span><span class="av pos">' + fmt(d.actif) + '</span></div>';
+
+  const dettes = d.lignesPassif.filter(([, v]) => v > 0);
+  if (dettes.length) {
+    html += '<div class="actif-section">Passif (dettes)</div>';
+    dettes.forEach(([n, v]) => { html += '<div class="actif-row"><span class="al">' + n + '</span><span class="av neg">\u2212 ' + fmt(v) + '</span></div>'; });
+    html += '<div class="actif-row" style="font-weight:700"><span class="al">Total passif</span><span class="av neg">\u2212 ' + fmt(d.passif) + '</span></div>';
+  }
+  if (d.lignesAss.length) {
+    html += '<div class="actif-section">Protection d\'assurance en vigueur</div>';
+    d.lignesAss.forEach(([n, v, t]) => { html += '<div class="actif-row"><span class="al">' + n + '</span><span class="av">' + fmt(v) + (t === 'mois' ? ' / mois' : '') + '</span></div>'; });
+    if (d.assVie > 0 && d.passif > 0) html += '<div style="font-size:11px;color:var(--gry);margin-top:8px">Le capital-décès en vigueur représente ' + Math.round(d.assVie / d.passif * 100) + ' % du passif total.</div>';
+  }
   zone.innerHTML = html;
+}
+
+function printBilan() {
+  const d = bilanData();
+  const txt = id => { const e = document.getElementById(id); return e ? e.value : ''; };
+  const nom = (txt('p-nom') || txt('retraite-client-nom') || '').trim();
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const sitEl = document.getElementById('p-sit');
+  const sit = sitEl && sitEl.options[sitEl.selectedIndex] ? sitEl.options[sitEl.selectedIndex].text : '';
+  const pf = (n, v) => '<div class="rrow"><span class="rl">' + n + '</span><span class="rv">' + v + '</span></div>';
+  const keep = 'print-color-adjust:exact;-webkit-print-color-adjust:exact';
+  let h = '';
+  // profil
+  h += '<div class="card"><div class="ch nv">Profil</div><div class="cb"><div class="g2"><div>' +
+    pf('Client', nom ? esc(nom) : '\u2014') + pf('Situation familiale', esc(sit)) + pf('Enfants à charge', g('p-enf')) +
+    '</div><div>' + pf('Âge actuel', g('p-age') + ' ans') + pf('Retraite prévue à', g('p-ret') + ' ans') +
+    pf('Revenu brut annuel', fmt(g('p-rev')) + (g('p-rev2') > 0 ? ' + ' + fmt(g('p-rev2')) : '')) + '</div></div></div></div>';
+  // KPIs
+  h += '<div class="kpis"><div class="kpi gn"><div class="kl">Total actif</div><div class="kv">' + fmt(d.actif) + '</div></div>' +
+    '<div class="kpi or"><div class="kl">Total passif</div><div class="kv">' + fmt(d.passif) + '</div></div>' +
+    '<div class="kpi gd"><div class="kl">Actif net</div><div class="kv" style="' + (d.net < 0 ? 'color:#C55A11' : '') + '">' + fmt(d.net) + '</div></div>' +
+    '<div class="kpi"><div class="kl">Endettement</div><div class="kv">' + Math.round(d.ratio) + ' %</div><div class="ks">passif \u00f7 actif</div></div></div>';
+  // répartition
+  const gs = d.groupes.filter(x => x.val > 0);
+  if (gs.length) {
+    h += '<div class="card"><div class="ch gd">Composition de l\'actif</div><div class="cb">' + bilanBarre(d, 16) +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 28px;margin-top:10px;font-family:Arial,sans-serif;font-size:11px">' +
+      gs.map(x => '<div style="display:flex;align-items:center;gap:7px;padding:3px 0"><span style="width:9px;height:9px;border-radius:50%;background:' + x.coul + ';flex:none;' + keep + '"></span><span style="flex:1;color:#666">' + x.nom + '</span><b>' + fmt(x.val) + '</b><span style="width:34px;text-align:right;color:#999">' + Math.round(x.val / d.actif * 100) + ' %</span></div>').join('') +
+      '</div></div></div>';
+  }
+  // actif / passif
+  let ra = '';
+  d.lignesActif.forEach(([titre, lignes]) => lignes.filter(([, v]) => v > 0).forEach(([n, v]) => { ra += pf(n, fmt(v)); }));
+  ra += '<div class="rrow tot"><span class="rl">Total actif</span><span class="rv">' + fmt(d.actif) + '</span></div>';
+  let rp = '';
+  d.lignesPassif.filter(([, v]) => v > 0).forEach(([n, v]) => { rp += pf(n, '\u2212 ' + fmt(v)); });
+  if (!rp) rp = pf('Aucune dette déclarée', '\u2014');
+  rp += '<div class="rrow tot"><span class="rl">Total passif</span><span class="rv">' + fmt(d.passif) + '</span></div>';
+  h += '<div class="g2"><div class="card"><div class="ch gn">Actif</div><div class="cb">' + ra + '</div></div>' +
+       '<div class="card"><div class="ch or">Passif</div><div class="cb">' + rp + '</div></div></div>';
+  // assurance
+  if (d.lignesAss.length) {
+    h += '<div class="card"><div class="ch bl">Protection d\'assurance en vigueur</div><div class="cb">' +
+      d.lignesAss.map(([n, v, t]) => pf(n, fmt(v) + (t === 'mois' ? ' / mois' : ''))).join('') +
+      (d.assVie > 0 && d.passif > 0 ? '<div class="note" style="margin-top:8px">Le capital-décès en vigueur représente ' + Math.round(d.assVie / d.passif * 100) + ' % du passif total déclaré.</div>' : '') +
+      '</div></div>';
+  }
+  // projection
+  const svg = document.getElementById('nw-svg');
+  if (svg && svg.innerHTML.trim()) {
+    const w = parseFloat(svg.getAttribute('width')) || 700;
+    const leg = document.getElementById('nw-legende');
+    h += '<div class="card"><div class="ch nv">Projection de l\'actif net sur 20 ans</div><div class="cb">' +
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + w + ' 220" width="100%">' + svg.innerHTML + '</svg>' +
+      '<div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:6px;font-size:10px;color:#666;font-family:Arial,sans-serif">' + (leg ? leg.innerHTML : '') + '</div>' +
+      '<div class="note">Projection fondée sur les cotisations et rendements saisis dans les onglets REER et CELI, une croissance de l\'immobilier d\'environ 3\u00a0% par an, un remboursement linéaire des dettes sur 20 ans et une croissance d\'environ 4\u00a0% par an des autres placements. Il s\'agit d\'une illustration et non d\'une prévision.</div></div></div>';
+  }
+  h += '<div class="note">Les valeurs présentées sont celles déclarées par le client et n\'ont pas fait l\'objet d\'une vérification.</div>';
+
+  const tmp = document.createElement('div');
+  tmp.id = 'pane-bilanprint';
+  tmp.style.display = 'none';
+  tmp.innerHTML = h;
+  document.body.appendChild(tmp);
+  try { printPane('bilanprint', 'Bilan patrimonial' + (nom ? ' \u2014 ' + nom : '')); } finally { tmp.remove(); }
 }
 
 
