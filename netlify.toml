@@ -7,10 +7,6 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
-[[scheduled_functions]]
-  name = "fonds-update"
-  cron = "0 13 5 * *"
-
 [[redirects]]
   from = "/marches"
   to = "/"
