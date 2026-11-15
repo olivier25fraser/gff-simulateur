@@ -65,25 +65,33 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0F0F0F;
 </div>
 
 <script>
-const H = "d781ec969b160c2beb25b3e01a3c059a213009d03b07f5c188ed1285ef647575";
-
-function verifier() {
-  const pwd = document.getElementById('pwd').value.trim();
-  if (!pwd) { document.getElementById('pwd').focus(); return; }
+async function verifier() {
+  const champ = document.getElementById('pwd');
+  const pwd = champ.value.trim();
+  if (!pwd) { champ.focus(); return; }
   const btn = document.getElementById('btn');
+  const err = document.getElementById('err');
   btn.disabled = true;
   btn.textContent = 'V\u00e9rification...';
-  document.getElementById('err').style.display = 'none';
+  err.style.display = 'none';
 
-  // Vérification simple compatible HTTP et HTTPS
-  const encoded = btoa(unescape(encodeURIComponent(pwd)));
-  if (encoded === 'R0ZGMjAyNiFPRk1U') {
-    sessionStorage.setItem('gff_conseiller_auth', 'R0ZGMjAyNiFPRk1U');
+  let ok = false;
+  try {
+    const r = await fetch('/conseiller/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ password: pwd })
+    });
+    ok = r.ok;
+  } catch (e) { ok = false; }
+
+  if (ok) {
     window.location.href = '/conseiller/app.html';
   } else {
-    document.getElementById('err').style.display = 'block';
-    document.getElementById('pwd').value = '';
-    document.getElementById('pwd').focus();
+    err.style.display = 'block';
+    champ.value = '';
+    champ.focus();
     btn.disabled = false;
     btn.textContent = 'Acc\u00e9der au simulateur \u2192';
   }
@@ -92,12 +100,7 @@ function verifier() {
 function togglePwd(el) {
   const inp = document.getElementById('pwd');
   inp.type = inp.type === 'password' ? 'text' : 'password';
-  el.textContent = inp.type === 'password' ? '👁' : '🙈';
-}
-
-// Si déjà authentifié → aller directement au simulateur
-if (sessionStorage.getItem('gff_conseiller_auth') === 'R0ZGMjAyNiFPRk1U') {
-  window.location.href = '/conseiller/app.html';
+  el.textContent = inp.type === 'password' ? '\ud83d\udc41' : '\ud83d\ude48';
 }
 </script>
 </body>

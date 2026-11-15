@@ -4,14 +4,13 @@
  */
 
 import { getStore } from "@netlify/blobs";
-
-const HASH = "d781ec969b160c2beb25b3e01a3c059a213009d03b07f5c188ed1285ef647575";
+import { sessionValide } from "./_shared/session.mjs";
 
 const HEADERS = {
   "Content-Type": "application/json",
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "x-gff-auth, Content-Type"
+  "Access-Control-Allow-Headers": "Content-Type"
 };
 
 function resp(data, status) {
@@ -24,8 +23,7 @@ function resp(data, status) {
 export default async function handler(req, context) {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: HEADERS });
 
-  const auth = req.headers.get("x-gff-auth");
-  if (auth !== HASH) return resp({ error: "Non autorise" }, 401);
+  if (!sessionValide(req)) return resp({ error: "Non autorise" }, 401);
 
   try {
     const store = getStore({ name: "gff-clients", consistency: "strong" });
