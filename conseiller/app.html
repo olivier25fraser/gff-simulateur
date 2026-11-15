@@ -741,6 +741,13 @@ body.dark #pane-retraite .note{background:#241f0f;color:#ccc}
 .rt-step>summary::after{content:'▾';color:var(--gry);font-size:13px;transition:transform .15s}
 .rt-step:not([open])>summary::after{transform:rotate(-90deg)}
 .rt-sb{padding:4px 18px 18px;border-top:1px solid var(--gry-l)}
+.rt-nav{display:flex;justify-content:space-between;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--gry-l)}
+.rt-nav button{border:1px solid var(--gry-m);background:#fff;color:var(--ink);border-radius:999px;padding:9px 18px;font-weight:700;font-size:13.5px;cursor:pointer;font-family:inherit}
+.rt-nav button:hover{border-color:var(--rt-gold)}
+.rt-nav .rt-next{background:var(--ink);color:#fff;border-color:var(--ink);margin-left:auto}
+.rt-nav .rt-next.final{background:var(--rt-gold);border-color:var(--rt-gold);color:#0F0F0F}
+body.dark #pane-retraite .rt-nav button:not(.rt-next){background:#1a1a1a;color:#eee;border-color:#444}
+#pane-retraite.rt-client .rt-nav{display:none}
 .rt-sub{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--rt-gold-br);margin:18px 0 8px}
 .rt-sub:first-child{margin-top:12px}
 .rt-grid2,.rt-grid3,.rt-grid4{display:grid;gap:0 12px}
@@ -768,7 +775,10 @@ body.dark #pane-retraite .note{background:#241f0f;color:#ccc}
 /* verdict */
 .rt-verdict{display:grid;grid-template-columns:auto 1fr;gap:4px 18px;align-items:center;border-radius:20px;padding:18px 24px;margin-bottom:14px;color:#fff;background:linear-gradient(125deg,#0F0F0F 0%,#262620 100%);border-left:8px solid #4ade80;box-shadow:var(--shadow-lg)}
 .rt-verdict.warn{border-left-color:#fbbf24}
+body.rt-client-on #update-banner{display:none!important}
 .rt-verdict.bad{border-left-color:#f87171}
+#pane-retraite.rt-client .rt-verdict.bad{border-left-color:#fbbf24}
+#pane-retraite.rt-client .rt-verdict.bad .rv-icon{background:rgba(251,191,36,.16);color:#fbbf24}
 .rv-icon{grid-row:1/3;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;background:rgba(74,222,128,.16);color:#4ade80}
 .rt-verdict.warn .rv-icon{background:rgba(251,191,36,.16);color:#fbbf24}
 .rt-verdict.bad .rv-icon{background:rgba(248,113,113,.16);color:#f87171}
@@ -4545,6 +4555,7 @@ function show(id,el){
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
   $('pane-'+id).classList.add('on');
+  document.body.classList.toggle('rt-client-on', id==='retraite' && $('pane-retraite').classList.contains('rt-client'));
   el.classList.add('on');
   // Faire défiler la barre d'onglets pour centrer l'onglet actif
   if(el.scrollIntoView) el.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
@@ -8752,6 +8763,7 @@ function rtToggleClient() {
   const on = p.classList.toggle('rt-client');
   const b = $('rt-client-btn');
   if (b) { b.classList.toggle('on', on); b.textContent = on ? '✎ Retour à la saisie' : '🖥 Mode client'; }
+  document.body.classList.toggle('rt-client-on', on);
   if (on) p.dataset.view = 'ov';
   document.querySelectorAll('#rt-vtabs button').forEach(x => x.classList.toggle('on', x.dataset.v === p.dataset.view));
   rtRecalc();
@@ -9025,26 +9037,26 @@ function rtRenderVerdict() {
   if (!a) { el.innerHTML = ''; return; }
   const pct = Math.round(a.pct);
   let cls = 'ok', icon = '✓', title;
-  if (a.manque <= 0) title = a.dejaRetraite ? 'Le capital actuel suffit' : 'Objectif atteint — ' + pct + ' %';
-  else if (a.pct >= 75) { cls = 'warn'; icon = '!'; title = 'Presque — ' + pct + ' % de l\'objectif'; }
-  else { cls = 'bad'; icon = '!'; title = 'Écart important — ' + pct + ' % de l\'objectif'; }
+  if (a.manque <= 0) title = a.dejaRetraite ? 'Votre capital actuel suffit pour la retraite' : 'Bonne nouvelle : votre objectif de retraite est atteint';
+  else if (a.pct >= 75) { cls = 'warn'; icon = '!'; title = 'Vous êtes presque rendu : ' + pct + ' % de votre objectif'; }
+  else { cls = 'bad'; icon = '!'; title = 'Vous avez atteint ' + pct + ' % de votre objectif'; }
 
   const qui = rtMode === 'seul' ? '' : ' du couple';
   let sub = a.dejaRetraite
-    ? 'Capital actuel' + qui + ' : ' + fmt(Math.round(a.capitalProj)) + ' pour un besoin de ' + fmt(Math.round(a.capitalNecessaire)) + '.'
-    : 'Capital projeté' + qui + ' à ' + a.ageRet + ' ans : ' + fmt(Math.round(a.capitalProj)) + ' pour un objectif de ' + fmt(Math.round(a.capitalNecessaire)) + '.';
-  if (a.manque > 0 && !a.dejaRetraite) sub += ' Il manque ' + fmt(Math.round(a.manque)) + ', soit environ ' + fmt(Math.round(a.cotAdd / 12)) + ' de plus par mois.';
+    ? 'Votre capital actuel' + qui + ' est d\'environ ' + fmt(Math.round(a.capitalProj)) + ', pour un besoin estimé à ' + fmt(Math.round(a.capitalNecessaire)) + '.'
+    : 'À ' + a.ageRet + ' ans, votre capital' + qui + ' devrait atteindre environ ' + fmt(Math.round(a.capitalProj)) + ', pour un objectif de ' + fmt(Math.round(a.capitalNecessaire)) + '.';
+  if (a.manque > 0 && !a.dejaRetraite) sub += ' Pour combler l\'écart de ' + fmt(Math.round(a.manque)) + ', il faudrait épargner environ ' + fmt(Math.round(a.cotAdd / 12)) + ' de plus par mois.';
   let capFin = null;
   if (d) {
     const qui2 = rtMode === 'couple' ? ' (Client 1)' : '';
-    if (d.epuise) sub += ' Les fonds sont épuisés à ' + d.epuise + ' ans' + qui2 + '.';
-    else if (d.ok < d.annees) sub += ' Le capital dure jusqu\'à ' + a.ageDeces + ' ans, mais le revenu net projeté (≈ ' + fmt(Math.round(d.netMoyen)) + '/an) est sous le revenu désiré (' + fmt(Math.round(d.besoin)) + ') : l\'impôt à la retraite réduit le revenu net.';
-    else sub += ' Le revenu désiré est soutenu jusqu\'à ' + a.ageDeces + ' ans.';
+    if (d.epuise) sub += ' Au rythme de retrait prévu, les fonds durent jusqu\'à ' + d.epuise + ' ans' + qui2 + '.';
+    else if (d.ok < d.annees) sub += ' Le capital dure jusqu\'à ' + a.ageDeces + ' ans, mais le revenu net projeté (environ ' + fmt(Math.round(d.netMoyen)) + ' par année) est inférieur au revenu désiré (' + fmt(Math.round(d.besoin)) + ') à cause de l\'impôt à la retraite.';
+    else sub += ' Le revenu désiré est assuré jusqu\'à ' + a.ageDeces + ' ans.';
     capFin = d.capFin;
   }
   const stats = [
     ['Cotisation actuelle', fmt(Math.round(a.cotMens)) + '/mois', ''],
-    ['À ajouter', a.manque > 0 && !a.dejaRetraite ? fmt(Math.round(a.cotAdd / 12)) + '/mois' : 'Rien', a.manque > 0 && !a.dejaRetraite ? '' : 'good'],
+    ['À ajouter par mois', a.manque > 0 && !a.dejaRetraite ? fmt(Math.round(a.cotAdd / 12)) + '/mois' : 'Rien à ajouter', a.manque > 0 && !a.dejaRetraite ? '' : 'good'],
     ['Capital visé', fmt(Math.round(a.capitalNecessaire)), '']
   ];
   if (capFin != null) stats.push(['Capital restant à ' + a.ageDeces + ' ans', fmt(Math.round(capFin)), capFin > 0 ? 'good' : 'bad']);
@@ -9463,6 +9475,38 @@ function rtPrintClient() {
 function rtPrint() { rtPrintClient(); }
 
 // ───────── Initialisation ─────────
+
+// ───────── Navigation par étapes (Précédent / Suivant) ─────────
+function rtStepNav(group) {
+  const steps = Array.from(group.querySelectorAll(':scope > details.rt-step')).filter(d => !d.classList.contains('rt-adv'));
+  steps.forEach((d, i) => {
+    const sb = d.querySelector('.rt-sb'); if (!sb || sb.querySelector(':scope > .rt-nav')) return;
+    const last = i === steps.length - 1;
+    const nav = document.createElement('div'); nav.className = 'rt-nav';
+    if (i > 0) {
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = '← Précédent';
+      b.onclick = () => rtGoStep(steps, i, i - 1); nav.appendChild(b);
+    }
+    const n = document.createElement('button'); n.type = 'button';
+    n.className = 'rt-next' + (last ? ' final' : '');
+    n.textContent = last ? 'Voir les résultats ↓' : 'Suivant →';
+    n.onclick = () => last ? rtShowResults() : rtGoStep(steps, i, i + 1);
+    nav.appendChild(n);
+    sb.appendChild(nav);
+  });
+}
+function rtGoStep(steps, from, to) {
+  steps.forEach((d, k) => { d.open = (k === to); });
+  steps[to].scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function rtShowResults() {
+  rtSetView('ov');
+  const v = $('rt-verdict'); if (v) v.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+(function rtStepNavInit() {
+  ['obj-seul', 'obj-couple'].forEach(id => { const g = document.getElementById(id); if (g) rtStepNav(g); });
+})();
+
 (function rtInit() {
   rtInitNumberFields();
   rtInitOverrides();
