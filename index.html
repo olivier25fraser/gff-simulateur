@@ -90,6 +90,33 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
   transition:border-color .2s}
 .hero-link:hover{border-bottom-color:var(--gold)}
 
+/* ── HERO v2 ── */
+.hero.hero-v2{display:block;min-height:0;padding:150px 5% 104px;
+  background:var(--noir)}
+.hero.hero-v2::before{background:repeating-linear-gradient(to bottom,transparent 0,transparent 71px,rgba(255,255,255,.045) 71px,rgba(255,255,255,.045) 72px);
+  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 35%);mask-image:linear-gradient(to right,transparent 0,#000 35%)}
+.hv{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
+  gap:clamp(40px,7vw,96px);align-items:end;position:relative;z-index:1}
+.hv .hero-badge-rule{width:44px;margin-bottom:28px}
+.hero.hero-v2 h1{font-size:clamp(40px,5.6vw,72px);line-height:1.06;margin-bottom:26px}
+.hero.hero-v2 p{max-width:30em}
+.hv-piliers{border-top:1px solid rgba(255,255,255,.22)}
+.pilier{padding:22px 0 24px;border-bottom:1px solid rgba(255,255,255,.14)}
+.pilier h2{font-family:'Fraunces',serif;font-weight:500;font-size:27px;color:#fff;margin-bottom:8px;line-height:1.2}
+.pilier p,.hero.hero-v2 .pilier p{font-size:16px;line-height:1.7;margin:0;color:rgba(255,255,255,.62);max-width:none}
+.pilier a{color:rgba(255,255,255,.88);text-decoration:none;border-bottom:1px solid rgba(191,143,0,.65)}
+.pilier a:hover{color:#fff;border-bottom-color:var(--gold-l)}
+.hero.hero-v2 .hero-btns{align-items:center}
+@media (prefers-reduced-motion:no-preference){
+  .pilier{opacity:0;transform:translateY(10px);animation:pilierIn .6s ease forwards}
+  .pilier:nth-child(1){animation-delay:.2s}.pilier:nth-child(2){animation-delay:.38s}.pilier:nth-child(3){animation-delay:.56s}
+}
+@keyframes pilierIn{to{opacity:1;transform:none}}
+@media(max-width:860px){
+  .hv{grid-template-columns:1fr;align-items:start}
+  .hero.hero-v2{padding:120px 6% 72px}
+}
+
 /* ── SERVICES ── */
 .section{padding:96px 5%}
 .section-tag{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
@@ -259,22 +286,21 @@ footer{background:#080808;padding:48px 5% 24px;border-top:1px solid rgba(255,255
 </nav>
 
 <!-- ═══ HERO ═══ -->
-<section class="hero" style="position:relative;overflow:hidden">
-  <svg style="position:absolute;top:0;right:0;width:48%;height:100%;z-index:0;pointer-events:none" viewBox="0 0 600 900" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M600,0 L600,900 L260,900 C160,760 320,620 210,470 C100,320 270,160 160,0 Z" fill="#BF8F00" opacity=".16"/>
-    <path d="M600,120 L600,900 L360,900 C280,780 400,660 320,540 C240,420 370,300 300,180 C260,120 340,80 380,60 Z" fill="#D4A017" opacity=".10"/>
-  </svg>
-  <svg class="scroll-arrow" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#BF8F00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M6 9l6 6 6-6"/>
-  </svg>
-  <div class="hero-content">
-    <h1>Votre sécurité<br>financière, <em>notre<br>priorité</em></h1>
-    <p>Groupe Financier Formule vous accompagne dans la protection de ce qui compte le plus : votre famille, votre patrimoine et votre avenir.</p>
-    <div class="hero-btns">
-      <a href="#contact" class="btn-primary">
-        Consultation gratuite →
-      </a>
-      <a href="#services" class="hero-link">Voir nos services</a>
+<section class="hero hero-v2">
+  <div class="hv">
+    <div class="hero-content">
+      <div class="hero-badge-rule" aria-hidden="true"></div>
+      <h1>Votre sécurité financière, notre priorité</h1>
+      <p>Groupe Financier Formule vous accompagne dans la protection de ce qui compte le plus : votre famille, votre patrimoine et votre avenir.</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn-primary">Consultation gratuite</a>
+        <a href="#services" class="hero-link">Voir nos services</a>
+      </div>
+    </div>
+    <div class="hv-piliers">
+      <div class="pilier"><h2>Votre famille</h2><p><a href="/assurance-vie/">Assurance vie</a>, <a href="/assurance-invalidite/">assurance invalidité</a>, <a href="/assurance-maladies-graves/">assurance maladies graves</a></p></div>
+      <div class="pilier"><h2>Votre patrimoine</h2><p><a href="/assurance-hypothecaire/">Assurance hypothécaire</a>, <a href="/epargne-retraite/">REER et CELI</a>, <a href="/epargne-retraite/">CELIAPP pour une première propriété</a></p></div>
+      <div class="pilier"><h2>Votre avenir</h2><p><a href="/epargne-retraite/">Épargne et retraite</a>, <a href="/epargne-retraite/">REEE pour les études des enfants</a>, <a href="/epargne-retraite/">REEI</a></p></div>
     </div>
   </div>
 </section>
