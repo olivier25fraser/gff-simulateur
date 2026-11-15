@@ -421,6 +421,25 @@ body.dark .fp svg text{fill:#ddd}
 .actif-row .al{font-size:12px;color:var(--gry)}
 .actif-row .av{font-size:13px;font-weight:700;color:var(--ink)}
 .actif-row .av.neg{color:var(--org)}
+/* ── Bilan patrimonial : mise en page compacte ── */
+.bp-grid{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:18px;align-items:start}
+.bp-side{position:sticky;top:12px}
+.bp-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 24px}
+.cmp{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 14px}
+.bp-hint{margin-top:6px;padding:8px 12px;background:#FFF8E1;border-left:3px solid #BF8F00;border-radius:6px;font-size:11.5px;color:#6b5a1e}
+.bp-low{display:grid;grid-template-columns:1.15fr 1fr;gap:18px;align-items:start}
+#pane-profil.pane .field{margin-bottom:9px}
+#pane-profil.pane .field label{font-size:9.5px;letter-spacing:.05em;line-height:1.25;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#pane-profil.pane .field input,#pane-profil.pane .field select{height:34px;font-size:13.5px;border-radius:8px;padding:0 9px}
+#pane-profil.pane .actif-section{margin:14px 0 8px}
+#pane-profil.pane .actif-net-total{padding:14px 16px}
+#pane-profil.pane .ant-value{font-size:25px}
+#pane-profil .actif-row .av{white-space:nowrap}
+#pane-profil .actif-row .al{padding-right:10px}
+body.dark .bp-hint{background:#2e2a1c;color:#d9c98a}
+@media(max-width:1180px){.bp-grid{grid-template-columns:1fr}.bp-side{position:static}.cmp{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:860px){#pane-profil.pane .field label{white-space:normal}.bp-cols{grid-template-columns:1fr}.cmp{grid-template-columns:repeat(2,minmax(0,1fr))}.bp-low{grid-template-columns:1fr}}
+
 .actif-row .av.pos{color:var(--grn)}
 
 /* ══ BUDGET ══ */
@@ -1215,7 +1234,47 @@ body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
   </button>
   <div id="kpis" class="kpis"></div>
 
-  <div class="card" style="margin-bottom:18px">
+  <div class="bp-grid">
+    <div class="bp-main">
+      <div class="card">
+        <div class="ch nv">Dossier client</div>
+        <div class="cb">
+          <div class="cmp"><div class="field"><label for="p-nom">Nom du client</label><input type="text" id="p-nom" placeholder="Prénom Nom" maxlength="80" oninput="calcActifNet()"></div><div class="field"><label for="p-sit">Situation familiale</label><select id="p-sit" onchange="calc()"><option>Personne seule</option><option>Couple (2 revenus)</option><option>Couple (1 revenu)</option><option>Famille monoparentale</option><option>Proche de la retraite</option></select></div><div class="field"><label for="p-age">Âge actuel</label><input type="number" id="p-age" value="35" min="18" max="75" oninput="calc()"></div><div class="field"><label for="p-ret">Retraite prévue à</label><input type="number" id="p-ret" value="65" min="50" max="75" oninput="calc()"></div><div class="field"><label for="p-rev">Revenu brut annuel ($)</label><input type="number" id="p-rev" value="75000" min="0" oninput="calc()"></div><div class="field"><label for="p-rev2">Revenu conjoint(e) ($)</label><input type="number" id="p-rev2" value="0" min="0" oninput="calc()"></div><div class="field"><label for="p-enf">Enfants à charge</label><input type="number" id="p-enf" value="0" min="0" max="10" oninput="calc()"></div></div>
+          <div class="bp-hint">Ces renseignements alimentent automatiquement les autres onglets (REER, CELI, retraite, succession…). Un champ modifié à la main ailleurs n'est plus écrasé.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ch gd">Actif, passif et protection</div>
+        <div class="cb">
+          <div class="bp-cols">
+            <div><div class="actif-section" style=margin-top:0>Liquidités et placements</div><div class="field"><label for="an-liquide">Comptes bancaires ($)</label><input type="number" id="an-liquide" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-reer-val">REER / FERR ($)</label><input type="number" id="an-reer-val" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-celi-val">CELI ($)</label><input type="number" id="an-celi-val" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-reee-val">REEE ($)</label><input type="number" id="an-reee-val" value="0" min="0" oninput="calcActifNet()"></div><div class="field" title="Régime de retraite de l'employeur : valeur estimée"><label for="an-rpa">Régime d'employeur ($)</label><input type="number" id="an-rpa" value="0" min="0" oninput="calcActifNet()"></div><div class="field" title="Placements non enregistrés"><label for="an-nonreg">Non enregistrés ($)</label><input type="number" id="an-nonreg" value="0" min="0" oninput="calcActifNet()"></div></div>
+            <div><div class="actif-section" style=margin-top:0>Immobilier</div><div class="field"><label for="an-maison">Résidence principale ($)</label><input type="number" id="an-maison" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-immo">Autres propriétés ($)</label><input type="number" id="an-immo" value="0" min="0" oninput="calcActifNet()"></div><div class="actif-section">Passif (dettes)</div><div class="field"><label for="an-hypo">Solde hypothécaire ($)</label><input type="number" id="an-hypo" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-auto">Prêts auto ($)</label><input type="number" id="an-auto" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-cc">Cartes / marges de crédit ($)</label><input type="number" id="an-cc" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-autres-dette">Prêts étudiants / autres ($)</label><input type="number" id="an-autres-dette" value="0" min="0" oninput="calcActifNet()"></div></div>
+            <div><div class="actif-section" style=margin-top:0>Assurance en vigueur</div><div class="field"><label for="an-ass-vie-t">Vie temp. : capital ($)</label><input type="number" id="an-ass-vie-t" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-ass-vie-t-duree">Vie temp. : durée (années)</label><input type="number" id="an-ass-vie-t-duree" value="0" min="0" max="60" oninput="calcActifNet()"></div><div class="field"><label for="an-ass-vie-p">Vie perm. : capital ($)</label><input type="number" id="an-ass-vie-p" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-ass-inv">Invalidité : $ par mois</label><input type="number" id="an-ass-inv" value="0" min="0" oninput="calcActifNet()"></div><div class="field"><label for="an-ass-mg">Maladies graves : capital ($)</label><input type="number" id="an-ass-mg" value="0" min="0" oninput="calcActifNet()"></div><div class="actif-section">Autres actifs</div><div class="field" title="Valeur de rachat de l'assurance vie permanente"><label for="an-rachat">Valeur de rachat ($)</label><input type="number" id="an-rachat" value="0" min="0" oninput="calcActifNet()"></div><div class="field" title="Véhicule, entreprise, etc."><label for="an-autres-actif">Autres actifs ($)</label><input type="number" id="an-autres-actif" value="0" min="0" oninput="calcActifNet()"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card notes-card">
+        <div class="ch gd">Notes du conseiller</div>
+        <div class="cb">
+          <textarea id="notes-conseiller" placeholder="Observations, objectifs particuliers, situation familiale, points à suivre..." oninput="saveNoteStamp()"></textarea>
+          <div class="notes-stamp" id="notes-stamp"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="bp-side">
+      <div class="card">
+        <div class="ch nv">Bilan patrimonial &mdash; Actif net</div>
+        <div class="cb" id="actif-net-zone">
+          <div style="color:var(--gry);font-size:12px">Remplissez l'actif et le passif pour voir votre bilan.</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="card">
     <div class="ch nv">Projection de l'actif net &mdash; 20 ans</div>
     <div class="cb">
       <div class="nw-chart-wrap">
@@ -1225,101 +1284,22 @@ body.dark #pane-retraite .rt-scen td.em{background:#2a2000;color:#fff}
     </div>
   </div>
 
-  <div class="g2">
-    <div>
-      <div class="card">
-        <div class="ch nv">Profil personnel</div>
-        <div class="cb">
-          <div class="hint" style="margin:0 0 14px;padding:9px 12px;background:#FFF8E1;border-left:3px solid #BF8F00;border-radius:6px;font-size:12px">Ces renseignements alimentent automatiquement les autres onglets (REER, CELI, retraite, succession…). Un champ modifié à la main ailleurs n'est plus écrasé.</div>
-          <div class="field"><label>Nom du client <span class="sub">pour le rapport imprimé</span></label>
-            <input type="text" id="p-nom" placeholder="Prénom Nom" maxlength="80" oninput="calcActifNet()"></div>
-          <div class="field"><label>Situation familiale</label>
-            <select id="p-sit" onchange="calc()">
-              <option>Personne seule</option><option>Couple (2 revenus)</option>
-              <option>Couple (1 revenu)</option><option>Famille monoparentale</option>
-              <option>Proche de la retraite</option>
-            </select></div>
-          <div class="field"><label>Âge actuel</label><input type="number" id="p-age" value="35" min="18" max="75" oninput="calc()"></div>
-          <div class="field"><label>Âge de retraite prévu</label><input type="number" id="p-ret" value="65" min="50" max="75" oninput="calc()"></div>
-          <div class="field"><label>Revenu brut annuel ($)</label><input type="number" id="p-rev" value="75000" min="0" oninput="calc()"></div>
-          <div class="field"><label>Revenu conjoint(e) ($) <span class="sub">si couple</span></label><input type="number" id="p-rev2" value="0" min="0" oninput="calc()"></div>
-          <div class="field"><label>Enfants à charge</label><input type="number" id="p-enf" value="0" min="0" max="10" oninput="calc()"></div>
-
-        <div class="actif-section">Actif</div>
-        <div class="field"><label>Comptes bancaires / liquidités ($)</label>
-          <input type="number" id="an-liquide" value="0" min="0" oninput="calcActifNet()"></div>
-        <div class="field"><label>Valeur de la résidence principale ($)</label>
-          <input type="number" id="an-maison" value="0" min="0" oninput="calcActifNet()"></div>
-        <div class="field"><label>Autres propriétés / immobilier ($)</label>
-          <input type="number" id="an-immo" value="0" min="0" oninput="calcActifNet()"></div>
-        <div class="field"><label>REER / FERR ($)</label>
-          <input type="number" id="an-reer-val" value="0" min="0" oninput="calcActifNet()"></div>
-        <div class="field"><label>CELI ($)</label>
-          <input type="number" id="an-celi-val" value="0" min="0" oninput="calcActifNet()"></div>
-        <div class="field"><label>REEE ($)</label>
-          <input type="number" id="an-reee-val" value="0" min="0" oninput="calcActifNet()"></div>
-        <div class="field"><label>Régime de retraite de l'employeur &mdash; valeur estimée ($)</label>
-          <input type="number" id="an-rpa" value="0" min="0" oninput="calcActifNet()"></div>
-        <div class="field"><label>Placements non enregistrés ($)</label>
-          <input type="number" id="an-nonreg" value="0" min="0" oninput="calcActifNet()"></div>
-        <div class="field"><label>Valeur de rachat &mdash; assurance vie permanente ($)</label>
-          <input type="number" id="an-rachat" value="0" min="0" oninput="calcActifNet()"></div>
-        <div class="field"><label>Autres actifs (véhicule, entreprise...) ($)</label>
-          <input type="number" id="an-autres-actif" value="0" min="0" oninput="calcActifNet()"></div>
-
-        <div class="actif-section">Passif (dettes)</div>
-        <div class="field"><label>Solde hypothécaire ($)</label>
-          <input type="number" id="an-hypo" value="0" min="0" oninput="calcActifNet()"></div>
-        <div class="field"><label>Prêts auto ($)</label>
-          <input type="number" id="an-auto" value="0" min="0" oninput="calcActifNet()"></div>
-        <div class="field"><label>Cartes de crédit / marges ($)</label>
-          <input type="number" id="an-cc" value="0" min="0" oninput="calcActifNet()"></div>
-        <div class="field"><label>Prêts étudiants / autres dettes ($)</label>
-          <input type="number" id="an-autres-dette" value="0" min="0" oninput="calcActifNet()"></div>
-
-        <div class="actif-section">Protection d'assurance en vigueur</div>
-        <div class="field"><label>Assurance vie temporaire &mdash; capital-décès ($)</label>
-          <input type="number" id="an-ass-vie-t" value="0" min="0" oninput="calcActifNet()"></div>
-        <div class="field"><label>Assurance vie temporaire &mdash; durée restante <span class="sub">en années (ex. 20)</span></label>
-          <input type="number" id="an-ass-vie-t-duree" value="0" min="0" max="60" oninput="calcActifNet()"></div>
-        <div class="field"><label>Assurance vie permanente &mdash; capital-décès ($)</label>
-          <input type="number" id="an-ass-vie-p" value="0" min="0" oninput="calcActifNet()"></div>
-        <div class="field"><label>Assurance invalidité &mdash; prestation mensuelle ($/mois)</label>
-          <input type="number" id="an-ass-inv" value="0" min="0" oninput="calcActifNet()"></div>
-        <div class="field"><label>Assurance maladies graves &mdash; capital ($)</label>
-          <input type="number" id="an-ass-mg" value="0" min="0" oninput="calcActifNet()"></div>
-        </div>
-      </div>
-      <div class="card notes-card">
-        <div class="ch gd">Notes du conseiller</div>
-        <div class="cb">
-          <textarea id="notes-conseiller" placeholder="Observations, objectifs particuliers, situation familiale, points à suivre..." oninput="saveNoteStamp()"></textarea>
-          <div class="notes-stamp" id="notes-stamp"></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ch bl">Cotisations sociales 2026</div>
-        <div class="cb" id="cotis-soc"></div>
+  <div class="bp-low">
+    <div class="card">
+      <div class="ch gd">Taux marginaux &mdash; Québec 2026 (CQFF)</div>
+      <div class="cb" style="padding:0">
+        <table class="tbl"><thead><tr><th>#</th><th>Tranche</th><th>Taux combiné</th></tr></thead>
+        <tbody id="pal-body"></tbody></table>
       </div>
     </div>
     <div>
       <div class="card">
-        <div class="ch gd">Taux marginaux — Québec 2026 (CQFF)</div>
-        <div class="cb" style="padding:0">
-          <table class="tbl"><thead><tr><th>#</th><th>Tranche</th><th>Taux combiné</th></tr></thead>
-          <tbody id="pal-body"></tbody></table>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:18px">
-        <div class="ch nv">Bilan patrimonial — Actif net</div>
-        <div class="cb" id="actif-net-zone">
-          <div style="color:var(--gry);font-size:12px">Remplissez les champs actif/passif dans le profil pour voir votre bilan.</div>
-        </div>
-      </div>
-      <div class="card">
         <div class="ch gn">Votre profil fiscal</div>
         <div class="cb" id="profil-fiscal"></div>
+      </div>
+      <div class="card">
+        <div class="ch bl">Cotisations sociales 2026</div>
+        <div class="cb" id="cotis-soc"></div>
       </div>
     </div>
   </div>
@@ -4417,7 +4397,7 @@ function bilanData() {
   ];
   d.assVie = d.assVieT + d.assVieP;
   const dureeTxt = d.assVieDuree > 0 ? ' (' + d.assVieDuree + (d.assVieDuree > 1 ? ' ans' : ' an') + ' restant' + (d.assVieDuree > 1 ? 's' : '') + ')' : '';
-  d.lignesAss = [['Assurance vie temporaire' + dureeTxt, d.assVieT, 'cap'], ['Assurance vie permanente', d.assVieP, 'cap'], ['Assurance invalidité : prestation mensuelle', d.assInv, 'mois'], ['Assurance maladies graves : capital', d.assMg, 'cap']].filter(x => x[1] > 0);
+  d.lignesAss = [['Assurance vie temporaire' + dureeTxt, d.assVieT, 'cap'], ['Assurance vie permanente', d.assVieP, 'cap'], ['Assurance invalidité', d.assInv, 'mois'], ['Assurance maladies graves : capital', d.assMg, 'cap']].filter(x => x[1] > 0);
   d.lignesPassif = [['Hypothèque', d.hypo], ['Prêts auto', d.auto], ['Cartes de crédit / marges', d.cc], ['Prêts étudiants / autres dettes', d.autresD]];
   return d;
 }
@@ -4454,20 +4434,8 @@ function calcActifNet() {
     '<div style="background:var(--gry-l);border-radius:8px;padding:10px 12px"><div style="font-size:10px;color:var(--gry);font-weight:600">Immobilier</div><div style="font-size:19px;font-weight:700">' + Math.round(d.pctImmo) + ' %</div><div style="font-size:10px;color:var(--gry)">de l\'actif</div></div>' +
     '<div style="background:var(--gry-l);border-radius:8px;padding:10px 12px"><div style="font-size:10px;color:var(--gry);font-weight:600">Placements</div><div style="font-size:19px;font-weight:700">' + Math.round(d.pctPlac) + ' %</div><div style="font-size:10px;color:var(--gry)">de l\'actif</div></div></div>';
 
-  html += '<div class="actif-section">Détail de l\'actif</div>';
-  d.lignesActif.forEach(([titre, lignes]) => {
-    const l = lignes.filter(([, v]) => v > 0);
-    if (!l.length) return;
-    l.forEach(([n, v]) => { html += '<div class="actif-row"><span class="al">' + n + '</span><span class="av pos">' + fmt(v) + '</span></div>'; });
-  });
-  html += '<div class="actif-row" style="font-weight:700"><span class="al">Total actif</span><span class="av pos">' + fmt(d.actif) + '</span></div>';
-
-  const dettes = d.lignesPassif.filter(([, v]) => v > 0);
-  if (dettes.length) {
-    html += '<div class="actif-section">Passif (dettes)</div>';
-    dettes.forEach(([n, v]) => { html += '<div class="actif-row"><span class="al">' + n + '</span><span class="av neg">\u2212 ' + fmt(v) + '</span></div>'; });
-    html += '<div class="actif-row" style="font-weight:700"><span class="al">Total passif</span><span class="av neg">\u2212 ' + fmt(d.passif) + '</span></div>';
-  }
+  html += '<div class="actif-section">Passif</div>' +
+    '<div class="actif-row"><span class="al">Total du passif</span><span class="av neg">\u2212 ' + fmt(d.passif) + '</span></div>';
   if (d.lignesAss.length) {
     html += '<div class="actif-section">Protection d\'assurance en vigueur</div>';
     d.lignesAss.forEach(([n, v, t]) => { html += '<div class="actif-row"><span class="al">' + n + '</span><span class="av">' + fmt(v) + (t === 'mois' ? ' / mois' : '') + '</span></div>'; });
