@@ -1,35 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://gfformule.ca/</loc>
-    <lastmod>2026-11-15</lastmod>
-  </url>
-  <url>
-    <loc>https://gfformule.ca/assurance-vie/</loc>
-    <lastmod>2026-11-22</lastmod>
-    </url>
-  <url>
-    <loc>https://gfformule.ca/assurance-invalidite/</loc>
-    <lastmod>2026-11-22</lastmod>
-    </url>
-  <url>
-    <loc>https://gfformule.ca/assurance-maladies-graves/</loc>
-    <lastmod>2026-11-22</lastmod>
-    </url>
-  <url>
-    <loc>https://gfformule.ca/epargne-retraite/</loc>
-    <lastmod>2026-11-22</lastmod>
-    </url>
-  <url>
-    <loc>https://gfformule.ca/assurance-hypothecaire/</loc>
-    <lastmod>2026-11-22</lastmod>
-    </url>
-  <url>
-    <loc>https://gfformule.ca/assurance-enfant/</loc>
-    <lastmod>2026-11-22</lastmod>
-  </url>
-  <url>
-    <loc>https://gfformule.ca/riviere-du-loup/</loc>
-    <lastmod>2026-11-22</lastmod>
-  </url>
+<url><loc>https://gfformule.ca/</loc><lastmod>2026-11-22</lastmod><priority>1.0</priority></url>
+<url><loc>https://gfformule.ca/assurance-vie/</loc><lastmod>2026-11-22</lastmod><priority>0.8</priority></url>
+<url><loc>https://gfformule.ca/assurance-invalidite/</loc><lastmod>2026-11-22</lastmod><priority>0.8</priority></url>
+<url><loc>https://gfformule.ca/assurance-maladies-graves/</loc><lastmod>2026-11-22</lastmod><priority>0.8</priority></url>
+<url><loc>https://gfformule.ca/assurance-hypothecaire/</loc><lastmod>2026-11-22</lastmod><priority>0.8</priority></url>
+<url><loc>https://gfformule.ca/epargne-retraite/</loc><lastmod>2026-11-22</lastmod><priority>0.8</priority></url>
+<url><loc>https://gfformule.ca/assurance-enfant/</loc><lastmod>2026-11-22</lastmod><priority>0.8</priority></url>
+<url><loc>https://gfformule.ca/riviere-du-loup/</loc><lastmod>2026-11-22</lastmod><priority>0.7</priority></url>
+<url><loc>https://gfformule.ca/reee/</loc><lastmod>2026-11-22</lastmod><priority>0.8</priority></url>
+<url><loc>https://gfformule.ca/reer/</loc><lastmod>2026-11-22</lastmod><priority>0.8</priority></url>
+<url><loc>https://gfformule.ca/celi/</loc><lastmod>2026-11-22</lastmod><priority>0.8</priority></url>
+<url><loc>https://gfformule.ca/assurance-travailleur-autonome/</loc><lastmod>2026-11-22</lastmod><priority>0.8</priority></url>
+<url><loc>https://gfformule.ca/rimouski/</loc><lastmod>2026-11-22</lastmod><priority>0.7</priority></url>
+<url><loc>https://gfformule.ca/matane/</loc><lastmod>2026-11-22</lastmod><priority>0.7</priority></url>
+<url><loc>https://gfformule.ca/mont-joli/</loc><lastmod>2026-11-22</lastmod><priority>0.7</priority></url>
+<url><loc>https://gfformule.ca/amqui/</loc><lastmod>2026-11-22</lastmod><priority>0.7</priority></url>
+<url><loc>https://gfformule.ca/trois-pistoles/</loc><lastmod>2026-11-22</lastmod><priority>0.7</priority></url>
+<url><loc>https://gfformule.ca/la-pocatiere/</loc><lastmod>2026-11-22</lastmod><priority>0.7</priority></url>
+<url><loc>https://gfformule.ca/temiscouata-sur-le-lac/</loc><lastmod>2026-11-22</lastmod><priority>0.7</priority></url>
+<url><loc>https://gfformule.ca/quebec/</loc><lastmod>2026-11-22</lastmod><priority>0.7</priority></url>
+<url><loc>https://gfformule.ca/zones-desservies/</loc><lastmod>2026-11-22</lastmod><priority>0.8</priority></url>
 </urlset>
