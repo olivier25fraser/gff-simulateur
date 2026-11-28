@@ -287,7 +287,12 @@ nav .nav-logo img{height:38px}
 .lv-mid a{display:inline-block;padding:11px 20px;border-radius:9px;font-weight:700;font-size:15px;text-decoration:none}.lv-mid .m1{background:#BF8F00;color:#fff}.lv-mid .m2{border:1.5px solid #BF8F00;color:#8a6700}
 @media(max-width:860px){.lv-rdv-in{grid-template-columns:1fr;gap:34px}.lv-rdv{padding:60px 6%}.lv-form{padding:22px}}
 @media(max-width:768px){.lv-sticky{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:90;background:#fff;border-top:1px solid #ddd;box-shadow:0 -6px 20px rgba(0,0,0,.12);padding:10px 12px;gap:10px}.lv-sticky{flex-direction:column}.lv-st-row{display:flex;gap:8px}.lv-st-row a{font-size:14px!important;padding:11px 4px!important}.lv-sticky>a{flex:none;display:flex}.lv-sticky a{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 8px;border-radius:10px;font-weight:700;font-size:15px;text-decoration:none}.lv-st-call{border:1.5px solid #BF8F00;color:#8a6700}.lv-st-rdv{background:#BF8F00;color:#fff}body{padding-bottom:118px}.lv-trust-in{justify-content:flex-start;font-size:13.5px;gap:8px 20px}.lv-trust-ct{display:none}}
-html{scroll-behavior:smooth}#rdv{scroll-margin-top:70px}
+html{scroll-behavior:smooth}
+.lv-intro{background:linear-gradient(180deg,#fbf6e6,#f6efd8);padding:56px 0 52px!important}.lv-intro .section-sub{max-width:760px}
+.lv-intro-btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}.lv-intro-btns a{display:inline-block;padding:13px 24px;border-radius:10px;font-weight:700;font-size:16px;text-decoration:none}.lv-intro-btns .m1{background:#BF8F00;color:#fff}.lv-intro-btns .m1:hover{background:#a67c00}.lv-intro-btns .m2{border:1.5px solid #BF8F00;color:#8a6700;background:#fff}
+.lv .lv-sec{padding-top:56px;padding-bottom:56px}.lv .lv-intro{padding-top:56px;padding-bottom:52px}
+.lv-mid{background:#fff!important}
+#rdv{scroll-margin-top:70px}
 /* ── HERO v2 ── */
 .hero.hero-v2{display:flex;flex-direction:column;justify-content:center;min-height:0;
   padding:104px 5% 0;background:var(--noir)}
@@ -408,7 +413,6 @@ fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlenco
 .catch(function(){window.location.href='mailto:ofraser@gfformule.ca,mtheberge@gfformule.ca?subject='+encodeURIComponent('Consultation GFF - '+sujet)+'&body='+encodeURIComponent('Nom: '+nom+'\nCourriel: '+email+'\nTél: '+tel+'\n\n'+full);b.textContent='Demander ma consultation gratuite →';b.disabled=false;});}
 </script>
 
-<a href="#rdv" class="lv-st-rdv">Rendez-vous gratuit</a></div>
 <footer><div style="max-width:1200px;margin:0 auto"><div class="footer-top"><img src="/assets/logo-footer.png" width="183" height="64" loading="lazy" decoding="async" style="height:38px;width:auto" alt="Groupe Financier Formule"><div class="footer-links"><a href="/#services">Services</a><a href="/#pourquoi">Notre approche</a><a href="/#processus">Processus</a><a href="/#contact">Contact</a></div></div><div class="footer-bottom"><p>© 2026 Groupe Financier Formule | Cabinet de services financiers. Tous droits réservés.</p><p>9562-4698 Québec inc.</p></div></div></footer>
 </body>
 </html>
